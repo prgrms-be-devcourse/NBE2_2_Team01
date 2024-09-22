@@ -18,24 +18,31 @@
 ![image](https://github.com/user-attachments/assets/f45e0aa3-1d51-43c2-a7fc-c76fc928e749)
 - users테이블에 있는 구글 이메일로 로그인
 
+
 ![image](https://github.com/user-attachments/assets/e4a93f67-35ab-40d6-9049-b1e3d4d5dfb7)
 
 - 비밀번호 입력
 - 이때 db에서 비밀번호는 암호화되어 있음
 
+
 ![image](https://github.com/user-attachments/assets/5fe73090-f741-4033-9b17-2e1fc2e92b15)
 - 계속
 
+
 ![image](https://github.com/user-attachments/assets/a9bd5ca9-48f8-43ab-82be-c05b9d1d9751)
+
 
 ![image](https://github.com/user-attachments/assets/5bbd54c8-b274-48d0-b6fa-6bb40df700e2)
 - 글 등록 가능
 
+
 ![image](https://github.com/user-attachments/assets/15b2df53-181b-43ec-9a38-960f48df71c8)
 - 자신이 작성한(같은 이메일) 글이면 수정, 삭제 가능
+
   
 ![image](https://github.com/user-attachments/assets/d65b9408-e81a-4c90-9598-7398fd346e16)
 - 다른 사용자가 작성한 글은 수정, 삭제 불가 ->다른 사용자와 본인을 구분해서 다른 사용자의 글은 수정, 삭제 버튼이 안보이게 할 순 없을까
+
 
 ### 카카오톡 로그인하기
 
@@ -99,9 +106,74 @@
 ```
 - 위 코드는 Oauth2UserCustomService 클래스 일부분
 
+
 ![image](https://github.com/user-attachments/assets/7a1f11e9-aaa9-4fd0-94e6-950f15b47f33)
 - 같은 nickname으로 로그인시 에러
   
 - 결론: 같은 사용자가 구글계정에서 카카오톡 계정으로 로그인하기 위해 구글 계정 로그아웃할때, nickname이 본인 이름이 아닌 null로 업데이트되게 만들고 싶음(실패)
 
-  2.  
+2.  blogdb의 users테이블에 OAuth 이메일과 비밀번호가 있어야함
+   - 디비에 없는 계정으로 구글 로그인 시,이메일은 삽입되나 비밀번호가 디비에 삽입이 안됨
+   - 이거 어짜피 구글 로그인만 성공해야 글을 작성,수정,삭제할 수 있으니까 신경 안써도 될까? (몰라)
+
+     
+3. 로그아웃하면 세션 및 쿠키 삭제, 토큰 무효화되어야 함
+   - 로그아웃되도 직전 로그인방식으로 들어가면 토큰이 살아있음...
+```
+        http.logout(logout -> logout
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
+                .addLogoutHandler(new CustomLogoutHandler(oAuth2AuthorizationRequestBasedOnCookieRepository()))
+                .logoutSuccessUrl("/login"));
+```
+- 위 코드는 WebOAuthSecurityConfig클래스 일부분
+
+  
+```
+@Override
+    public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate(); // 세션 무효화
+            System.out.println("Session invalidated.");
+        }
+        authorizationRequestRepository.removeAuthorizationRequestCookies(request, response);
+        System.out.println("Authorization request cookies removed.");
+        if (authentication != null) {
+            SecurityContextHolder.clearContext();
+            System.out.println("Security context cleared.");
+        }
+    }
+```
+- 위 코드는 CustomLogoutHandler 클래스 일부분
+
+- 결론:
+- 구글 설정-> 개인 정보 보호 및 보안 -> 인터넷 사용 기록 삭제를 해야지만 토큰이 사라짐
+- 로그아웃만으로  토큰 무효화, 쿠키 및 세션 삭제하고 싶다....
+
+
+4. 일반 로그인으로 로그인하면 글 등록,수정,삭제가 안됨
+- OAuthAndSessionSecurityConfig 클래스를 주석 해제하고 WebOAuthSecurityConfig 주석처리 후
+```
+<div class = "mb-4">
+                    <form action="/login" method="POST">
+                        <input type="hidden" th:name="${_csrf?.parameterName}" th:value="${_csrf?.token}" />
+                        <div class="mb-3">
+                            <label class="form-label text-white">Email address</label>
+                            <input type="email" class="form-control" name="username">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label text-white">Password</label>
+                            <input type="password" class="form-control" name="password">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+
+                    <button type="button" class="btn btn-secondary mt-3" onclick="location.href='/signup'">회원가입</button>
+                </div>
+```
+- oauth.html에 위 코드 주석 해제
+![image](https://github.com/user-attachments/assets/933bd86b-91f0-4772-a93f-6dd8e84564c4)
+
+- 일반 로그인을 하면 글 목록이 보이나 글 등록, 수정,삭제를 할 수 없음
+
+- 결론: 일반 로그인도 액세스 토큰, 리프레시 토큰을 발급하게 만들고 싶음(실패)
