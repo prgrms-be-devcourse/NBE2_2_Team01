@@ -11,6 +11,7 @@
 ### OAuth로 로그인
 
 ![image](https://github.com/user-attachments/assets/7fc39bfb-c75a-4f7c-a49b-c28c54cdd980)
+- http://localhost:8080/login
 
 ### 구글 로그인하기
 
@@ -42,4 +43,65 @@
 - users테이블에 있는 카카오톡 이메일로 로그인
 - 이후 구글 로그인과 똑같이 됨
 
+### 문제상황
+
+1. nickname 컬럼명이 겹치면 안됨
+   - 만약에 사용자가 구글, 카카오톡 로그인을 시도할때 이름(ex. 홍길동)이 같으므로 nickname에 본인 이름이 들어간다.
+ ```
+  //OAuth관련키 저장
+    @Column(name="nickname",unique = true)
+    private String nickname;
+
+    //생성자에 nickname 추가
+    @Builder
+    public User(String email, String password,String nickname) {
+        this.email = email;
+        this.password = password;
+        this.nickname = nickname;
+    }
+
+    //사용자 이름 변경
+    public User update(String nickname) {
+        this.nickname = nickname;
+        return this;
+    }
+ ```
+  - 위 코드는 User 클래스 일부분
+```
+ private User savedOrUpdate(OAuth2User oAuth2User) {
+        Map<String, Object> attributes = oAuth2User.getAttributes(); //OAuth2 사용자 정보(email, name 등)를 속성 맵으로 가져온다.
+
+        // OAuth2User의 속성 출력
+        String email;
+        String name;
+
+        if (attributes.containsKey("kakao_account")) {
+            email = (String) ((Map<String, Object>) attributes.get("kakao_account")).get("email");
+            System.out.println("Email from Kakao: " + email);
+            name = (String) ((Map<String, Object>) attributes.get("properties")).get("nickname");
+
+        } else {
+            // 구글 사용자 정보 처리
+            email = (String) attributes.get("email");
+            name = (String) attributes.get("name");
+        }
+
+        User user = userRepository.findByEmail(email)
+                .map(entity -> {
+                    // 로그 추가
+                    System.out.println("User found, updating: " + entity);
+                    return entity.update(name);
+                })
+                ...
+;
+        return userRepository.save(user); //새로운 사용자 정보를 저장하거나 업데이트된 사용자 정보를 저장한다.
+    }
+```
+- 위 코드는 Oauth2UserCustomService 클래스 일부분
+
+![image](https://github.com/user-attachments/assets/7a1f11e9-aaa9-4fd0-94e6-950f15b47f33)
+- 같은 nickname으로 로그인시 에러
   
+- 결론: 같은 사용자가 구글계정에서 카카오톡 계정으로 로그인하기 위해 구글 계정 로그아웃할때, nickname이 본인 이름이 아닌 null로 업데이트되게 만들고 싶음(실패)
+
+  2.  
