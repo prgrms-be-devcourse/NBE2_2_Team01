@@ -222,30 +222,71 @@
 ### 해결상황
 
 #### 페이징 넘버
-1. 
- - Spring Data JPA에서 PageRequest.of(page, size) 메서드를 통해 페이지 요청을 생성할 때, 첫 번째 페이지를 0으로 처리합니다.
- -  이는 내부적으로 처리할 때 효율적이고 직관적입니다. 즉, PageRequest.of(0, 10)이라고 하면 0번째 페이지에서 10개의 데이터를 요청하는 의미입니다.
- -  
-2.  첫번쨰 페이지 그룹에서의 '이전'버튼과 마지막 페이지 그룹에서의 '다음' 버튼은 비활성화뿐만 아니라 안보이게 만들고 싶다.
-    - 'disabled'이 아닌 'd-none'
 
-    ![image](https://github.com/user-attachments/assets/d015773f-2f82-412d-a015-e28dd9d6087b)
-    ```
-            <!-- 이전 그룹 버튼 -->
-            <li class="page-item" th:classappend="${page.number >= 10} ? '' : 'disabled'">
-                <a class="page-link" th:href="@{/articles(page=${(page.number/10)*10 }, size=${page.size})}" tabindex="-1">이전</a>
-            </li>      ...
-    ```
-    - 'disabled' 이면 첫번쨰 그룹 페이지에서도 '이전' 버튼이 비활성화된 상태이나 보임
-    ![image](https://github.com/user-attachments/assets/da68b106-898a-4851-9915-fba7b8dafe53)
-    ```
+- 초기 articleList.html 일부 코드
+   ```
+   <ul class="pagination justify-content-center">
+       <!-- 이전 버튼 -->
+       <li class="page-item" th:classappend="${page.hasPrevious()} ? '' : 'disabled'">
+           <a class="page-link" th:href="@{/articles(page=${page.number > 0 ? page.number - 1 : 0}, size=${page.size})}" tabindex="-1">이전</a>
+       </li>
+   
+       <!-- 페이지 번호 반복 -->
+       <li class="page-item" th:each="i : ${#numbers.sequence(1, page.totalPages)}"
+           th:classappend="${page.number + 1 == i} ? 'active' : ''">
+           <a class="page-link" th:href="@{/articles(page=${i - 1}, size=${page.size})}"
+              th:text="${i}"></a>
+       </li>
+   
+       <!-- 다음 버튼 -->
+       <li class="page-item" th:classappend="${page.hasNext()} ? '' : 'disabled'">
+           <a class="page-link" th:href="@{/articles(page=${page.number + 1}, size=${page.size})}">다음</a>
+       </li>
+   </ul>
+   ```
+
+1. Spring Data JPA의 페이지 처리
+    - Spring Data JPA에서 PageRequest.of(page, size) 메서드를 통해 페이지 요청을 생성할 때, 첫 번째 페이지를 0으로 처리한다.
+    -  따라서 사용자가 입력하는 페이지 번호와 실제 페이지 번호 간의 불일치가 발생함
+2. Thymeleaf 템플릿 코드의 오류
+    - 페이지 번호 반복 처리에서 인덱스가 잘못 계산되어 페이지 번호가 올바르게 표시되지 않는다.
+3. URL 파라미터 전달
+    - 링크에서 페이지 번호를 0으로 설정하는 경우(예: 이전 버튼 클릭 시) page=-1 또는 page=0으로 잘못 전달되어 오류를 유발했다.
+4.  첫번째 페이지 그룹에서의 '이전'버튼과 마지막 페이지 그룹에서의 '다음' 버튼은 비활성화가 됐지만 계속 보인다.
+
+
+- 수정된 코드
+  ![image](https://github.com/user-attachments/assets/eb359c69-2558-4bae-b02b-19e7ae02afd1)
+  ```
+   <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+
             <!-- 이전 그룹 버튼 -->
             <li class="page-item" th:classappend="${page.number >= 10} ? '' : 'd-none'">
                 <a class="page-link" th:href="@{/articles(page=${(page.number/10)*10 }, size=${page.size})}" tabindex="-1">이전</a>
-            </li>      ...
-    ```
-    - 'd-none' 이면 첫번쨰 그룹 페이지에서 '이전' 버튼이 보이지 않음
+            </li>
 
+            <!-- 페이지 번호 반복 -->
+            <li class="page-item" th:each="i : ${#numbers.sequence((page.number/10)*10, ((page.number/10)*10 + 9) < page.totalPages ? (page.number/10)*10 + 9 : page.totalPages - 1)}"
+                th:classappend="${page.number == i} ? 'active' : ''">
+                <a class="page-link" th:href="@{/articles(page=${i+1}, size=${page.size})}" th:text="${i+1}"></a> <!-- 1-based 페이지 표시 -->
+            </li>
+
+            <!-- 다음 그룹 버튼 -->
+            <li class="page-item" th:classappend="${(page.number/10)*10 + 10 < page.totalPages} ? '' : 'd-none'">
+                <a class="page-link" th:href="@{/articles(page=${(page.number/10)*10 + 11}, size=${page.size})}">다음</a>
+            </li>
+
+        </ul>
+    </nav>
+  ```
+
+- n페이지 http://localhost:8080/articles?page=n 
+- 페이지네이션 로직을 수정하여 페이지 번호를 올바르게 계산하도록 함
+- 이전, 다음 버튼 클릭 시 올바른 페이지로 이동하도록 th:classappend와 href를 수정함
+- 'd-none' 사용하여 첫번째 페이지 그룹에서의 '이전'버튼과 마지막 페이지 그룹에서의 '다음' 버튼 보이지 않게 함(비활성화)
+  
+##### 참고
     
 ```
 <script>
@@ -262,4 +303,4 @@
     });
 </script>
 ```
-콘솔 로그 찍으면서 pageNumber 확인
+- 콘솔 로그 찍으면서 pageNumber 확인
