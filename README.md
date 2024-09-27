@@ -67,9 +67,25 @@
 ### 페이징
 
 ![image](https://github.com/user-attachments/assets/4b24a95c-2639-424e-8606-e06a401b95bf)
-- 최대 10페이지가 보이게 만듦 (예시를 위해 게시글을 1개씩 보이게 했으나 실제로는 최대 10개함
+- 최대 10페이지가 보이게 만듦 (예시를 위해 게시글을 1개씩 보이게 했으나 실제로는 최대 10개가 보임)
+- '다음' 버튼은 아직 표시되지 않은 다음 페이지 그룹이 있을 때만 보임(활성화)
+- '이전' 버튼은 이전 페이지 그룹이 10 이상일 때만 보임(활성화)
 
-  
+![image](https://github.com/user-attachments/assets/6d3a7409-318c-4729-bdda-cb5dcf454762)
+- '다음' 버튼을 클릭면 11페이지로 이동함
+
+![image](https://github.com/user-attachments/assets/9efb2499-5096-49c8-b834-713e478207e9)
+- 11페이지에서 '다음' 버튼을클릭하면 21페이지로 이동함
+- 표시되지 않은 다음 페이지 그룹이 없으므로 '다음' 버튼이 보이지 않음
+
+![image](https://github.com/user-attachments/assets/48a40b93-10a2-4e4e-a19c-e269aa9172e4)
+- 21페이지에서 '이전' 버튼 클릭하면 11페이지로 20페이지로 이동
+![image](https://github.com/user-attachments/assets/49802d70-c6ad-41f7-8747-7151d0d3fa27)
+- 20페이지에서 '이전' 보튼 클릭하면 10페이지로 이동
+- 표시되지 않은 이전 페이지 그룹이 없으므로 '이전' 버튼이 보이지 않음
+
+
+****
 ### 문제상황
 
 1. nickname 컬럼명이 겹치면 안됨
