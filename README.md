@@ -78,8 +78,9 @@
 - 11페이지에서 '다음' 버튼을클릭하면 21페이지로 이동함
 - 표시되지 않은 다음 페이지 그룹이 없으므로 '다음' 버튼이 보이지 않음
 
-![image](https://github.com/user-attachments/assets/48a40b93-10a2-4e4e-a19c-e269aa9172e4)
-- 21페이지에서 '이전' 버튼 클릭하면 11페이지로 20페이지로 이동
+![image](https://github.com/user-attachments/assets/2a154142-17b9-45b0-8f74-43c54f345c9c)
+- 24페이지에서 '이전' 버튼 클릭하면 20페이지로 이동
+
 ![image](https://github.com/user-attachments/assets/49802d70-c6ad-41f7-8747-7151d0d3fa27)
 - 20페이지에서 '이전' 보튼 클릭하면 10페이지로 이동
 - 표시되지 않은 이전 페이지 그룹이 없으므로 '이전' 버튼이 보이지 않음
@@ -212,8 +213,53 @@
 - oauth.html에 위 코드 주석 해제
 ![image](https://github.com/user-attachments/assets/933bd86b-91f0-4772-a93f-6dd8e84564c4)
 
+
 - 일반 로그인을 하면 글 목록이 보이나 글 등록, 수정,삭제를 할 수 없음
 
 - 결론: 일반 로그인도 액세스 토큰, 리프레시 토큰을 발급하게 만들고 싶음(실패)
+****
 
-  ### 해결상황
+### 해결상황
+
+#### 페이징 넘버
+1. 
+ - Spring Data JPA에서 PageRequest.of(page, size) 메서드를 통해 페이지 요청을 생성할 때, 첫 번째 페이지를 0으로 처리합니다.
+ -  이는 내부적으로 처리할 때 효율적이고 직관적입니다. 즉, PageRequest.of(0, 10)이라고 하면 0번째 페이지에서 10개의 데이터를 요청하는 의미입니다.
+ -  
+2.  첫번쨰 페이지 그룹에서의 '이전'버튼과 마지막 페이지 그룹에서의 '다음' 버튼은 비활성화뿐만 아니라 안보이게 만들고 싶다.
+    - 'disabled'이 아닌 'd-none'
+
+    ![image](https://github.com/user-attachments/assets/d015773f-2f82-412d-a015-e28dd9d6087b)
+    ```
+            <!-- 이전 그룹 버튼 -->
+            <li class="page-item" th:classappend="${page.number >= 10} ? '' : 'disabled'">
+                <a class="page-link" th:href="@{/articles(page=${(page.number/10)*10 }, size=${page.size})}" tabindex="-1">이전</a>
+            </li>      ...
+    ```
+    - 'disabled' 이면 첫번쨰 그룹 페이지에서도 '이전' 버튼이 비활성화된 상태이나 보임
+    ![image](https://github.com/user-attachments/assets/da68b106-898a-4851-9915-fba7b8dafe53)
+    ```
+            <!-- 이전 그룹 버튼 -->
+            <li class="page-item" th:classappend="${page.number >= 10} ? '' : 'd-none'">
+                <a class="page-link" th:href="@{/articles(page=${(page.number/10)*10 }, size=${page.size})}" tabindex="-1">이전</a>
+            </li>      ...
+    ```
+    - 'd-none' 이면 첫번쨰 그룹 페이지에서 '이전' 버튼이 보이지 않음
+
+    
+```
+<script>
+    // 페이지 번호를 로그에 출력
+    document.addEventListener('DOMContentLoaded', function () {
+        // Thymeleaf 변수를 JavaScript로 전달
+        var currentPage = [[${page.number}]]; // 0-based 페이지 번호
+        var totalPages = [[${page.totalPages}]];
+
+        // 콘솔에 출력
+        console.log("Current page number: " + currentPage);
+        console.log("Total number of pages: " + totalPages);
+
+    });
+</script>
+```
+콘솔 로그 찍으면서 pageNumber 확인
