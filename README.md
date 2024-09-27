@@ -222,7 +222,12 @@
 ### 해결상황
 
 #### 페이징 넘버
+![image](https://github.com/user-attachments/assets/ad1686d7-3353-49cc-837b-fcf1aa07f9b3)
+- 2페이지를 클릭해도 http://localhost:8080/articles?page=1으로 로딩됨
+![image](https://github.com/user-attachments/assets/561057d1-7d0d-4187-8145-06f8a40fe5e4)
+- 1페이지를 클릭하면 에러 발생
 
+  
 - 초기 articleList.html 일부 코드
    ```
    <ul class="pagination justify-content-center">
