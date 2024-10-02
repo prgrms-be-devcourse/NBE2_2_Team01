@@ -1,0 +1,158 @@
+
+// 삭제 기능
+const deleteButton = document.getElementById('delete-btn');
+
+if (deleteButton) {
+    deleteButton.addEventListener('click', event => {
+        let id = document.getElementById('article-id').value;
+
+        function success() {
+            alert('삭제가 완료되었습니다.');
+            location.replace('/articles');
+        }
+
+        function fail(response) {
+            response.text().then(text => {
+                alert('삭제에 실패했습니다');
+                location.replace('/articles');
+            });
+        }
+
+        httpRequest('DELETE', `/api/articles/${id}`, null, success, fail);
+    });
+}
+
+// 수정 기능
+const modifyButton = document.getElementById('modify-btn');
+
+if (modifyButton) {
+    modifyButton.addEventListener('click', event => {
+        let params = new URLSearchParams(location.search);
+        let id = params.get('id');
+
+        const body = new FormData();
+
+        body.append('request', JSON.stringify({
+            title: document.getElementById('title').value,
+            content: editorInstance.getData()  // CKEditor의 내용을 가져옴
+        }));
+
+        const fileInput = document.getElementById('file-input'); // 파일 input 요소
+        if (fileInput && fileInput.files.length > 0) {
+            for (let i = 0; i < fileInput.files.length; i++) {
+                body.append('files', fileInput.files[i]); // 파일 추가
+            }
+        }
+
+        function success() {
+            alert('수정 완료되었습니다.');
+            location.replace(`/articles/${id}`);
+        }
+
+        function fail(response) {
+            response.text().then(text => {
+                alert('수정 실패했습니다.' );
+                // console.log(text)
+                location.replace(`/articles/${id}`);
+            });
+        }
+
+        httpRequest('PUT', `/api/articles/${id}`, body, success, fail);
+    });
+}
+
+
+// 등록 기능
+const createButton = document.getElementById('create-btn');
+
+if (createButton) {
+    createButton.addEventListener('click', event => {
+        const body = new FormData();
+        // CKEditor 5에서 데이터 가져오기 (index.js에서 초기화된 전역 변수 사용)
+
+        body.append('request', JSON.stringify({
+            title: document.getElementById('title').value,
+            content: editorInstance.getData()   // CKEditor5에서 데이터 가져오기
+
+        }));
+
+        const fileInput = document.getElementById('file-input'); // 파일 input 요소
+        if (fileInput && fileInput.files.length > 0) {
+            for (let i = 0; i < fileInput.files.length; i++) {
+                body.append('files', fileInput.files[i]); // 파일 추가
+            }
+        }
+
+        function success() {
+            alert('등록 완료되었습니다.');
+            location.replace('/articles');
+        }
+
+        function fail(response) {
+            response.text().then(text => {
+                alert('등록 실패했습니다. ');
+                location.replace('/articles');
+            });
+        }
+
+        httpRequest('POST', '/api/articles', body, success, fail);
+    });
+}
+
+
+// 쿠키를 가져오는 함수
+function getCookie(key) {
+    var result = null;
+    var cookie = document.cookie.split(';');
+    cookie.some(function (item) {
+        item = item.replace(' ', '');
+        var dic = item.split('=');
+        if (key === dic[0]) {
+            result = dic[1];
+            return true;
+        }
+    });
+    return result;
+}
+
+// HTTP 요청을 보내는 함수
+let retryCount = 0;  // 재시도 횟수 제한
+
+function httpRequest(method, url, body, success, fail) {
+    const headers = {
+        Authorization: 'Bearer ' + localStorage.getItem('access_token'),
+        // Content-Type 설정하지 않음, FormData 사용 시 브라우저가 자동으로 설정함
+    };
+
+    fetch(url, {
+        method: method,
+        headers: headers,  // Content-Type 설정하지 않음
+        body: body, // FormData 객체 전달
+    }).then(response => {
+        if (response.ok) {
+            return success();
+        }
+        const refresh_token = getCookie('refresh_token');
+        if (response.status === 401 && refresh_token && retryCount < 3) {
+            retryCount++;
+            fetch('/api/token', {
+                method: 'POST',
+                headers: {
+                    Authorization: 'Bearer ' + localStorage.getItem('access_token'),
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    refreshToken: getCookie('refresh_token'),
+                }),
+            })
+                .then(res => res.ok ? res.json() : Promise.reject())
+                .then(result => {
+                    localStorage.setItem('access_token', result.accessToken);
+                    httpRequest(method, url, body, success, fail); // 토큰 갱신 후 다시 요청
+                })
+                .catch(() => fail(response));
+        } else {
+            return fail(response);
+        }
+    }).catch(error => fail(error));
+}
