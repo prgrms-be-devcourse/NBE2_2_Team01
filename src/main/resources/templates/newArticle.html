@@ -1,34 +1,80 @@
+
 <!DOCTYPE html>
+
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>블로그 글</title>
+    <title>게시판 글</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <!-- CKEditor CDN -->
+    <script src="https://cdn.ckeditor.com/ckeditor5/35.0.1/classic/ckeditor.js"></script>
+<!--    <script src="ckeditor/ckeditor5.js"></script>-->
+
+
 </head>
 <body>
 <div class="p-5 mb-5 text-center</> bg-light">
-    <h1 class="mb-3">My Blog</h1>
-    <h4 class="mb-3">블로그에 오신 것을 환영합니다.</h4>
+    <h1 class="mb-3">경로당</h1>
+    <h4 class="mb-3">경로당에 오신 것을 환영합니다.</h4>
 </div>
 
 <div class="container mt-5">
-    <div class="row">
-        <div class="col-lg-8">
-            <article>
-                <input type="hidden" id="article-id" th:value="${article.id}">
 
-                <header class="mb-4">
-                    <input type="text" class="form-control" placeholder="제목" id="title" th:value="${article.title}">
-                </header>
-                <section class="mb-5">
-                    <textarea class="form-control h-25" rows="10" placeholder="내용" id="content" th:text="${article.content}"></textarea>
-                </section>
-                <button th:if="${article.id} != null" type="button" id="modify-btn" class="btn btn-primary btn-sm">수정</button>
-                <button th:if="${article.id} == null" type="button" id="create-btn" class="btn btn-primary btn-sm">등록</button>
-            </article>
+    <div class="row">
+
+        <div class="col-lg-8">
+            <div class="mb-4" style="text-align: right;"> <!-- 상단에 간격을 추가 -->
+                <button type="button" id="return-btn"
+                        th:onclick="|location.href='@{/articles}'|"
+                        class="btn btn-return btn-sm">목록으로 돌아가기</button>
+            </div>
+
+                <article>
+                    <input type="hidden" id="article-id" th:value="${article.id}">
+
+                    <header class="mb-4">
+                        <input type="text" class="form-control" placeholder="제목" id="title" th:value="${article.title}">
+                    </header>
+                    <section class="mb-5">
+                        <textarea class="form-control h-25" rows="10" placeholder="내용" id="content" th:text="${article.content}"></textarea>
+
+                    </section>
+
+                    <button th:if="${article.id} != null" type="button" id="modify-btn" class="btn btn-primary btn-sm">수정</button>
+                    <button th:if="${article.id} == null" type="button" id="create-btn" class="btn btn-primary btn-sm">등록</button>
+                </article>
+
+
         </div>
     </div>
 </div>
 
+
+ <script>
+    //import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+
+     let editorInstance;
+
+    ClassicEditor
+        .create(document.querySelector('#content'), {
+            language: 'ko' ,//언어설정
+            ckfinder: {
+
+                uploadUrl: '/api/upload?articleId=' + document.querySelector('#article-id').value // articleId 추가
+            }
+        })
+        .then(editor => {
+            editorInstance = editor;  // 에디터 인스턴스를 전역 변수에 저장
+            console.log('CKEditor가 초기화되었습니다.');
+            let sHTML = editorInstance.getData();
+            console.log(sHTML);
+        })
+        .catch(error => {
+
+            console.error('CKEditor 초기화 오류:', error);
+        });
+
+ </script>
+<!--<script src="/dist/bundle.js"></script> &lt;!&ndash; Webpack이 생성한 번들 파일을 HTML에 추가 &ndash;&gt;-->
 <script src="/js/article.js"></script>
 </body>

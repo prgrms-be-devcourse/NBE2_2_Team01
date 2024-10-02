@@ -43,10 +43,12 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     }
 }
 //코드 흐름
-//요청이 들어오면 Authorization 헤더에서 JWT 토큰을 추출합니다.
-//Bearer 접두사를 제거한 후 토큰이 유효한지 검증합니다.
-//토큰이 유효하면 해당 토큰을 사용해 인증 정보를 추출하고 Spring Security의 SecurityContext에 설정합니다.
-//이후 필터 체인의 나머지 부분을 처리합니다.
+//클라이언트가 요청을 보낼 때 Authorization 헤더에 JWT 토큰을 포함하여 전송한다.
+//TokenAuthenticationFilter는 요청을 가로채 Authorization 헤더에서 JWT 토큰을 추출한다.
+//Bearer 접두사를 제거한 후 토큰이 유효한지 검증한다.
+//토큰이 유효하면 해당 토큰을 사용해 인증 정보를 추출하고 Spring Security의 SecurityContext에 설정한다.
+//이후 필터 체인의 나머지 부분을 처리한다.
 //핵심 포인트
-//JWT 토큰 처리: Authorization 헤더에서 토큰을 가져와 검증한 후, 인증 정보를 설정하는 과정입니다.
-//Spring Security와의 통합: 인증이 완료된 후 SecurityContextHolder에 인증 정보를 설정하여 Spring Security가 이를 바탕으로 인증된 사용자로 간주하게 만듭니다.
+//JWT 토큰 처리: Authorization 헤더에서 토큰을 가져와 검증한 후, 인증 정보를 설정하는 과정
+//Spring Security와의 통합: 인증이 완료된 후 SecurityContextHolder에 인증 정보를 설정하여 Spring Security가 이를 바탕으로 인증된 사용자로 간주하게 만든다.
+

@@ -6,9 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import me.seunghui.springbootdeveloper.dto.AddUserRequest;
 import me.seunghui.springbootdeveloper.service.UserService;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,25 +16,33 @@ import org.springframework.web.bind.annotation.PostMapping;
 @RequiredArgsConstructor
 @Log4j2
 public class UserApiController {
-    private final UserService userService;
+    private final UserService userService;  // 사용자 서비스 클래스 (회원가입, 로그아웃 처리)
 
-    @PostMapping("/user") //회원가입
+    // 회원가입 요청 처리 메서드
+    @PostMapping("/user") // HTTP POST 요청으로 회원가입 처리
     public String signup(AddUserRequest request){
-        userService.save(request); //회원가입 메서드 호출
-        return "redirect:/login"; //회원 가입이 완료된 이후에 로그인 페이지로 이동
+        userService.save(request); // UserService를 통해 회원가입 로직 수행
+        return "redirect:/login"; // 회원가입이 완료되면 로그인 페이지로 리다이렉트
     }
 
-    @GetMapping("/logout")
+    // 로그아웃 요청 처리 메서드
+    @GetMapping("/logout") // HTTP GET 요청으로 로그아웃 처리
     public String logout(HttpServletRequest request, HttpServletResponse response){
-        log.info("로그아웃 요청 수신");
+        log.info("로그아웃 요청 수신");  // 로그아웃 요청이 들어왔음을 로깅
+
+        // SecurityContextHolder를 통해 현재 로그인한 사용자의 이메일을 가져옴
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         log.info("로그아웃 이메일: " + email);
 
+        // UserService를 통해 해당 사용자의 닉네임을 null로 설정
         userService.setNicknameNullByEmail(email);
         log.info("닉네임 null로 설정 완료");
 
+        // Spring Security의 로그아웃 처리 메서드 호출 (현재 사용자의 세션 및 인증 정보 삭제)
         new SecurityContextLogoutHandler().logout(request, response,
                 SecurityContextHolder.getContext().getAuthentication());
+
+        // 로그아웃 완료 후 로그인 페이지로 리다이렉트
         return "redirect:/login";
     }
 }

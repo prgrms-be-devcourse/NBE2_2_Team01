@@ -35,63 +35,55 @@ public class WebOAuthSecurityConfig {
     @Bean
     public WebSecurityCustomizer configure() { //스프링 시큐리티 기능 비활성화
         return (web) -> web.ignoring()
-                .requestMatchers(toH2Console()) //H2 콘솔에 대한 요청 경로
                 .requestMatchers("/img/**", "/css/**", "/js/**"); //정적 자원에 대한 경로를 보안 검사에서 제외
     }
 
+    // 메인 보안 설정 메서드
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        //토큰 방식으로 인증을 하기 떄문에 기준에 사용하던 폼로그인, 세션 비활성화
-        http.csrf(csrf -> csrf.disable()) //CSRF 보호 기능을 비활성화한다. 이 애플리케이션은 주로 API와 토큰 방식의 인증을 사용하므로 필요 없다.
-                .httpBasic(httpBasic -> httpBasic.disable()) //기본 HTTP 인증을 비활성화한다. 토큰 인증 방식을 사용하기 때문에 HTTP Basic 인증은 필요 없다.
-                .formLogin(formLogin -> formLogin.disable())
-                .logout(logout -> logout.disable()); //기본적인 로그인 폼과 로그아웃 기능을 비활성화한다. 자체적으로 OAuth2 및 JWT 인증을 사용한다.
+        // CSRF 보호 및 HTTP 기본 인증을 비활성화
+        http.csrf(csrf -> csrf.disable())  // CSRF 보호 비활성화 (API에서 주로 사용)
+                .httpBasic(httpBasic -> httpBasic.disable())  // 기본 HTTP 인증 비활성화
+                .formLogin(formLogin -> formLogin.disable())  // 기본 폼 로그인 비활성화
+                .logout(logout -> logout.disable());  // 기본 로그아웃 비활성화
 
-        // 세션 관리 비활성화
-        //세션을 사용하지 않는 무상태 인증 방식을 설정한다. API 인증에서는 서버에 세션을 저장하지 않고 클라이언트에서 JWT 토큰을 통해 인증을 관리한다.
+        // 세션을 사용하지 않는 방식으로 설정 (무상태)
         http.sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-        //헤더를 확인할 커스텀 필터 추가
-        //TokenAuthenticationFilter를 Spring Security의 기본 UsernamePasswordAuthenticationFilter 앞에 추가하여,
-        // JWT 토큰을 헤더에서 읽고 인증하는 커스텀 필터를 사용한다.
+        // JWT 토큰을 처리하는 커스텀 필터를 추가 (UsernamePasswordAuthenticationFilter 앞에 배치)
         http.addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
-        //토큰 재발급 URL은 인증 없이 접근 가능하도록 설정. 나머지 API URL은 인증 필요
+        // API 토큰 발급 경로와 파일 업로드 경로는 인증 없이 접근 가능
         http.authorizeRequests()
-                .requestMatchers("/api/token").permitAll() // /api/token 경로는 인증 없이 접근할 수 있도록 설정
-                .requestMatchers("/api/**").authenticated() // /api/** 경로는 인증이 필요하도록 설정
-                .anyRequest().permitAll(); //그 외의 경로는 모두 접근 가능
+                .requestMatchers("/api/token", "/api/upload").permitAll() // 인증 필요 없음
+                .requestMatchers("/api/**").authenticated()  // API 요청은 인증이 필요
+                .anyRequest().permitAll();  // 그 외 모든 요청은 인증 필요 없음
 
-        // OAuth2 로그인 설정
-        //OAuth2 로그인을 지원하며, 성공 시 커스텀 성공 핸들러(oAuth2SuccessHandler())가 실행된다.
+        // OAuth2 로그인 설정: 로그인 성공 후 사용자 정보를 커스텀 핸들러로 처리
         http.oauth2Login(oauth2 -> oauth2
-                .loginPage("/login")
+                .loginPage("/login")  // OAuth2 로그인 페이지 설정
                 .authorizationEndpoint(authorization -> authorization
-                        .authorizationRequestRepository(oAuth2AuthorizationRequestBasedOnCookieRepository()))
-                .successHandler(oAuth2SuccessHandler())
+                        .authorizationRequestRepository(oAuth2AuthorizationRequestBasedOnCookieRepository()))  // OAuth2 요청을 쿠키에 저장
+                .successHandler(oAuth2SuccessHandler())  // 로그인 성공 후 토큰 발급 처리
                 .userInfoEndpoint(userInfo -> userInfo
-                        .userService(oauth2UserCustomService)));
+                        .userService(oauth2UserCustomService)));  // 사용자 정보 서비스 설정
 
-        // 로그아웃 설정
-        //로그아웃 후 /login으로 리다이렉트된다.
-//        http.logout(logout -> logout
-//                .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
-//                .logoutSuccessUrl("/login"));
+        // 로그아웃 설정: 커스텀 로그아웃 핸들러 사용
         http.logout(logout -> logout
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
-                .addLogoutHandler(new CustomLogoutHandler(oAuth2AuthorizationRequestBasedOnCookieRepository()))
-                .logoutSuccessUrl("/login"));
+                .addLogoutHandler(new CustomLogoutHandler(oAuth2AuthorizationRequestBasedOnCookieRepository()))  // 커스텀 로그아웃 핸들러 추가
+                .logoutSuccessUrl("/login"));  // 로그아웃 후 로그인 페이지로 리다이렉트
 
-
-        // 예외 처리: /api/** 경로에 대해 401 상태 코드 반환
-        ///api/** 경로로 접근할 때 인증이 되지 않으면 401 UNAUTHORIZED 상태 코드를 반환한다.
+        // 예외 처리: 인증되지 않은 API 요청에 대해 401 에러 반환
         http.exceptionHandling(exceptions -> exceptions
                 .defaultAuthenticationEntryPointFor(
                         new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED),
-                        new AntPathRequestMatcher("/api/**")));
-        return http.build();
+                        new AntPathRequestMatcher("/api/**")));  // 인증되지 않은 API 요청에 대해 401 응답
+
+        return http.build();  // 설정 완료 후 SecurityFilterChain 반환
     }
+
     // OAuth2 인증 성공 후 토큰을 발급하는 커스텀 핸들러
     @Bean
     public OAuth2SuccessHandler oAuth2SuccessHandler(){
@@ -105,7 +97,7 @@ public class WebOAuthSecurityConfig {
         return new TokenAuthenticationFilter(tokenProvider);
     }
 
-    //
+    // OAuth2 인증 요청을 쿠키에 기반하여 저장하고 관리하는 리포지토리
     @Bean
     public OAuth2AuthorizationRequestBasedOnCookieRepository oAuth2AuthorizationRequestBasedOnCookieRepository(){
         return new OAuth2AuthorizationRequestBasedOnCookieRepository();
@@ -122,3 +114,4 @@ public class WebOAuthSecurityConfig {
 //이 코드는 Spring Security 6.1을 기반으로 OAuth2 로그인과 JWT 토큰 인증을 지원하는 보안 설정을 구현합니다.
 // 세션을 사용하지 않고 무상태(stateless) 방식으로 동작하며, 특정 API 엔드포인트는 인증 없이 접근할 수 있도록 설정하고,
 // OAuth2 로그인 성공 시 사용자 정보를 저장하거나 업데이트하는 처리를 담당합니다.
+

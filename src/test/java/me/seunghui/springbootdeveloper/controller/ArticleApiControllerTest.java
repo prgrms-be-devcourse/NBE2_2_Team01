@@ -1,7 +1,7 @@
 package me.seunghui.springbootdeveloper.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import me.seunghui.springbootdeveloper.Repository.BlogRepository;
+import me.seunghui.springbootdeveloper.Repository.ArticleRepository;
 import me.seunghui.springbootdeveloper.Repository.UserRepository;
 import me.seunghui.springbootdeveloper.domain.Article;
 import me.seunghui.springbootdeveloper.domain.User;
@@ -38,7 +38,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class BlogApiControllerTest {
+class ArticleApiControllerTest {
     // HTTP 요청을 시뮬레이션하기 위한 클래스
     // 실제 웹 서버를 실행하지 않고도 컨트롤러의 기능을 테스트할 수 있게 해줍니다.
     @Autowired
@@ -55,7 +55,7 @@ class BlogApiControllerTest {
     private WebApplicationContext context;
 
     @Autowired
-    BlogRepository blogRepository;
+    ArticleRepository articleRepository;
     
     @Autowired
     UserRepository userRepository;
@@ -68,7 +68,7 @@ class BlogApiControllerTest {
     @BeforeEach
     public void mockMvcSetup(){
         this.mockMvc= MockMvcBuilders.webAppContextSetup(context).build();
-        blogRepository.deleteAll();
+        articleRepository.deleteAll();
     }
     
     @BeforeEach
@@ -110,7 +110,7 @@ class BlogApiControllerTest {
         result.andExpect(status().isCreated());
 
         //데이터베이스에서 모든 아티클 글을 조회
-        List<Article> articles=blogRepository.findAll();
+        List<Article> articles= articleRepository.findAll();
 
         assertThat(articles.size()).isEqualTo(1);
         assertThat(articles.get(0).getTitle()).isEqualTo(title);
@@ -157,7 +157,7 @@ class BlogApiControllerTest {
         mockMvc.perform(delete(url,savedArticle.getId()))
                 .andExpect(status().isOk());
 
-        List<Article> articles=blogRepository.findAll();
+        List<Article> articles= articleRepository.findAll();
 
         assertThat(articles).isEmpty();
     }
@@ -179,7 +179,7 @@ class BlogApiControllerTest {
 
         result.andExpect(status().isOk());
 
-        Article article=blogRepository.findById(savedArticle.getId()).get();
+        Article article= articleRepository.findById(savedArticle.getId()).get();
 
         assertThat(article.getTitle()).isEqualTo(newTitle);
         assertThat(article.getContent()).isEqualTo(newContent);
@@ -187,7 +187,7 @@ class BlogApiControllerTest {
     }
 
     private Article createDefaultArticle() {
-        return blogRepository.save(Article.builder()
+        return articleRepository.save(Article.builder()
                 .title("title")
                 .author(user.getUsername())
                 .content("content")

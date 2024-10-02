@@ -13,41 +13,43 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Log4j2
 public class UserService {
-    private final UserRepository userRepository;
-    // 사용자 비밀번호를 안전하게 저장하기 위해 BCrypt 해싱 알고리즘을 사용함
+    private final UserRepository userRepository; // 사용자 정보를 처리하는 레포지토리
 
-    public Long save(AddUserRequest dto){
+    // 사용자 저장 메서드 (회원가입)
+    public Long save(AddUserRequest dto) {
+        // 비밀번호를 안전하게 저장하기 위해 BCrypt 해싱 알고리즘 사용
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
+        // DTO에서 이메일과 비밀번호를 추출하여, 비밀번호를 암호화 후 User 객체 생성
         return userRepository.save(User.builder()
                 .email(dto.getEmail())
-                .password(encoder.encode(dto.getPassword()))
-                .build()).getId(); //dto.getPassword()로부터 비밀번호를 가져와 bCryptPasswordEncoder로 암호화하여 User 객체에 설정
-        //저장된 User 객체에서 ID를 추출하여 반환합니다. 이 ID는 새로 생성된 사용자 레코드의 고유 식별자임
+                .password(encoder.encode(dto.getPassword())) // 비밀번호를 해시 처리
+                .build()).getId(); // 저장된 사용자 레코드의 ID 반환
     }
-    //AddUserRequest는 사용자가 가입할 때 필요한 정보를 담고 있는 DTO(Data Transfer Object)
-    // DTO에서 이메일과 비밀번호를 추출하여 사용자 객체를 생성함
 
-    public User findById(Long userId){
+    // ID로 사용자 조회
+    public User findById(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Unexpected user"));
     }
 
-    public User findByEmail(String email){
+    // 이메일로 사용자 조회
+    public User findByEmail(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("No user found with email: " + email));
     }
 
-
-    @Transactional
+    // 특정 사용자의 닉네임을 null로 설정하는 메서드 (이메일로 사용자 조회)
+    @Transactional // 데이터 변경 시 트랜잭션을 보장함
     public void setNicknameNullByEmail(String email) {
         log.info("닉네임을 null로 변경할 이메일: " + email);
         userRepository.findByEmail(email).ifPresent(user -> {
+            // 닉네임을 null로 변경 후 저장
             user.update(null);
             userRepository.save(user);
             log.info("닉네임이 null로 변경됨: " + user);
         });
     }
-
 }
 //전체 동작 흐름
 //사용자 가입 요청이 들어오면, AddUserRequest DTO를 통해 사용자 정보가 전달됩니다.
