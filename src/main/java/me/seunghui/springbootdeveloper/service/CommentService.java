@@ -1,13 +1,16 @@
 package me.seunghui.springbootdeveloper.service;
 
+import io.jsonwebtoken.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import me.seunghui.springbootdeveloper.Repository.ArticleRepository;
 import me.seunghui.springbootdeveloper.Repository.CommentRepository;
 import me.seunghui.springbootdeveloper.domain.Article;
 import me.seunghui.springbootdeveloper.domain.Comment;
-import me.seunghui.springbootdeveloper.dto.AddCommentRequest;
-import me.seunghui.springbootdeveloper.dto.CommentResponse;
+import me.seunghui.springbootdeveloper.dto.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,15 +40,27 @@ public class CommentService {
         return savedComment;
     }
 
+    //2. 게시글에 달린 댓글 목록 조회(페이징)
+    public Page<CommentListViewReponse> getComments(Long articleId, CommentPageRequestDTO commentPageRequestDTO) {
+        try{
+            Sort sort= Sort.by("commentId").descending(); //pno(상품 번호)를 기준으로 내림차순(descending())으로 정렬- 최신 상품이 상위에 표시
+            Pageable pageable=commentPageRequestDTO.getPageable(sort); //PageRequestDTO 객체를 사용하여 페이징 정보를 생성
+            return  commentRepository.list(commentPageRequestDTO.getId(),pageable); //Pageable 객체를 인자로 받아서 상품 목록을 페이지 단위로 반환
+        }catch (Exception e){
+            log.error("--- "+e.getMessage());
+            throw new RuntimeException("Review NOT Fetched", e);
+        }
+    }
     //2. 게시글에 달린 댓글 목록 조회
     public List<CommentResponse> getComments(Long articleId) {
-       // log.info("Fetching comments for articleId: {}", articleId);
+        // log.info("Fetching comments for articleId: {}", articleId);
         List<Comment> comments = commentRepository.findByArticleId(articleId);
         //log.info("Found {} comments for articleId {}", comments.size(), articleId);
         return comments.stream()
                 .map(CommentResponse::new)
                 .collect(Collectors.toList());
     }
+
 
     //2. 게시글에 맞는 한개 댓글과 대댓글 조회
     public List<CommentResponse> getReComments(Long articleId,Long commentId) {

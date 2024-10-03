@@ -1,9 +1,25 @@
+//목록으로 돌아가기
+const returnButton = document.getElementById('article-return-btn');
+if (returnButton) {
+    returnButton.addEventListener('click', event => {
+        // 사용자에게 경고창을 띄우고, '확인'을 누르면 목록으로 이동
+        const userConfirmed = confirm('게시글 목록으로 돌아가시겠습니까? 작성하고 있는 글이 저장되지 않습니다.');
+        if (userConfirmed) {
+            // '확인'을 누르면 목록 페이지로 이동
+            location.replace('/articles');
+        } else {
+            // '취소'를 누르면 아무 동작도 하지 않음
+            event.preventDefault();
+        }
+    });
+}
 
 // 삭제 기능
 const deleteButton = document.getElementById('delete-btn');
 
 if (deleteButton) {
     deleteButton.addEventListener('click', event => {
+        const userConfirmed = confirm('삭제하시겠습니까?');
         let id = document.getElementById('article-id').value;
 
         function success() {
@@ -18,7 +34,12 @@ if (deleteButton) {
             });
         }
 
-        httpRequest('DELETE', `/api/articles/${id}`, null, success, fail);
+        if (userConfirmed) {
+            httpRequest('DELETE', `/api/articles/${id}`, null, success, fail);
+        } else {
+            event.preventDefault();
+        }
+
     });
 }
 
@@ -156,3 +177,29 @@ function httpRequest(method, url, body, success, fail) {
         }
     }).catch(error => fail(error));
 }
+
+// document.addEventListener("DOMContentLoaded", function() {
+//     const token = localStorage.getItem("access_token");
+//     if (token) {
+//         fetch("/articles", {
+//             method: "GET",
+//             headers: {
+//                 "Authorization": "Bearer " + token
+//             }
+//         })
+//             .then(response => {
+//                 if (!response.ok) {
+//                     // Handle error
+//                     console.error("Error fetching articles");
+//                 } else {
+//                     return response.text();
+//                 }
+//             })
+//             .then(html => {
+//                 document.documentElement.innerHTML = html;
+//             })
+//             .catch(error => console.error("Error:", error));
+//     } else {
+//         console.log("No JWT token found in localStorage");
+//     }
+// });

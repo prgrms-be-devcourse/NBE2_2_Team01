@@ -28,6 +28,7 @@ public class PageRequestDTO {
     @Max(10)
     private int size=10; //한 페이지 게시물 수
 
+
     //페이지번호, 페이지 게시물 수 , 정렬 순서를 Pageble 객체로 반환
     public Pageable getPageable(Sort sort) {
         int pageNum=page<0?1:page-1;

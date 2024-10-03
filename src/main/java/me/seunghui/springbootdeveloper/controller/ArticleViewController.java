@@ -3,10 +3,10 @@ package me.seunghui.springbootdeveloper.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import me.seunghui.springbootdeveloper.domain.Article;
-import me.seunghui.springbootdeveloper.dto.ArticleListViewResponse;
-import me.seunghui.springbootdeveloper.dto.ArticleViewResponse;
-import me.seunghui.springbootdeveloper.dto.PageRequestDTO;
+import me.seunghui.springbootdeveloper.domain.Comment;
+import me.seunghui.springbootdeveloper.dto.*;
 import me.seunghui.springbootdeveloper.service.ArticleService;
+import me.seunghui.springbootdeveloper.service.CommentService;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -22,14 +22,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Log4j2
 public class ArticleViewController {
     private final ArticleService articleService;  // 게시글 관련 서비스
-
+    private final CommentService commentService;
     // 게시글 목록을 페이지 네이션과 함께 가져오기
     @GetMapping("/articles")  // "/articles" 경로로 GET 요청을 처리
     public String getArticles(@ModelAttribute PageRequestDTO pageRequestDTO, Model model) {
 
         // 페이지 요청 정보에 맞는 게시글 리스트 가져오기 (페이지네이션 적용)
         Page<ArticleListViewResponse> articleListPage = articleService.getList(pageRequestDTO);
-
         // 현재 페이지의 게시글 목록을 모델에 추가
         model.addAttribute("articles", articleListPage.getContent());
 
@@ -42,13 +41,15 @@ public class ArticleViewController {
 
     // 특정 게시글을 가져와서 보여줌
     @GetMapping("/articles/{id}")  // "/articles/{id}" 경로로 GET 요청을 처리
-    public String getArticle(@PathVariable Long id, Model model) {
+    public String getArticle(@PathVariable Long id, @ModelAttribute CommentPageRequestDTO commentPageRequestDTO, Model model) {
         // ID에 해당하는 게시글 찾기
         Article article = articleService.findById(id);
+        Page<CommentListViewReponse> commentListPage = commentService.getComments(id,commentPageRequestDTO);
+
 
         // 현재 사용자 정보 가져오기 (로그인한 사용자의 이름 또는 이메일)
-        String currentUserName = SecurityContextHolder.getContext().getAuthentication().getName();
-
+        String currentUserName =  SecurityContextHolder.getContext().getAuthentication().getName();
+        log.info("Authentication: {}",  SecurityContextHolder.getContext().getAuthentication());
         // 현재 사용자가 게시글의 작성자인지 확인
         boolean isOwner = article.getAuthor().equals(currentUserName);
         log.info("currentUserName: {}", currentUserName);
@@ -56,6 +57,10 @@ public class ArticleViewController {
 
         // 게시글 정보를 모델에 추가
         model.addAttribute("article", article);
+
+        model.addAttribute("user", currentUserName);
+        model.addAttribute("comments", commentListPage.getContent());
+        model.addAttribute("page", commentListPage);
 
         // article.html 템플릿으로 리턴 (게시글 상세 페이지)
         return "article";

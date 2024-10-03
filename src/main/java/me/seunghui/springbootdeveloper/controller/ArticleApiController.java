@@ -43,17 +43,13 @@ public class ArticleApiController {
    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE) // 서버가 항상 JSON 형식으로 응답하도록 명시적 설정
     public ResponseEntity<List<ArticleResponse>> findAllArticles() {
         String userName = SecurityContextHolder.getContext().getAuthentication().getName(); // 현재 사용자 이름 가져오기
-        //log.info("userName: {}", userName);
+        log.info("userName: {}", userName);
         // 데이터베이스에서 모든 게시글을 조회하여 ArticleResponse로 변환
 //        List<ArticleResponse> articles = articleService.findAll()
 //                .stream()
 //                .map(ArticleResponse::new) // Article 엔티티를 ArticleResponse DTO로 변환
 //                .toList();
         List<ArticleResponse> articles = articleService.getArticles();
-//        for (ArticleResponse article : articles) {
-//            log.info("Article Content: {}, Title: {}",
-//                    article.getContent(),article.getTitle());
-//        }
 
         return ResponseEntity.ok().body(articles); // 조회된 게시글 리스트를 반환
     }

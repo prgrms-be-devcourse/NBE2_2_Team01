@@ -4,96 +4,81 @@
     <meta charset="UTF-8">
     <title>블로그 글 목록</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
-    <style>
-        /*!* 배경 이미지 설정 *!*/
-        /*.header-section {*/
-        /*    background-image: url('https://storage.googleapis.com/static.smalljoys.me/2021/09/6630438_20210831093807_1630470918.png');*/
-        /*    background-size: 60%;  !* 이미지가 div 전체에 맞춰지도록 설정 *!*/
-        /*    background-position: top ;!* 이미지 가운데 정렬 *!*/
-        /*    background-repeat: no-repeat; !* 이미지 반복 방지 *!*/
-        /*    color: white; !* 텍스트 색상을 이미지 위에서 잘 보이도록 변경 *!*/
-        /*}*/
-    </style>
+    <link rel="stylesheet" href="/css/article.css">
+
 </head>
-<script>
-    // 페이지 번호를 로그에 출력
-    document.addEventListener('DOMContentLoaded', function () {
-        // Thymeleaf 변수를 JavaScript로 전달
-        var currentPage = [[${page.number}]]; // 0-based 페이지 번호
-        var totalPages = [[${page.totalPages}]];
 
-        // 콘솔에 출력
-        console.log("Current page number: " + currentPage);
-        console.log("Total number of pages: " + totalPages);
-
-    });
-
-
-</script>
 <body>
 
-<div class="p-5 mb-5 text-center</> bg-light  header-section">
-    <h1 class="mb-3">경로당</h1>
-    <h4 class="mb-3">경로당에 오신 것을 환영합니다.</h4>
-</div>
+<div class="wrapper">
+    <!-- 헤더 섹션 -->
+    <div class="p-5 mb-5 bg-light header-section">
+        <h1 class="mb-3">경로당</h1>
+        <h4 class="mb-3">경로당에 오신 것을 환영합니다.</h4>
 
-<div class="container">
-    <div style="text-align: right;">
-        <button type="button" id="create-btn"
-                th:onclick="|location.href='@{/new-article}'|"
-                class="btn btn-secondary btn-sm mb-3">글 등록</button>
-
+        <!-- 우측 상단에 로그아웃 버튼 -->
+        <button type="button" class="btn btn-secondary logout-btn" id="logout-btn">로그아웃</button>
     </div>
 
-    <div class="row-6" th:each="item : ${articles}">
-        <div class="card">
-            <div class="card-header" th:text="${item.id}">
+    <!-- 메인 컨텐츠 섹션 -->
+    <div class="content">
+        <div class="container">
+            <div style="text-align: right;">
+                <button type="button" id="create-btn"
+                        th:onclick="|location.href='@{/new-article}'|"
+                        class="btn btn-secondary btn-sm mb-3">글 등록</button>
             </div>
 
-            <div class="card-body d-flex justify-content-between align-items-center">
-                <h5 class="card-title" th:text="${item.title}"></h5>
-<!--                <p class="card-text" th:text="${item.content}"></p>-->
-                <a th:href="@{/articles/{id}(id=${item.id})}" class="btn btn-primary">보러가기</a>
+            <div class="row-6" th:each="item : ${articles}">
+                <div class="card">
+                    <div class="card-header" th:text="${item.id}"></div>
+                    <div class="card-body d-flex justify-content-between align-items-center">
+                        <h5 class="card-title" th:text="${item.title}"></h5>
+                        <a th:href="@{/articles/{id}(id=${item.id})}" class="btn btn-primary">보러가기</a>
+                    </div>
+                </div>
+                <br>
             </div>
+
+            <!-- 페이지네이션 -->
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    <!-- 이전 그룹 버튼 -->
+                    <li class="page-item" th:classappend="${page.number >= 10} ? '' : 'd-none'">
+                        <a class="page-link" th:href="@{/articles(page=${(page.number/10)*10 }, size=${page.size})}" tabindex="-1">&laquo;</a>
+                    </li>
+                    <!-- 이전 페이지 버튼 -->
+                    <li class="page-item" th:classappend="${page.hasPrevious()} ? '' : 'disabled'">
+                        <a class="page-link" th:href="@{/articles(page=${page.number}, size=${page.size})}" tabindex="-1">&lt;</a>
+                    </li>
+
+                    <!-- 페이지 번호 반복 -->
+                    <li class="page-item" th:each="i : ${#numbers.sequence((page.number/10)*10, ((page.number/10)*10 + 9) < page.totalPages ? (page.number/10)*10 + 9 : page.totalPages - 1)}"
+                        th:classappend="${page.number == i} ? 'active' : ''">
+                        <a class="page-link" th:href="@{/articles(page=${i+1}, size=${page.size})}" th:text="${i+1}"></a>
+                    </li>
+
+                    <!-- 다음 페이지 버튼 -->
+                    <li class="page-item" th:classappend="${page.hasNext()} ? '' : 'disabled'">
+                        <a class="page-link" th:href="@{/articles(page=${page.number + 2}, size=${page.size})}">&gt;</a>
+                    </li>
+                    <!-- 다음 그룹 버튼 -->
+                    <li class="page-item" th:classappend="${(page.number/10)*10 + 10 < page.totalPages} ? '' : 'd-none'">
+                        <a class="page-link" th:href="@{/articles(page=${(page.number/10)*10 + 11}, size=${page.size})}">&raquo;</a>
+                    </li>
+                </ul>
+            </nav>
         </div>
-        <br>
     </div>
 
-    <nav aria-label="Page navigation">
-        <ul class="pagination justify-content-center">
-
-            <!-- 이전 그룹 버튼 -->
-            <li class="page-item" th:classappend="${page.number >= 10} ? '' : 'd-none'">
-                <a class="page-link" th:href="@{/articles(page=${(page.number/10)*10 }, size=${page.size})}" tabindex="-1">&laquo;</a>
-            </li>
-            <!-- 이전 페이지 버튼 -->
-            <li class="page-item" th:classappend="${page.hasPrevious()} ? '' : 'disabled'">
-                <a class="page-link" th:href="@{/articles(page=${page.number}, size=${page.size})}" tabindex="-1">&lt;</a>
-            </li>
-
-            <!-- 페이지 번호 반복 -->
-            <li class="page-item" th:each="i : ${#numbers.sequence((page.number/10)*10, ((page.number/10)*10 + 9) < page.totalPages ? (page.number/10)*10 + 9 : page.totalPages - 1)}"
-                th:classappend="${page.number == i} ? 'active' : ''">
-                <a class="page-link" th:href="@{/articles(page=${i+1}, size=${page.size})}" th:text="${i+1}"></a> <!-- 1-based 페이지 표시 -->
-            </li>
-
-            <!-- 다음 페이지 버튼 -->
-            <li class="page-item" th:classappend="${page.hasNext()} ? '' : 'disabled'">
-                <a class="page-link" th:href="@{/articles(page=${page.number + 2}, size=${page.size})}">&gt;</a>
-            </li>
-            <!-- 다음 그룹 버튼 -->
-            <li class="page-item" th:classappend="${(page.number/10)*10 + 10 < page.totalPages} ? '' : 'd-none'">
-                <a class="page-link" th:href="@{/articles(page=${(page.number/10)*10 + 11}, size=${page.size})}">&raquo;</a>
-            </li>
-
-        </ul>
-    </nav>
-
-
-
-    <button type="button" class="btn btn-secondary" id="logout-btn">로그아웃</button>
-
+    <!-- Footer -->
+    <footer>
+        © 2024 경로당:
+        <a class="text-dark" href="#">경로당 홈페이지</a>
+    </footer>
 </div>
+
 <script src="/js/token.js"></script>
 <script src="/js/article.js"></script>
 </body>
+</html>

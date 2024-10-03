@@ -4,47 +4,92 @@
     <meta charset="UTF-8">
     <title>게시판</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/article.css">
+
 </head>
 <body>
-<div class="p-5 mb-5 text-center</> bg-light">
+<div class="p-5 mb-5 bg-light header-section">
     <h1 class="mb-3">경로당</h1>
     <h4 class="mb-3">경로당에 오신 것을 환영합니다.</h4>
 </div>
 
-<div class="container mt-5">
-    <div class="row">
+<div class="wrapper">
 
-        <div class="col-lg-8">
-            <div class="mb-4" style="text-align: right;"> <!-- 상단에 간격을 추가 -->
-                <button type="button" id="return-btn"
-                        th:onclick="|location.href='@{/articles}'|"
-                        class="btn btn-return btn-sm">목록으로 돌아가기</button>
+    <div class="content">
+        <div class="container mt-5">
+            <div class="row mb-4">
+                <!-- 좌측에 수정, 삭제 버튼 -->
+                <div class="col-lg-6 text-left">
+                    <button type="button" id="modify-btn"
+                            th:onclick="|location.href='@{/new-article?id={articleId}(articleId=${article.id})}'|"
+                            class="btn btn-primary btn-sm">수정</button>
+                    <button type="button" id="delete-btn" class="btn btn-secondary btn-sm">삭제</button>
+                </div>
+
+                <!-- 우측에 목록으로 돌아가기 버튼 -->
+                <div class="col-lg-6 text-right">
+                    <button type="button" id="return-btn"
+                            th:onclick="|location.href='@{/articles}'|"
+                            class="btn btn-return btn-sm">목록으로 돌아가기</button>
+                </div>
             </div>
 
-            <article>
-                <input type="hidden" id="article-id" th:value="${article.id}">
-                <header class="mb-4">
-                    <h1 class="fw-bolder mb-1" th:text="${article.title}"></h1>
-                    <div class="text-muted fst-italic mb-2" th:text="|Posted on
-                            ${#temporals.format(article.createdAt, 'yyyy-MM-dd HH:mm')} By ${article.author}|"></div>
-                </header>
+            <div class="row">
+                <div class="col-lg-12">
+                    <article>
+                        <input type="hidden" id="article-id" th:value="${article.id}">
+                        <header class="mb-4">
+                            <h1 class="fw-bolder mb-1" th:text="${article.title}"></h1>
+                            <div class="text-muted fst-italic mb-2" th:text="|Posted on
+                                    ${#temporals.format(article.createdAt, 'yyyy-MM-dd HH:mm')} By ${article.author}|"></div>
+                        </header>
 
-                <section class="mb-5">
-                    <div class="fs-5 mb-4" th:utext="${article.content}"></div>
-                </section>
-                <button type="button" id="modify-btn"
-                        th:onclick="|location.href='@{/new-article?id={articleId}(articleId=${article.id})}'|"
+                        <section class="mb-5">
+                            <div class="fs-5 mb-4" th:utext="${article.content}"></div>
+                        </section>
+                    </article>
 
-                        class="btn btn-primary btn-sm">수정</button>
-                <button type="button" id="delete-btn"
+                    <!-- 댓글 목록 섹션 -->
+                    <div id="comments-section" class="mt-5">
+                        <h5>댓글 목록</h5>
+                        <div th:each="comment : ${comments}">
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <h6 class="card-subtitle mb-2 text-muted" th:text="${comment.getCommentAuthor()}"></h6>
+                                    <p class="card-text" th:text="${comment.getCommentContent()}"></p>
+                                    <p class="text-muted" th:text="${#temporals.format(comment.getCommentCreatedAt(), 'yyyy-MM-dd HH:mm')}"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                        class="btn btn-secondary btn-sm">삭제</button>
-            </article>
+                    <!-- 댓글 작성 폼 -->
+                    <div id="comment-form-section" class="mt-4">
+                        <h4>댓글 작성</h4>
+                        <h6 class="mb-2 text-muted" th:text="${user}"/>
 
 
+                        <form th:action="@{/comments}" method="post">
+                            <input type="hidden" name="articleId" th:value="${article.id}"/>
+                            <div class="form-group">
+                                <textarea class="form-control" name="content" rows="3" placeholder="댓글을 입력하세요"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-sm">댓글 작성</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+
+    <footer>
+        © 2024 경로당:
+        <a class="text-dark" href="#">경로당 홈페이지</a>
+    </footer>
+
 </div>
 
 <script src="/js/article.js"></script>
+<script src="/js/comment.js"></script>
 </body>
+</html>
