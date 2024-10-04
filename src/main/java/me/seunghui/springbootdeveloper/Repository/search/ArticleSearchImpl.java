@@ -4,7 +4,7 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPQLQuery;
 import me.seunghui.springbootdeveloper.domain.Article;
 import me.seunghui.springbootdeveloper.domain.QArticle;
-import me.seunghui.springbootdeveloper.dto.ArticleListViewResponse;
+import me.seunghui.springbootdeveloper.dto.Article.ArticleListViewResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;

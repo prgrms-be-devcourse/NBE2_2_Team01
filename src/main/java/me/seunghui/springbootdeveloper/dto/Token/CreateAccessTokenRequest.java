@@ -1,4 +1,4 @@
-package me.seunghui.springbootdeveloper.dto;
+package me.seunghui.springbootdeveloper.dto.Token;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -1,4 +1,4 @@
-package me.seunghui.springbootdeveloper.dto;
+package me.seunghui.springbootdeveloper.dto.Comment;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,6 +11,7 @@ import me.seunghui.springbootdeveloper.domain.Comment;
 public class AddCommentRequest {
     private String commentContent;
     private Long parentCommentId; // 대댓글일 경우 부모 댓글의 ID
+    //private boolean commentIsDeleted;
 
     // Article과 Comment 객체를 이용해 Comment 엔티티 생성
     public Comment toEntity(String commentAuthor, Article article, Comment parentComment) {

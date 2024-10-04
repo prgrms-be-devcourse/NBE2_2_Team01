@@ -3,10 +3,10 @@
 //import lombok.RequiredArgsConstructor;
 //import me.seunghui.springbootdeveloper.Repository.ArticleRepository;
 //import me.seunghui.springbootdeveloper.domain.Article;
-//import me.seunghui.springbootdeveloper.dto.AddArticleRequest;
-//import me.seunghui.springbootdeveloper.dto.ArticleListViewResponse;
-//import me.seunghui.springbootdeveloper.dto.PageRequestDTO;
-//import me.seunghui.springbootdeveloper.dto.UpdateArticleRequest;
+//import me.seunghui.springbootdeveloper.dto.Article.AddArticleRequest;
+//import me.seunghui.springbootdeveloper.dto.Article.ArticleListViewResponse;
+//import me.seunghui.springbootdeveloper.dto.Article.PageRequestDTO;
+//import me.seunghui.springbootdeveloper.dto.Article.UpdateArticleRequest;
 //import org.springframework.data.domain.Page;
 //import org.springframework.data.domain.Pageable;
 //import org.springframework.data.domain.Sort;

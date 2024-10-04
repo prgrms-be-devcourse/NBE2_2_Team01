@@ -1,6 +1,7 @@
 package me.seunghui.springbootdeveloper.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -44,7 +45,12 @@ public class Comment {
 
 
     @Column
+    @JsonProperty("commentIsHidden")  // 추가
     private boolean commentIsHidden;
+
+    @Column
+    @JsonProperty("commentIsDeleted")  // 추가
+    private boolean commentIsDeleted;
 
 
     @ManyToOne // 여러 개의 InsertedFile이 하나의 Article에 속함
@@ -69,13 +75,28 @@ public class Comment {
         this.parentComment = parentComment;
     }
 
-    public void update(String commentContent) {
+    public void changeCommentContent(String commentContent) {
         this.commentContent = commentContent;
     }
-
-    public void blind(boolean commentIsHidden) {
+    public void changeCommentIsHidden(boolean commentIsHidden) {
         this.commentIsHidden = commentIsHidden;
     }
+    public void changeCommentIsDeleted(boolean commentIsDeleted) {
+        this.commentIsDeleted = commentIsDeleted;
+    }
+
+    public void update(String commentContent) {
+        this.commentContent = commentContent;
+
+    }
+//     public void update(String commentContent,boolean commentIsDeleted) {
+//        this.commentContent = commentContent;
+//        this.commentIsDeleted = commentIsDeleted;
+//    }
+
+
+
+
 
 
 }

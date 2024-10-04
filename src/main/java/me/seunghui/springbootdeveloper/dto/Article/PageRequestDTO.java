@@ -1,4 +1,4 @@
-package me.seunghui.springbootdeveloper.dto;
+package me.seunghui.springbootdeveloper.dto.Article;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Max;

@@ -4,7 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import me.seunghui.springbootdeveloper.dto.AddUserRequest;
+import me.seunghui.springbootdeveloper.dto.User.AddUserRequest;
 import me.seunghui.springbootdeveloper.service.UserService;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;

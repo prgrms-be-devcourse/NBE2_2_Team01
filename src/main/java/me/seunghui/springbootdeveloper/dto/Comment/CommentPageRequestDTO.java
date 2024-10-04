@@ -1,4 +1,4 @@
-package me.seunghui.springbootdeveloper.dto;
+package me.seunghui.springbootdeveloper.dto.Comment;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;

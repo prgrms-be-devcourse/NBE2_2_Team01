@@ -1,7 +1,7 @@
 package me.seunghui.springbootdeveloper.Repository;
 
 import me.seunghui.springbootdeveloper.domain.Comment;
-import me.seunghui.springbootdeveloper.dto.CommentListViewReponse;
+import me.seunghui.springbootdeveloper.dto.Comment.CommentListViewReponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,6 +11,11 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
+    // 게시글에 속한 모든 댓글과 대댓글을 commentId 순으로 가져옴
+    @Query("SELECT c FROM Comment c LEFT JOIN FETCH c.parentComment " +
+            "WHERE c.article.id = :articleId ORDER BY c.commentId ASC")
+    List<Comment> findByArticleIdOrderByCommentIdAsc(@Param("articleId") Long articleId);
+
     @Query("SELECT c FROM Comment c WHERE c.article.id=:articleId")
     List<Comment> findByArticleId(@Param("articleId") Long articleId);
 
@@ -22,9 +27,19 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     List<Comment> findByCommentId(@Param("articleId") Long articleId, @Param("commentId") Long commentId);
 
     // 특정 부모 댓글을 포함하여 그 자식 댓글을 모두 조회 (부모 댓글도 포함)
-    @Query("SELECT c FROM Comment c WHERE c.article.id = :articleId " +
-            "AND (c.commentId = :commentId OR c.parentComment.commentId = :commentId " +
-            "OR c.parentComment.commentId IN (SELECT sc.commentId FROM Comment sc WHERE sc.parentComment.commentId = :commentId))")
+//    @Query("SELECT c FROM Comment c WHERE c.article.id = :articleId " +
+//            "AND (c.commentId = :commentId OR c.parentComment.commentId = :commentId " +
+//            "OR c.parentComment.commentId IN (SELECT sc.commentId FROM Comment sc WHERE sc.parentComment.commentId = :commentId))")
+//    List<Comment> findParentAndChildCommentsByArticleId(
+//            @Param("articleId") Long articleId,
+//            @Param("commentId") Long commentId
+//    );
+
+    // 특정 부모 댓글과 그 자식 댓글을 모두 조회, commentId 순으로 정렬
+    @Query("SELECT c FROM Comment c " +
+            "WHERE c.article.id = :articleId " +
+            "AND (c.commentId = :commentId OR c.parentComment.commentId = :commentId) " +
+            "ORDER BY c.commentId ASC")
     List<Comment> findParentAndChildCommentsByArticleId(
             @Param("articleId") Long articleId,
             @Param("commentId") Long commentId

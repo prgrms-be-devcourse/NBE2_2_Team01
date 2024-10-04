@@ -178,28 +178,3 @@ function httpRequest(method, url, body, success, fail) {
     }).catch(error => fail(error));
 }
 
-// document.addEventListener("DOMContentLoaded", function() {
-//     const token = localStorage.getItem("access_token");
-//     if (token) {
-//         fetch("/articles", {
-//             method: "GET",
-//             headers: {
-//                 "Authorization": "Bearer " + token
-//             }
-//         })
-//             .then(response => {
-//                 if (!response.ok) {
-//                     // Handle error
-//                     console.error("Error fetching articles");
-//                 } else {
-//                     return response.text();
-//                 }
-//             })
-//             .then(html => {
-//                 document.documentElement.innerHTML = html;
-//             })
-//             .catch(error => console.error("Error:", error));
-//     } else {
-//         console.log("No JWT token found in localStorage");
-//     }
-// });

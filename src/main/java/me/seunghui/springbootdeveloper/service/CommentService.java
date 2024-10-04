@@ -1,13 +1,12 @@
 package me.seunghui.springbootdeveloper.service;
 
-import io.jsonwebtoken.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import me.seunghui.springbootdeveloper.Repository.ArticleRepository;
 import me.seunghui.springbootdeveloper.Repository.CommentRepository;
 import me.seunghui.springbootdeveloper.domain.Article;
 import me.seunghui.springbootdeveloper.domain.Comment;
-import me.seunghui.springbootdeveloper.dto.*;
+import me.seunghui.springbootdeveloper.dto.Comment.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -54,12 +53,14 @@ public class CommentService {
     //2. 게시글에 달린 댓글 목록 조회
     public List<CommentResponse> getComments(Long articleId) {
         // log.info("Fetching comments for articleId: {}", articleId);
-        List<Comment> comments = commentRepository.findByArticleId(articleId);
+        //List<Comment> comments = commentRepository.findByArticleId(articleId);
+        List<Comment> comments = commentRepository.findByArticleIdOrderByCommentIdAsc(articleId);
         //log.info("Found {} comments for articleId {}", comments.size(), articleId);
         return comments.stream()
                 .map(CommentResponse::new)
                 .collect(Collectors.toList());
     }
+
 
 
     //2. 게시글에 맞는 한개 댓글과 대댓글 조회
@@ -71,14 +72,38 @@ public class CommentService {
                 .map(CommentResponse::new)
                 .collect(Collectors.toList());
     }
+
+
+//    @Transactional
+//    public CommentResponse updateComment(Long commentId, AddCommentRequest request) {
+//        Comment updatedComment=commentRepository.findById(commentId).orElseThrow(()->new IllegalArgumentException("Comment not found"));
+//        authorizeCommentAuthor(updatedComment);
+//        updatedComment.update(request.getCommentContent());
+//
+//        return new CommentResponse(updatedComment);
+//    }
+
+
     //4. 댓글 수정
     @Transactional
-    public CommentResponse updateComment(Long commentId, AddCommentRequest request) {
+    public UpdateCommentRequest updateComment(Long commentId, UpdateCommentRequest request) {
         Comment updatedComment=commentRepository.findById(commentId).orElseThrow(()->new IllegalArgumentException("Comment not found"));
-        authorizeCommentAuthor(updatedComment);
-        updatedComment.update(request.getCommentContent());
 
-        return new CommentResponse(updatedComment);
+        // 로그 추가
+      log.info("Before Update: commentId = {}, isDeleted = {}, content = {}", updatedComment.getCommentId(), updatedComment.isCommentIsDeleted(), updatedComment.getCommentContent());
+
+
+        authorizeCommentAuthor(updatedComment);
+        //댓글 블라인드 처리 업데이트
+        updatedComment.changeCommentContent(request.getCommentContent());
+        updatedComment.changeCommentIsDeleted(request.isCommentIsDeleted());
+        updatedComment.changeCommentIsHidden(request.isCommentIsHidden());
+        //updatedComment.update(request.getCommentContent(), request.isCommentIsDeleted());
+
+        // 로그 추가: 업데이트 후 값을 확인
+      log.info("After Update: commentId = {}, isDeleted = {}, content = {}", updatedComment.getCommentId(), updatedComment.isCommentIsDeleted(), updatedComment.getCommentContent());
+
+        return new UpdateCommentRequest(updatedComment);
     }
 
 

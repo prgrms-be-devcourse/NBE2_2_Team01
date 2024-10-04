@@ -1,4 +1,4 @@
-package me.seunghui.springbootdeveloper.dto;
+package me.seunghui.springbootdeveloper.dto.Comment;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
@@ -13,14 +13,16 @@ public class CommentListViewReponse {
     private final String commentContent;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime commentCreatedAt;
-    private final Long id; //게시글 아이디
+    private final Long articleId; //게시글 아이디
+    private final Long parentCommentId; // 부모 댓글의 ID
 
     public CommentListViewReponse(Comment comment) {
         this.commentId=comment.getCommentId();
         this.commentAuthor=comment.getCommentAuthor();
         this.commentContent=comment.getCommentContent();
         this.commentCreatedAt=comment.getCommentCreatedAt();
-        this.id=comment.getArticle().getId();
+        this.articleId=comment.getArticle().getId();
+        this.parentCommentId= comment.getParentComment() != null ? comment.getParentComment().getCommentId() : null; // 부모 댓글 ID 설정
     }
 
 

@@ -1,6 +1,6 @@
 package me.seunghui.springbootdeveloper.Repository.search;
 
-import me.seunghui.springbootdeveloper.dto.ArticleListViewResponse;
+import me.seunghui.springbootdeveloper.dto.Article.ArticleListViewResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

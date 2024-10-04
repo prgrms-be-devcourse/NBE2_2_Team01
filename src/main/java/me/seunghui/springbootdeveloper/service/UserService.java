@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import me.seunghui.springbootdeveloper.Repository.UserRepository;
 import me.seunghui.springbootdeveloper.domain.User;
-import me.seunghui.springbootdeveloper.dto.AddUserRequest;
+import me.seunghui.springbootdeveloper.dto.User.AddUserRequest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

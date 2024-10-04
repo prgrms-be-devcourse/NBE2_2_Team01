@@ -7,7 +7,7 @@ import me.seunghui.springbootdeveloper.config.jwt.JwtFactory;
 import me.seunghui.springbootdeveloper.config.jwt.JwtProperties;
 import me.seunghui.springbootdeveloper.domain.RefreshToken;
 import me.seunghui.springbootdeveloper.domain.User;
-import me.seunghui.springbootdeveloper.dto.CreateAccessTokenRequest;
+import me.seunghui.springbootdeveloper.dto.Token.CreateAccessTokenRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

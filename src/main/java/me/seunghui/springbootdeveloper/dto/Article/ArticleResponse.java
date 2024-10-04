@@ -1,6 +1,5 @@
-package me.seunghui.springbootdeveloper.dto;
+package me.seunghui.springbootdeveloper.dto.Article;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import me.seunghui.springbootdeveloper.domain.Article;
 

@@ -1,8 +1,8 @@
 package me.seunghui.springbootdeveloper.controller;
 
 import lombok.RequiredArgsConstructor;
-import me.seunghui.springbootdeveloper.dto.CreateAccessTokenRequest;
-import me.seunghui.springbootdeveloper.dto.CreateAccessTokenResponse;
+import me.seunghui.springbootdeveloper.dto.Token.CreateAccessTokenRequest;
+import me.seunghui.springbootdeveloper.dto.Token.CreateAccessTokenResponse;
 import me.seunghui.springbootdeveloper.service.TokenService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
