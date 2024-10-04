@@ -16,6 +16,9 @@
         <h1 class="mb-3">경로당, 함께하소</h1>
         <h4 class="mb-3">작은 화면 속 우리들의 소통공간</h4>
     </div>
+
+    <!-- 우측 상단에 로그아웃 버튼 -->
+    <button type="button" class="btn btn-secondary logout-btn" id="logout-btn">로그아웃</button>
 </div>
 
 <div class="wrapper">
@@ -39,7 +42,7 @@
                         </header>
 
                         <section class="mb-5">
-                            <textarea class="form-control h-25" rows="10" placeholder="내용" id="content" th:text="${article.content}"></textarea>
+                            <textarea class="form-control h-25" rows="18" placeholder="내용" id="content" th:text="${article.content}"></textarea>
                         </section>
 
                         <div class="text-right">

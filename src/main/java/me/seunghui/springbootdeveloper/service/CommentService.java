@@ -116,6 +116,11 @@ public class CommentService {
         commentRepository.delete(comment);
     }
 
+    //댓글 개수 세기
+    @Transactional(readOnly = true)
+    public long getCommentCount(long articleId) {
+        return commentRepository.countCommentsByArticleId(articleId);
+    }
 
     // 게시글의 작성자를 확인하여 권한 검증
     private void authorizeCommentAuthor(Comment comment) {

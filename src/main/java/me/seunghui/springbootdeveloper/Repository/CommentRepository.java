@@ -46,6 +46,9 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     );
 
 
+    @Query("SELECT COUNT(c) FROM Comment c WHERE c.article.id = :articleId AND c.commentIsHidden = false AND c.commentIsDeleted = false")
+    long countCommentsByArticleId(@Param("articleId") Long articleId);
+
     //특정 상품 번호에 해당하는 모든 리뷰를 페이징하여 반환
 //    @Query("SELECT r FROM Review r WHERE r.product.pno=:pno") //r.product.pno=:pno는 Review 엔티티에서 연결된 Product의 pno 필드와 매개변수 pno가 일치하는 리뷰만 조회하겠다는 의미
 //    Page<ReviewDTO> list(@Param("pno") long pno, Pageable pageable);

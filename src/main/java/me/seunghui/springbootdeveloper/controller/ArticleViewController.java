@@ -48,7 +48,7 @@ public class ArticleViewController {
         // ID에 해당하는 게시글 찾기
         Article article = articleService.findById(id);
         Page<CommentListViewReponse> commentListPage = commentService.getComments(id,commentPageRequestDTO);
-
+        long commentCount = commentService.getCommentCount(id);
 
         // 현재 사용자 정보 가져오기 (로그인한 사용자의 이름 또는 이메일)
         String currentUserName =  SecurityContextHolder.getContext().getAuthentication().getName();
@@ -64,6 +64,7 @@ public class ArticleViewController {
         model.addAttribute("user", currentUserName);
         model.addAttribute("comments", commentListPage.getContent());
         model.addAttribute("page", commentListPage);
+        model.addAttribute("commentCount", commentCount);
 
         // article.html 템플릿으로 리턴 (게시글 상세 페이지)
         return "article";
