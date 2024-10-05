@@ -10,6 +10,7 @@ import me.seunghui.springbootdeveloper.dto.Comment.CommentListViewReponse;
 import me.seunghui.springbootdeveloper.dto.Comment.CommentPageRequestDTO;
 import me.seunghui.springbootdeveloper.service.ArticleService;
 import me.seunghui.springbootdeveloper.service.CommentService;
+import me.seunghui.springbootdeveloper.service.LikeService;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -26,6 +27,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class ArticleViewController {
     private final ArticleService articleService;  // 게시글 관련 서비스
     private final CommentService commentService;
+    private final LikeService likeService;
+
     // 게시글 목록을 페이지 네이션과 함께 가져오기
     @GetMapping("/articles")  // "/articles" 경로로 GET 요청을 처리
     public String getArticles(@ModelAttribute PageRequestDTO pageRequestDTO, Model model) {
@@ -47,8 +50,14 @@ public class ArticleViewController {
     public String getArticle(@PathVariable Long id, @ModelAttribute CommentPageRequestDTO commentPageRequestDTO, Model model) {
         // ID에 해당하는 게시글 찾기
         Article article = articleService.findById(id);
+        // 조회수 증가
+
+        articleService.getIncreaseViewCount(id); // 변경된 조회수를 저장
+
         Page<CommentListViewReponse> commentListPage = commentService.getComments(id,commentPageRequestDTO);
+        long likeCount=likeService.getLikeCount(id);
         long commentCount = commentService.getCommentCount(id);
+
 
         // 현재 사용자 정보 가져오기 (로그인한 사용자의 이름 또는 이메일)
         String currentUserName =  SecurityContextHolder.getContext().getAuthentication().getName();
@@ -64,6 +73,7 @@ public class ArticleViewController {
         model.addAttribute("user", currentUserName);
         model.addAttribute("comments", commentListPage.getContent());
         model.addAttribute("page", commentListPage);
+        model.addAttribute("likeCount", likeCount);
         model.addAttribute("commentCount", commentCount);
 
         // article.html 템플릿으로 리턴 (게시글 상세 페이지)

@@ -89,10 +89,6 @@ public class Comment {
         this.commentContent = commentContent;
 
     }
-//     public void update(String commentContent,boolean commentIsDeleted) {
-//        this.commentContent = commentContent;
-//        this.commentIsDeleted = commentIsDeleted;
-//    }
 
 
 

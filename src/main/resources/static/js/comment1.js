@@ -129,19 +129,34 @@ function deleteComment(commentId) {
 }
 
 // 댓글 목록 로드
+// function loadComments(articleId) {
+//     const url = `/api/comments/${articleId}`;
+//     httpRequest('GET', url, null,
+//         (response) => {
+//             if (!response.ok) {
+//                 console.error('응답에 문제가 있습니다. 상태 코드:', response.status);
+//                 return;
+//             }
+//             response.json().then(comments => {
+//                 renderComments(comments); // 댓글 목록을 화면에 렌더링
+//             }).catch(error => {
+//                 console.error('JSON 파싱 오류:', error);
+//             });
+//         },
+//         (error) => {
+//             console.error('댓글 불러오기 실패:', error);
+//         });
+// }
+// 댓글 목록 로드
 function loadComments(articleId) {
     const url = `/api/comments/${articleId}`;
     httpRequest('GET', url, null,
-        (response) => {
+        (data, response) => {  // 응답 데이터를 받고 response 객체도 전달받음
             if (!response.ok) {
                 console.error('응답에 문제가 있습니다. 상태 코드:', response.status);
                 return;
             }
-            response.json().then(comments => {
-                renderComments(comments); // 댓글 목록을 화면에 렌더링
-            }).catch(error => {
-                console.error('JSON 파싱 오류:', error);
-            });
+            renderComments(data); // 댓글 목록을 화면에 렌더링
         },
         (error) => {
             console.error('댓글 불러오기 실패:', error);

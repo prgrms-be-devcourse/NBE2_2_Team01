@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>게시판 글</title>
+    <title>게시글 등록</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
     <!-- CKEditor CDN -->
     <script src="https://cdn.ckeditor.com/ckeditor5/35.0.1/classic/ckeditor.js"></script>
@@ -41,9 +41,12 @@
                             <input type="text" class="form-control" placeholder="제목" id="title" th:value="${article.title}">
                         </header>
 
-                        <section class="mb-5">
+
+                        <section class="mb-5" >
                             <textarea class="form-control h-25" rows="18" placeholder="내용" id="content" th:text="${article.content}"></textarea>
                         </section>
+
+
 
                         <div class="text-right">
                             <button th:if="${article.id} != null" type="button" id="modify-btn" class="btn btn-primary btn-sm">수정</button>

@@ -111,7 +111,7 @@ if (createButton) {
 
         function fail(response) {
             response.text().then(text => {
-                alert('등록 실패했습니다. ');
+                alert('등록 실패했습니다. 로그인 후 이용해주세요! ');
                 location.replace('/articles');
             });
         }

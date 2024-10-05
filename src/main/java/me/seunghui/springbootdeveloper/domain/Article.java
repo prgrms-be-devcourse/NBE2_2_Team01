@@ -44,6 +44,9 @@ public class Article {
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>(); // 댓글 리스트
 
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Like> likes = new ArrayList<>(); // 댓글 리스트
+
     @Column(name = "author",nullable = false)
     private String author;
 
@@ -54,6 +57,12 @@ public class Article {
     @LastModifiedDate
     @Column(name = "update_at")
     private LocalDateTime updatedAt;
+
+    @Column(name="view_count")
+    private Long viewCount= 0L;
+
+    @Column(name="like_count")
+    private Long likeCount= 0L;
 
     // 파일을 추가하는 메서드, 양방향 연관 관계 설정
     public void addFiles(List<InsertedFile> files) {
@@ -77,8 +86,10 @@ public class Article {
     }
 
 
+
     public void changeAuthor(String author) {this.author = author;}
     public void changeTitle(String title) {this.title = title;}
     public void changeContent(String content) {this.content = content;}
-
+    public void isIncrementViewCount() {this.viewCount++;}
+    public void changeLikeCount(long likeCount) {this.likeCount=likeCount;}
 }

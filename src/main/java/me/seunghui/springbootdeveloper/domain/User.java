@@ -10,7 +10,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.ArrayList;
 import java.util.List;
+
 
 @Entity
 @Table(name = "users")
@@ -34,6 +36,9 @@ public class User implements UserDetails {
     //OAuth관련키 저장
     @Column(name="nickname",unique = true)
     private String nickname;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Like> likes = new ArrayList<>();
 
     //생성자에 nickname 추가
     @Builder

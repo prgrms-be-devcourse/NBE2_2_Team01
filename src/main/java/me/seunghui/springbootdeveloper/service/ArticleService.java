@@ -19,6 +19,7 @@ import java.util.List;
 public class ArticleService {
     private final ArticleRepository articleRepository;
     private final FileUploadService fileUploadService;
+    private final LikeService likeService;
 
     // 글 등록 메서드: 게시글을 저장하고 첨부 파일을 처리하여 파일과 게시글을 연결
     public Article save(AddArticleRequest request, String userName, List<MultipartFile> files) {
@@ -44,8 +45,14 @@ public class ArticleService {
 
     // 특정 ID로 게시글 조회
     public Article findById(Long id) {
-        return articleRepository.findById(id)
+        Article article= articleRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("not found: " + id));
+        long likeCount= likeService.getLikeCount(id);
+
+        article.changeLikeCount(likeCount);
+
+        articleRepository.save(article);
+        return article;
     }
 
     // 게시글 삭제 메서드: 게시글을 작성한 사용자만 삭제 가능
@@ -71,12 +78,25 @@ public class ArticleService {
         return savedArticle;
     }
 
+    //게시글 조회수 증가
+    public Article getIncreaseViewCount(Long id) {
+        Article article=articleRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("not found: " + id));
+        article.isIncrementViewCount();  // 조회수 증가
+         // 변경된 조회수를 저장
+        return articleRepository.save(article);
+    }
+
+
+
+
     // 게시글 목록 조회 메서드: 페이지네이션을 적용하여 게시글 목록을 조회
     public Page<ArticleListViewResponse> getList(PageRequestDTO pageRequestDTO) {
         Sort sort = Sort.by("id").descending();
         Pageable pageable = pageRequestDTO.getPageable(sort);
         return articleRepository.searchDTO(pageable); // QueryDSL을 통한 동적 검색
     }
+
 
     // 게시글의 작성자를 확인하여 권한 검증
     private void authorizeArticleAuthor(Article article) {

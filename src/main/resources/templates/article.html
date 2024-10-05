@@ -44,26 +44,40 @@
                     <article>
                         <input type="hidden" id="article-id"  th:value="${article.id}">
                         <header class="mb-4">
-                            <h1 class="fw-bolder mb-1" style="font-family:'나눔고딕'" th:text="${article.title}"></h1>
-                            <div class="text-muted fst-italic mb-2" th:text="|${article.author}
-                                    ${#temporals.format(article.createdAt, 'yyyy-MM-dd HH:mm')} |"></div>
+                            <h3 class="fw-bolder mb-1" style="font-family:'나눔고딕'" th:text="${article.title}"></h3>
+<!--                            <div class="text-muted fst-italic mb-2" th:text="|${article.author}-->
+<!--                                    ${#temporals.format(article.createdAt, 'yyyy-MM-dd HH:mm')} |"></div>-->
+<!--                            <p>조회수: <span th:text="${article.viewCount}"></span></p>-->
+                            <div class="text-muted fst-italic mb-2">
+                                <span th:text="${article.author}"></span>
+                                <span th:text="${#temporals.format(article.createdAt, 'yyyy-MM-dd HH:mm')}"></span>
+                                | 조회수: <span th:text="${article.viewCount}"></span>
+                            </div>
 
                         </header>
 
                         <section class="mb-5">
                             <div class="fs-5 mb-4" th:utext="${article.content}"></div>
                         </section>
-                    </article>
 
-                    <div id="comments">
-                        <!-- 댓글 목록 섹션 -->
-                        <div class="commentCountSvg">
+                        <div class="likeAndCommentCountSvg">
+                            <button id="like-button" class="like-button" th:value="${article.id}" th:attr="article-id=${article.id}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"  class="bi bi-heart not-liked" viewBox="0 0 16 16" id="like-icon">
+                                    <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/>
+                                </svg>
+                            </button>
+                            <p>좋아요 <span id="like-count" th:text="${likeCount}">0</span></p>
                             <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="currentColor" class="bi bi-chat-dots-fill" viewBox="0 0 16 16" style="transform: scaleX(-1);">
                                 <path d="M16 8c0 3.866-3.582 7-8 7a9 9 0 0 1-2.347-.306c-.584.296-1.925.864-4.181 1.234-.2.032-.352-.176-.273-.362.354-.836.674-1.95.77-2.966C.744 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7M5 8a1 1 0 1 0-2 0 1 1 0 0 0 2 0m4 0a1 1 0 1 0-2 0 1 1 0 0 0 2 0m3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2"/>
                             </svg>
-                            <p>댓글 수: <span th:text="${commentCount}">0</span></p>
+                            <p>댓글  <span id="comment-count" th:text="${commentCount}">0</span></p>
                         </div>
+                    </article>
 
+
+                    <div id="comments">
+
+                        <!-- 댓글 목록 섹션 -->
                         <div id="comments-section" class="mt-4">
                             <h5>댓글 목록</h5>
                             <div th:each="comment : ${comments}">
@@ -73,7 +87,7 @@
                                         <!--                                    <p class="card-text" th:text="${comment.commentContent}"></p>-->
                                         <!--                                    <p class="text-muted" th:text="${#temporals.format(comment.commentCreatedAt, 'yyyy-MM-dd HH:mm')}"></p>-->
                                         <!--                                    <button class="btn btn-link reply-btn" th:data-comment-id="${comment.commentId}">Reply</button>-->
-                                        <!-- comment.js에 html 코드가 작성되어있음 -->
+                                        <!-- comment1.js에 html 코드가 작성되어있음 -->
                                     </div>
                                 </div>
                             </div>
@@ -112,5 +126,6 @@
 
 <script src="/js/article.js"></script>
 <script src="/js/comment1.js"></script>
+<script src="/js/like.js"></script>
 </body>
 </html>
