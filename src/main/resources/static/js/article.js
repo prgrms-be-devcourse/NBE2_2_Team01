@@ -50,7 +50,7 @@ if (deleteButton) {
         }
 
         if (userConfirmed) {
-            httpRequest('DELETE', `/api/articles/${id}`, null, success, fail);
+            httpRequest('DELETE', `/api/article/${id}`, null, success, fail);
         } else {
             event.preventDefault();
         }
@@ -93,7 +93,7 @@ if (modifyButton) {
             });
         }
 
-        httpRequest('PUT', `/api/articles/${id}`, body, success, fail);
+        httpRequest('PUT', `/api/article/${id}`, body, success, fail);
     });
 }
 
@@ -131,7 +131,7 @@ if (createButton) {
             });
         }
 
-        httpRequest('POST', '/api/articles', body, success, fail);
+        httpRequest('POST', '/api/article', body, success, fail);
     });
 }
 

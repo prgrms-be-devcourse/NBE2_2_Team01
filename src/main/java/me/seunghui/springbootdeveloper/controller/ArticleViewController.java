@@ -50,14 +50,14 @@ public class ArticleViewController {
     public String getArticle(@PathVariable Long id, @ModelAttribute CommentPageRequestDTO commentPageRequestDTO, Model model) {
         // ID에 해당하는 게시글 찾기
         Article article = articleService.findById(id);
-        // 조회수 증가
+
 
         articleService.getIncreaseViewCount(id); // 변경된 조회수를 저장
 
         Page<CommentListViewReponse> commentListPage = commentService.getComments(id,commentPageRequestDTO);
-        long likeCount=likeService.getLikeCount(id);
-        long commentCount = commentService.getCommentCount(id);
 
+        long likeCount=likeService.getLikeCount(id); //좋아요
+        long commentCount = commentService.getCommentCount(id);// 조회수
 
         // 현재 사용자 정보 가져오기 (로그인한 사용자의 이름 또는 이메일)
         String currentUserName =  SecurityContextHolder.getContext().getAuthentication().getName();
