@@ -16,7 +16,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/articles")
@@ -71,9 +75,18 @@ public class ArticleApiController {
     // 게시글 삭제 API (DELETE)
     // 특정 게시글을 삭제
     @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> deleteArticle(@PathVariable("id") Long id) {
-        articleService.delete(id); // 게시글 삭제 서비스 호출
-        return ResponseEntity.ok().build(); // 성공 시 200 OK 반환
+    public ResponseEntity<?> deleteArticle(@PathVariable("id") Long id) {
+//        articleService.delete(id); // 게시글 삭제 서비스 호출
+//        return ResponseEntity.ok().build(); // 성공 시 200 OK 반환 -->응답 본문 없음
+        try {
+            articleService.delete(id);
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Article deleted successfully");
+            return ResponseEntity.ok().body(response);  // JSON 응답 반환
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Collections.singletonMap("message", "Error deleting article"));
+        }
     }
 
     // 게시글 수정 API (PUT)
