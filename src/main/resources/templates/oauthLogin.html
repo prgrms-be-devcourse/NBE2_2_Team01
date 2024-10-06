@@ -71,39 +71,24 @@
                 <h2 class="text-white">LOGIN</h2>
                 <p class="text-white-50 mt-2 mb-5">서비스 사용을 위해 로그인을 해주세요!</p>
 
-<!--                <div class = "mb-4">-->
-<!--                    <form action="/login" method="POST">-->
-<!--                        <input type="hidden" th:name="${_csrf?.parameterName}" th:value="${_csrf?.token}" />-->
-<!--                        <div class="mb-3">-->
-<!--                            <label class="form-label text-white">Email address</label>-->
-<!--                            <input type="email" class="form-control" name="username">-->
-<!--                        </div>-->
-<!--                        <div class="mb-3">-->
-<!--                            <label class="form-label text-white">Password</label>-->
-<!--                            <input type="password" class="form-control" name="password">-->
-<!--                        </div>-->
-<!--                        <button type="submit" class="btn btn-primary">Submit</button>-->
-<!--                    </form>-->
 
-<!--                    <button type="button" class="btn btn-secondary mt-3" onclick="location.href='/signup'">회원가입</button>-->
-<!--                </div>-
                 <div class="mb-3">
-                    <label class="form-label">아이디</label>
-                    <input type="text" class="form-control" name="username" id="username">
+                    <label class="form-label text-white">이메일 입력해주세요!</label>
+                    <!--                            <input type="email" class="form-control" name="username">-->
+                    <input type="email" class="form-control" name="username" id="username">  <!-- ID 추가 -->
 
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">비밀번호</label>
+                    <label class="form-label text-white">비밀번호 입력해주세요!</label>
                     <input type="password" class="form-control" name="password" id="password">
                 </div>
 
+
                 <!-- 로그인 버튼 -->
                 <div class="mb-2">
-                    <button id="login-btn" type="button" class="btn btn-primary btn-block">로그인</button>
+                    <button id="login-btn" type="button" class="btn btn-primary">접속</button>
                 </div>
-
-
 
                 <div class = "mb-2">
                     <a href="/oauth2/authorization/google">
@@ -115,6 +100,11 @@
                         <img src="/img/kakao.png">
                     </a>
                 </div>
+
+                <div class="mb-2">
+                    <button type="button" class="btn btn-secondary mt-3" onclick="location.href='/signup'">회원가입</button>
+                </div>
+
             </div>
         </div>
     </div>
