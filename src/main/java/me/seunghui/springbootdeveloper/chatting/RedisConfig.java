@@ -1,5 +1,6 @@
-package me.seunghui.springbootdeveloper.config.chatting;
+package me.seunghui.springbootdeveloper.chatting;
 
+import com.nimbusds.jose.shaded.gson.annotations.SerializedName;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,11 +9,10 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 
 @Configuration
-@EnableCaching
-@EnableRedisHttpSession
 public class RedisConfig {
 
 
@@ -24,6 +24,9 @@ public class RedisConfig {
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
         RedisTemplate<String,Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory);
+        // JSON 직렬화 설정
+        Jackson2JsonRedisSerializer<Object> serializer = new Jackson2JsonRedisSerializer<>(Object.class);
+        redisTemplate.setDefaultSerializer(serializer);
         return  redisTemplate;
     }
 

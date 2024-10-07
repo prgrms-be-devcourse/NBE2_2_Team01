@@ -1,8 +1,7 @@
-package me.seunghui.springbootdeveloper.config.chatting;
+package me.seunghui.springbootdeveloper.chatting;
 
 import lombok.extern.slf4j.Slf4j;
-import me.seunghui.springbootdeveloper.config.chattingService.ChatService;
-import org.springframework.context.annotation.Lazy;
+import me.seunghui.springbootdeveloper.chat.ChatService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -18,7 +17,6 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 @Component
 public class ChatHandlerImpl extends TextWebSocketHandler implements ChatHandler {
-
 
     private  final ChatService chatService;
     private final MessageBrokerService messageBrokerService;
@@ -41,11 +39,11 @@ public class ChatHandlerImpl extends TextWebSocketHandler implements ChatHandler
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        log.info("pricipal = {}",session.getAttributes().get("principal"));
+        log.info("accountId = {}",session.getAttributes().get("accountId"));
         String roomId = session.getUri().toString().split("/ws/chat/")[1];
-        String email = session.getAttributes().get("email").toString();
+        String accountId = session.getAttributes().get("accountId").toString();
 
-        chatService.handleUserConnection(session,roomId,email,roomSessions);
+        chatService.handleUserConnection(session,roomId,accountId,roomSessions);
         chatService.memberListUpdated(roomId,roomSessions);
 
     }

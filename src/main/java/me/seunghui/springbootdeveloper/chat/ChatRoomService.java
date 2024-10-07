@@ -1,5 +1,4 @@
-package me.seunghui.springbootdeveloper.config.chattingService;
-
+package me.seunghui.springbootdeveloper.chat;
 
 import me.seunghui.springbootdeveloper.Repository.chatting.ChatRoomRepository;
 import me.seunghui.springbootdeveloper.domain.ChatRoom;

@@ -1,4 +1,4 @@
-package me.seunghui.springbootdeveloper.config.chatting;
+package me.seunghui.springbootdeveloper.chatting;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -18,19 +18,18 @@ import java.util.concurrent.ConcurrentHashMap;
 public class WebSocketConfig implements WebSocketConfigurer {
 
 
-    private final WebSocketHandshakeInterceptorToken webSocketHandshakeInterceptorToken;
+    private final WebSocketHandshakeInterceptor webSocketHandshakeInterceptor;
     private final ChatHandler chatHandler;
 
-    public WebSocketConfig(WebSocketHandshakeInterceptorToken webSocketHandshakeInterceptorToken, ChatHandler chatHandler) {
-        this.webSocketHandshakeInterceptorToken = webSocketHandshakeInterceptorToken;
+    public WebSocketConfig(WebSocketHandshakeInterceptor webSocketHandshakeInterceptor, @Lazy ChatHandler chatHandler) {
+        this.webSocketHandshakeInterceptor = webSocketHandshakeInterceptor;
         this.chatHandler = chatHandler;
     }
-
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         registry.addHandler((WebSocketHandler) chatHandler, "/ws/chat/*")
-                .addInterceptors(webSocketHandshakeInterceptorToken)
+                .addInterceptors(webSocketHandshakeInterceptor)
                 .setAllowedOrigins("*");
     }
 

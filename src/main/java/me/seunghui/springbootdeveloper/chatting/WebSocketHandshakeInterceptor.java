@@ -1,6 +1,4 @@
-/*
-
-package me.seunghui.springbootdeveloper.config.chatting;
+package me.seunghui.springbootdeveloper.chatting;
 
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
@@ -21,7 +19,7 @@ public class WebSocketHandshakeInterceptor implements HandshakeInterceptor {
 
         if (authentication != null) {
             // 인증 정보를 WebSocket 세션의 속성에 추가
-            attributes.put("email", authentication.getName());  // 사용자 이름 저장
+            attributes.put("accountId", authentication.getName());  // 사용자 이름 저장 // 이메일
             attributes.put("authorities", authentication.getAuthorities());  // 권한 저장
         }
 
@@ -33,5 +31,3 @@ public class WebSocketHandshakeInterceptor implements HandshakeInterceptor {
 
     }
 }
-
-*/

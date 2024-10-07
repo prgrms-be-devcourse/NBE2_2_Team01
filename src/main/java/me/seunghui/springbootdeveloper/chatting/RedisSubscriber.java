@@ -1,4 +1,4 @@
-package me.seunghui.springbootdeveloper.config.chatting;
+package me.seunghui.springbootdeveloper.chatting;
 
 
 import lombok.extern.slf4j.Slf4j;
@@ -43,8 +43,8 @@ public class RedisSubscriber implements MessageListener {
                 try {
                     session.sendMessage(new TextMessage(content));
                     log.info("메세지가 보내졌습니다.");
-                    String email = (String) session.getAttributes().get("email");
-                    saveMessage(channel,email,content);
+                    String accountId = (String) session.getAttributes().get("accountId");
+                    saveMessage(channel,accountId,content);
 
                     log.info("메세지가 저장되었습니다");
                 } catch (IOException e) {

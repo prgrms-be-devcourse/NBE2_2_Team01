@@ -208,7 +208,7 @@
     <div class="member-list">
       <h4>참여 중인 멤버:</h4>
       <ul>
-        <li th:each="member : ${list}" th:text="${member.email}">닉네임</li>
+        <li th:each="member : ${list}" th:text="${member.nickname}">닉네임</li>
       </ul>
     </div>
   </div>
@@ -252,13 +252,13 @@
     messageContainer.classList.add('chatMessage-container');
 
     const nicknameElem = document.createElement('div');
-    nicknameElem.classList.add('email');
+    nicknameElem.classList.add('nickname');
     nicknameElem.textContent = data.nickname;
 
     if (data.sender === username) {
-      nicknameElem.classList.add('sent-email'); // 보낸 메시지의 경우
+      nicknameElem.classList.add('sent-nickname'); // 보낸 메시지의 경우
     } else {
-      nicknameElem.classList.add('received-email'); // 받은 메시지의 경우
+      nicknameElem.classList.add('received-nickname'); // 받은 메시지의 경우
     }
     messageContainer.appendChild(nicknameElem);
 

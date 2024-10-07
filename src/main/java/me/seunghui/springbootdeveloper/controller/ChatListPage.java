@@ -1,7 +1,6 @@
 package me.seunghui.springbootdeveloper.controller;
 
-import lombok.extern.slf4j.Slf4j;
-import me.seunghui.springbootdeveloper.config.chattingService.ChatRoomService;
+import me.seunghui.springbootdeveloper.chat.ChatRoomService;
 import me.seunghui.springbootdeveloper.domain.ChatRoom;
 import me.seunghui.springbootdeveloper.domain.User;
 import me.seunghui.springbootdeveloper.dto.chat.CreateChatForm;
@@ -15,15 +14,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.security.Principal;
 
-@Slf4j
 @Controller
 @RequestMapping("/chat")
 public class ChatListPage {
 
+
+    private final ChatRoomService chatRoomService;
     @Autowired
-    private ChatRoomService chatRoomService;
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+
+    public ChatListPage(ChatRoomService chatRoomService, UserService userService) {
+        this.chatRoomService = chatRoomService;
+        this.userService = userService;
+    }
 
     @GetMapping("/list")
     public String index(Model model){
@@ -38,12 +41,12 @@ public class ChatListPage {
 
     @PostMapping("/createRoom")
     public String createRoom(CreateChatForm createChatForm, Principal principal){
-        log.info("Principal : {}", principal.getName());
         User user = userService.findByEmail(principal.getName());
-        String nickname = user.getUsername();
+        String nickname = user.getNickname();
         ChatRoom chatRoom = createChatForm.toEntity(nickname);
         chatRoomService.save(chatRoom);
         return "redirect:/chat/list";
     }
+
 
 }
