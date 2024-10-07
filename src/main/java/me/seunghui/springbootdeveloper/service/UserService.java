@@ -3,6 +3,7 @@ package me.seunghui.springbootdeveloper.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import me.seunghui.springbootdeveloper.Repository.UserRepository;
+import me.seunghui.springbootdeveloper.domain.Role;
 import me.seunghui.springbootdeveloper.domain.User;
 import me.seunghui.springbootdeveloper.dto.User.AddUserRequest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -24,6 +25,9 @@ public class UserService {
         return userRepository.save(User.builder()
                 .email(dto.getEmail())
                 .password(encoder.encode(dto.getPassword())) // 비밀번호를 해시 처리
+                        .role(Role.ROLE_USER) // 자동 유저 부여
+                        .nickname(dto.getNickname())
+
                 .build()).getId(); // 저장된 사용자 레코드의 ID 반환
     }
 
