@@ -6,8 +6,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
+import lombok.extern.log4j.Log4j2;
 import me.seunghui.springbootdeveloper.config.jwt.JwtPrincipal;
 import me.seunghui.springbootdeveloper.config.jwt.TokenProvider;
+import me.seunghui.springbootdeveloper.service.UserDetailService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

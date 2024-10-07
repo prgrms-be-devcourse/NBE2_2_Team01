@@ -219,6 +219,8 @@ function renderComments(comments) {
     });
 }
 
+const currentUserName = /*[[${currentUserName}]]*/ '';
+
 // 특정 댓글과 그 대댓글을 렌더링하는 함수
 function renderCommentWithReplies(comment, allComments, depth) {
     const commentSection = document.getElementById('comments-section');
@@ -259,8 +261,10 @@ function renderCommentWithReplies(comment, allComments, depth) {
             <div class="d-flex justify-content-between align-items-center">
                 <h6 class="card-subtitle mb-2 text-muted" id="comment-Author">${comment.commentAuthor}</h6>
                 <div class="comment-button">
-                    <button type="button" id="comment-modify-btn-${comment.commentId}" class="btn btn-primary btn-sm">수정</button>
-                    <button type="button" id="comment-delete-btn-${comment.commentId}" class="btn btn-secondary btn-sm">삭제</button>
+                    <button type="button" id="comment-modify-btn-${comment.commentId}" 
+                            class="btn btn-primary btn-sm" th:if="${comment.commentAuthor} == ${currentUserName}">수정</button>
+                    <button type="button" id="comment-delete-btn-${comment.commentId}" 
+                            class="btn btn-secondary btn-sm"  th:if="${comment.commentAuthor} == ${currentUserName}">삭제</button>
                 </div>
             </div>
             <p class="card-text" id="comment-${comment.commentId}-content">${comment.commentContent}</p>
