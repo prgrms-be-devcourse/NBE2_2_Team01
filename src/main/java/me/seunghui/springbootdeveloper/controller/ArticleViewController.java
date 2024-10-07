@@ -11,6 +11,7 @@ import me.seunghui.springbootdeveloper.dto.Comment.CommentPageRequestDTO;
 import me.seunghui.springbootdeveloper.service.ArticleService;
 import me.seunghui.springbootdeveloper.service.CommentService;
 import me.seunghui.springbootdeveloper.service.LikeService;
+import me.seunghui.springbootdeveloper.service.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequiredArgsConstructor
 @Log4j2
 public class ArticleViewController {
+    private final UserService userService;
     private final ArticleService articleService;  // 게시글 관련 서비스
     private final CommentService commentService;
     private final LikeService likeService;
@@ -50,21 +52,23 @@ public class ArticleViewController {
     public String getArticle(@PathVariable Long id, @ModelAttribute CommentPageRequestDTO commentPageRequestDTO, Model model) {
         // ID에 해당하는 게시글 찾기
         Article article = articleService.findById(id);
-        // 조회수 증가
+
 
         articleService.getIncreaseViewCount(id); // 변경된 조회수를 저장
 
         Page<CommentListViewReponse> commentListPage = commentService.getComments(id,commentPageRequestDTO);
-        long likeCount=likeService.getLikeCount(id);
-        long commentCount = commentService.getCommentCount(id);
 
+        long likeCount=likeService.getLikeCount(id); //좋아요
+        long commentCount = commentService.getCommentCount(id);// 조회수
 
         // 현재 사용자 정보 가져오기 (로그인한 사용자의 이름 또는 이메일)
         String currentUserName =  SecurityContextHolder.getContext().getAuthentication().getName();
+        String currentUserName2=userService.currentUser();
         log.info("Authentication: {}",  SecurityContextHolder.getContext().getAuthentication());
         // 현재 사용자가 게시글의 작성자인지 확인
         boolean isOwner = article.getAuthor().equals(currentUserName);
         log.info("currentUserName: {}", currentUserName);
+        log.info("currentUserName2: {}", currentUserName2);
         log.info("isOwner: {}", isOwner);
 
         // 게시글 정보를 모델에 추가

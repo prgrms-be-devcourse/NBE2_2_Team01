@@ -46,7 +46,7 @@ body {
 }
 
 .ck-content{
-    height: 200px;
+    height: auto;
 }
 .articleList-content{
     max-width: 900px;

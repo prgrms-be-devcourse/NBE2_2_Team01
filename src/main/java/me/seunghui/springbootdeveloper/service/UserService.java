@@ -3,8 +3,11 @@ package me.seunghui.springbootdeveloper.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import me.seunghui.springbootdeveloper.Repository.UserRepository;
+import me.seunghui.springbootdeveloper.domain.Role;
+import me.seunghui.springbootdeveloper.domain.Comment;
 import me.seunghui.springbootdeveloper.domain.User;
 import me.seunghui.springbootdeveloper.dto.User.AddUserRequest;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +27,9 @@ public class UserService {
         return userRepository.save(User.builder()
                 .email(dto.getEmail())
                 .password(encoder.encode(dto.getPassword())) // 비밀번호를 해시 처리
+                        .role(Role.ROLE_USER) // 자동 유저 부여
+                        .nickname(dto.getNickname())
+
                 .build()).getId(); // 저장된 사용자 레코드의 ID 반환
     }
 
@@ -51,6 +57,14 @@ public class UserService {
         });
     }
 
+    public String currentUser() {
+        String userName = SecurityContextHolder.getContext().getAuthentication().getName(); // 현재 로그인된 사용자 확인
+//        if (!user.getEmail().equals(userName)) {
+//            throw new IllegalArgumentException("not authorized");
+//        }
+        log.info("userName: {}" , userName);
+        return userName;
+    }
     //사용자가 좋아요 누른 게시글 조회
     //사용자가 쓴 게시글 조회
     //시용자가 쓴 댓글 조회

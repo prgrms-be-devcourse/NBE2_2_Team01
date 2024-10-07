@@ -68,7 +68,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         //리프레시 토큰 생성 ->저장->쿠키에 저장
         String refreshToken = tokenProvider.generateToken(user, REFRESH_TOKEN_DURATION);
-        saveRefreshToken(user.getId(), refreshToken);
+        saveRefreshToken(user.getId(), refreshToken, user.getEmail());
         addRefreshTokenToCookie(request, response, refreshToken);
 
         //액세스 토큰 생성-> 패스에 액세스 토큰을 추가
@@ -84,10 +84,10 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
     //생성된 리프레시 토큰을 전달받아 데이터베이스에 저장
     //사용자의 userId로 기존 리프레시 토큰이 있는지 확인하고, 있으면 업데이트하고, 없으면 새로 생성하여 저장
-    private void saveRefreshToken(Long userId, String newRefreshToken) {
+    private void saveRefreshToken(Long userId, String newRefreshToken, String email) {
         RefreshToken refreshToken = refreshTokenRepository.findByUserId(userId)
                 .map(entity -> entity.update(newRefreshToken))
-                .orElse(new RefreshToken(userId, newRefreshToken));
+                .orElse(new RefreshToken(userId, newRefreshToken, email));
 
         refreshTokenRepository.save(refreshToken);
     }
