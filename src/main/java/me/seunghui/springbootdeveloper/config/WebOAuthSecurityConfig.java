@@ -53,7 +53,7 @@ public class WebOAuthSecurityConfig {
 
         // 세션을 사용하지 않는 방식으로 설정 (무상태)
         http.sessionManagement(session -> session
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                .sessionCreationPolicy(SessionCreationPolicy.ALWAYS));
 
         // JWT 토큰을 처리하는 커스텀 필터를 추가 (UsernamePasswordAuthenticationFilter 앞에 배치)
         http.addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
