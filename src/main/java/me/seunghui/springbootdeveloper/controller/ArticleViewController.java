@@ -55,7 +55,6 @@ public class ArticleViewController {
         Article article = articleService.findById(id);
 
 
-
         articleService.getIncreaseViewCount(id); // 변경된 조회수를 저장
 
         Page<CommentListViewReponse> commentListPage = commentService.getComments(id,commentPageRequestDTO);
@@ -68,7 +67,7 @@ public class ArticleViewController {
         log.info("Authentication: {}",  SecurityContextHolder.getContext().getAuthentication());
         // 현재 사용자가 게시글의 작성자인지 확인
         boolean isArticleOwner = article.getAuthor().equals(currentUserName);
-        boolean isCommentOwner = article.getAuthor().equals(currentUserName);
+
         log.info("currentUserName: {}", currentUserName);
         log.info("articleAuthor:{}", article.getAuthor());
         //log.info("isOwner: {}", isOwner);
@@ -76,7 +75,6 @@ public class ArticleViewController {
         // 게시글 정보를 모델에 추가
         model.addAttribute("article", article);
         model.addAttribute("isArticleOwner", isArticleOwner);
-        model.addAttribute("isCommentOwner", isCommentOwner);
         model.addAttribute("currentUserName", currentUserName);
         model.addAttribute("comments", commentListPage.getContent());
         //model.addAttribute("isCommentOwner", commentListPage.);

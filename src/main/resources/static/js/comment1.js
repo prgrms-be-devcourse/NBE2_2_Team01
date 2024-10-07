@@ -149,25 +149,6 @@ function deleteComment(commentId) {
 }
 
 // 댓글 목록 로드
-// function loadComments(articleId) {
-//     const url = `/api/comment/${articleId}`;
-//     httpRequest('GET', url, null,
-//         (response) => {
-//             if (!response.ok) {
-//                 console.error('응답에 문제가 있습니다. 상태 코드:', response.status);
-//                 return;
-//             }
-//             response.json().then(comments => {
-//                 renderComments(comments); // 댓글 목록을 화면에 렌더링
-//             }).catch(error => {
-//                 console.error('JSON 파싱 오류:', error);
-//             });
-//         },
-//         (error) => {
-//             console.error('댓글 불러오기 실패:', error);
-//         });
-// }
-// 댓글 목록 로드
 
 function loadComments(articleId) {
     const url = `/api/comment/${articleId}`;
@@ -219,7 +200,7 @@ function renderComments(comments) {
     });
 }
 
-const currentUserName = /*[[${currentUserName}]]*/ '';
+// const currentUserName = /*[[${currentUserName}]]*/ '';
 
 // 특정 댓글과 그 대댓글을 렌더링하는 함수
 function renderCommentWithReplies(comment, allComments, depth) {
@@ -246,6 +227,9 @@ function renderCommentWithReplies(comment, allComments, depth) {
         commentCard.classList.add('comment-main');
     }
     console.log(`댓글 ${comment.commentId}의${comment.commentAuthor} ${comment.commentCreatedAt} ${comment.commentAuthor}: ${comment.commentIsDeleted}`);
+// 댓글 작성자와 현재 사용자 정보를 로그로 출력
+    console.log("commentAuthor: ", comment.commentAuthor);
+    console.log("currentUserName: ", currentUserName);
 
     // 댓글 삭제 여부에 따라 표시
     if (comment.commentIsDeleted) {
@@ -261,10 +245,10 @@ function renderCommentWithReplies(comment, allComments, depth) {
             <div class="d-flex justify-content-between align-items-center">
                 <h6 class="card-subtitle mb-2 text-muted" id="comment-Author">${comment.commentAuthor}</h6>
                 <div class="comment-button">
-                    <button type="button" id="comment-modify-btn-${comment.commentId}" 
-                            class="btn btn-primary btn-sm" th:if="${comment.commentAuthor} == ${currentUserName}">수정</button>
-                    <button type="button" id="comment-delete-btn-${comment.commentId}" 
-                            class="btn btn-secondary btn-sm"  th:if="${comment.commentAuthor} == ${currentUserName}">삭제</button>
+                        ${comment.commentAuthor === currentUserName ? `
+                        <button type="button" id="comment-modify-btn-${comment.commentId}" class="btn btn-primary btn-sm">수정</button>
+                        <button type="button" id="comment-delete-btn-${comment.commentId}" class="btn btn-secondary btn-sm">삭제</button>
+                        ` : ''}
                 </div>
             </div>
             <p class="card-text" id="comment-${comment.commentId}-content">${comment.commentContent}</p>
