@@ -27,8 +27,8 @@
                 <div class="col-lg-6 text-left">
                     <button type="button" id="modify-btn"
                             th:onclick="|location.href='@{/new-article?id={articleId}(articleId=${article.id})}'|"
-                            class="btn btn-primary btn-sm">수정</button>
-                    <button type="button" id="delete-btn" class="btn btn-secondary btn-sm">삭제</button>
+                            class="btn btn-primary btn-sm" th:if="${isArticleOwner}">수정</button>
+                    <button type="button" id="delete-btn" class="btn btn-secondary btn-sm" th:if="${isArticleOwner}">삭제</button>
                 </div>
 
                 <!-- 우측에 목록으로 돌아가기 버튼 -->
@@ -97,7 +97,7 @@
                         <!-- 댓글 작성 폼 -->
                         <div id="comment-form-section" class="mt-4">
                             <h6>댓글 작성</h6>
-                            <h6 class="mb-2 text-muted" th:text="${user}"/>
+                            <h6 class="mb-2 text-muted" th:text="${currentUserName}"/>
 
                             <form id="comment-form">
                                 <input type="hidden" name="articleId" th:value="${article.id}"/>
