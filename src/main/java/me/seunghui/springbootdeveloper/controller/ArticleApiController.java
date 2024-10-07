@@ -21,9 +21,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@CrossOrigin(origins = "http://localhost:8080")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/articles")
+@RequestMapping("/api/article")
 @Log4j2
 public class ArticleApiController {
 
@@ -72,6 +73,21 @@ public class ArticleApiController {
         return ResponseEntity.ok().body(new ArticleResponse(article)); // 조회된 게시글을 반환
     }
 
+
+
+    // 게시글 수정 API (PUT)
+    // 게시글을 수정하고, 선택적으로 파일도 함께 수정
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Article> updateArticle(
+            @PathVariable("id") Long id, // 수정할 게시글 ID
+            @RequestPart("request") UpdateArticleRequest request, // 게시글 수정 데이터
+            @RequestPart(value = "files", required = false) List<MultipartFile> files // 선택적으로 수정할 파일 리스트
+    ) {
+        // 게시글과 파일을 업데이트하는 서비스 호출
+        Article updatedArticle = articleService.update(id, request, files);
+        return ResponseEntity.ok().body(updatedArticle); // 수정된 게시글 반환
+    }
+
     // 게시글 삭제 API (DELETE)
     // 특정 게시글을 삭제
     @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -89,18 +105,7 @@ public class ArticleApiController {
         }
     }
 
-    // 게시글 수정 API (PUT)
-    // 게시글을 수정하고, 선택적으로 파일도 함께 수정
-    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Article> updateArticle(
-            @PathVariable("id") Long id, // 수정할 게시글 ID
-            @RequestPart("request") UpdateArticleRequest request, // 게시글 수정 데이터
-            @RequestPart(value = "files", required = false) List<MultipartFile> files // 선택적으로 수정할 파일 리스트
-    ) {
-        // 게시글과 파일을 업데이트하는 서비스 호출
-        Article updatedArticle = articleService.update(id, request, files);
-        return ResponseEntity.ok().body(updatedArticle); // 수정된 게시글 반환
-    }
+
 }
 //consumes = MediaType.MULTIPART_FORM_DATA_VALUE를 작성한 이유는
 // 서버가 해당 요청이 multipart/form-data 형식으로 전송된다는 것을 명시적으로 알리기 위함

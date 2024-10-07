@@ -11,7 +11,7 @@ function httpRequest(method, url, body, success, fail) {
         body: body,
     }).then(response => {
         if (response.ok) {
-            return success(response);  // 응답을 success 콜백으로 전달
+            return response.json().then(data => success(data));  // JSON 응답을 성공 콜백으로 전달
         }
         const refresh_token = getCookie('refresh_token');
         if (response.status === 401 && refresh_token) {
@@ -44,20 +44,40 @@ function submitComment(articleId, content, parentCommentId = null) {
         parentCommentId: parentCommentId  // 부모 댓글 ID가 있을 경우 대댓글로 처리
     };
 
-    const url = `/api/comments/${articleId}`;
-    httpRequest('POST', url, JSON.stringify(body),  // JSON으로 변환해서 전송
-        () => {
-            loadComments(articleId); // 댓글 목록 다시 로드
+    // const url = `/api/comment/${articleId}`;
+    // httpRequest('POST', url, JSON.stringify(body),  // JSON으로 변환해서 전송
+    //     () => {
+    //         loadComments(articleId); // 댓글 목록 다시 로드
+    //         if (!parentCommentId) {
+    //             document.querySelector('textarea[name="content"]').value = ''; // 메인 댓글 textarea 초기화
+    //         } else {
+    //             document.querySelector(`#reply-form-${parentCommentId} textarea`).value = ''; // 대댓글 textarea 초기화
+    //         }
+    //     },
+    //     (error) => {
+    //         console.error('댓글 추가 실패:', error);
+    //         alert('댓글 추가에 실패했습니다.');
+    //     });
+    const url = `/api/comment/${articleId}`;
+
+    httpRequest('POST', url, JSON.stringify(body),
+        (savedComment) => {  // 성공 시 처리 (savedComment는 서버에서 반환된 댓글 객체)
+            console.log("새로운 댓글:", savedComment);  // 서버에서 반환된 저장된 댓글 객체 출력
+            loadComments(articleId);  // 댓글 목록 다시 로드
             if (!parentCommentId) {
-                document.querySelector('textarea[name="content"]').value = ''; // 메인 댓글 textarea 초기화
+                document.querySelector('textarea[name="content"]').value = '';  // 메인 댓글 초기화
             } else {
-                document.querySelector(`#reply-form-${parentCommentId} textarea`).value = ''; // 대댓글 textarea 초기화
+                document.querySelector(`#reply-form-${parentCommentId} textarea`).value = '';  // 대댓글 textarea 초기화
             }
         },
-        (error) => {
-            console.error('댓글 추가 실패:', error);
-            alert('댓글 추가에 실패했습니다.');
+        (response) => {  // 실패 시 처리
+            console.error('댓글 작성 실패, 상태 코드:', response.status || '응답 없음');
+            alert('댓글 작성에 실패했습니다. 다시 시도해주세요.');
         });
+
+
+
+
 }
 
 // 댓글 수정 요청 함수
@@ -104,7 +124,7 @@ function submitEdit(commentId, updatedContent) {
         });
     }
 
-    httpRequest('PUT', `/api/comments/${commentId}`, body, success, fail);
+    httpRequest('PUT', `/api/comment/${commentId}`, body, success, fail);
 }
 
 // 댓글 삭제 요청 함수 (isDeleted를 true로 업데이트)
@@ -125,12 +145,12 @@ function deleteComment(commentId) {
         });
     }
 
-    httpRequest('PUT', `/api/comments/${commentId}`, body, success, fail);
+    httpRequest('PUT', `/api/comment/${commentId}`, body, success, fail);
 }
 
 // 댓글 목록 로드
 // function loadComments(articleId) {
-//     const url = `/api/comments/${articleId}`;
+//     const url = `/api/comment/${articleId}`;
 //     httpRequest('GET', url, null,
 //         (response) => {
 //             if (!response.ok) {
@@ -148,8 +168,9 @@ function deleteComment(commentId) {
 //         });
 // }
 // 댓글 목록 로드
+
 function loadComments(articleId) {
-    const url = `/api/comments/${articleId}`;
+    const url = `/api/comment/${articleId}`;
     httpRequest('GET', url, null,
         (data, response) => {  // 응답 데이터를 받고 response 객체도 전달받음
             if (!response.ok) {
@@ -162,6 +183,28 @@ function loadComments(articleId) {
             console.error('댓글 불러오기 실패:', error);
         });
 }
+
+// function loadComments(articleId) {
+//     const url = `/api/comment/${articleId}`;
+//     httpRequest('GET', url, null,
+//         (data, response) => {  // 응답 데이터를 받고 response 객체도 전달받음
+//             if (!response.ok) {
+//                 console.error('응답에 문제가 있습니다. 상태 코드:', response.status);
+//                 return;
+//             }
+//
+//             try {
+//                 const jsonData = JSON.parse(data);  // JSON 파싱을 명시적으로 시도
+//                 renderComments(jsonData); // 댓글 목록을 화면에 렌더링
+//             } catch (error) {
+//                 console.error('JSON 파싱 오류:', error);
+//             }
+//         },
+//         (error) => {
+//             console.error('댓글 불러오기 실패:', error);
+//         });
+// }
+
 
 // 댓글 목록 렌더링
 function renderComments(comments) {
@@ -181,7 +224,16 @@ function renderCommentWithReplies(comment, allComments, depth) {
     const commentSection = document.getElementById('comments-section');
     const commentCard = document.createElement('div');
     commentCard.style.marginLeft = `${depth * 20}px`;  // 대댓글 들여쓰기
-
+    // 대댓글 깊이에 따라 클래스 부여
+    // if (depth === 1) {
+    //     // 첫 번째 대댓글 (최상위 댓글의 자식)만 들여쓰기 적용
+    //     commentCard.style.marginLeft = `20px`;
+    // } else if (depth >= 2) {
+    //     // 깊이가 2 이상인 대댓글은 추가 들여쓰기를 하지 않음
+    //     commentCard.style.marginLeft = `20px`;  // 들여쓰기를 고정
+    // } else {
+    //     commentCard.style.marginLeft = `0px`;  // 최상위 댓글
+    // }
     // commentId로 고유한 div 설정
     commentCard.id = `comment-card-${comment.commentId}`;
 

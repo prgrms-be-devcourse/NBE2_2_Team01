@@ -5,12 +5,15 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+
 import me.seunghui.springbootdeveloper.config.jwt.JwtPrincipal;
 import me.seunghui.springbootdeveloper.config.jwt.TokenProvider;
 import me.seunghui.springbootdeveloper.domain.Role;
 import me.seunghui.springbootdeveloper.domain.User;
 import me.seunghui.springbootdeveloper.service.UserDetailService;
 import me.seunghui.springbootdeveloper.service.UserService;
+import lombok.extern.log4j.Log4j2;
+
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -22,6 +25,7 @@ import java.io.IOException;
 import java.util.Arrays;
 
 @RequiredArgsConstructor
+@Log4j2
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
     private final TokenProvider tokenProvider; //JWT 토큰을 생성하고 검증하는 역할을 담당하는 클래스
     private final UserDetailService userDetailService;
@@ -65,6 +69,28 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(request, response); //필터 체인 내의 다음 필터로 요청을 전달함
     }
+//@Override
+//protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+//        throws ServletException, IOException {
+//    String header = request.getHeader("Authorization");
+//    if (header != null && header.startsWith("Bearer ")) {
+//        String token = header.substring(7);
+//        try {
+//            log.info("JWT 토큰 검증 중: {}", token);
+//            // JWT 검증 및 사용자 인증 처리
+//            UsernamePasswordAuthenticationToken authentication = getAuthentication(token);
+//            if (authentication != null) {
+//                SecurityContextHolder.getContext().setAuthentication(authentication);
+//                log.info("JWT 인증 성공: {}", authentication.getName());
+//            } else {
+//                log.info("JWT 인증 실패: 인증 객체가 null입니다.");
+//            }
+//        } catch (Exception e) {
+//            log.error("JWT 검증 중 예외 발생: {}", e.getMessage());
+//        }
+//    }
+//    filterChain.doFilter(request, response);
+//}
 
     private String getAccessToken(String authorizationHeader) {
         if(authorizationHeader != null && authorizationHeader.startsWith(TOKEN_PREFIX)) { //헤더가 존재하고 Bearer로 시작하는지 확인

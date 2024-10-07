@@ -6,7 +6,7 @@
 //     };
 //
 //     // AJAX 요청으로 댓글 작성
-//     fetch(`/api/comments/${articleId}`, {
+//     fetch(`/api/comment/${articleId}`, {
 //         method: 'POST',
 //         headers: {
 //             'Content-Type': 'application/json',
@@ -139,7 +139,7 @@
 //         parentCommentId: parentCommentId
 //     };
 //
-//     const url = `/api/comments/${articleId}`;
+//     const url = `/api/comment/${articleId}`;
 //     httpRequest('POST', url, JSON.stringify(body),  // JSON으로 변환해서 전송
 //         () => {
 //             alert('댓글이 추가되었습니다.');
@@ -159,7 +159,7 @@
 //
 // // 댓글 목록 로드
 // function loadComments(articleId) {
-//     const url = `/api/comments/${articleId}`;
+//     const url = `/api/comment/${articleId}`;
 //     httpRequest('GET', url, null,
 //         (response) => {
 //             if (!response.ok) {
@@ -350,7 +350,7 @@ function submitComment(articleId, content, parentCommentId = null) {
         parentCommentId: parentCommentId  // 부모 댓글 ID가 있을 경우 대댓글로 처리
     };
 
-    const url = `/api/comments/${articleId}`;
+    const url = `/api/comment/${articleId}`;
     httpRequest('POST', url, JSON.stringify(body),  // JSON으로 변환해서 전송
         () => {
             loadComments(articleId); // 댓글 목록 다시 로드
@@ -408,7 +408,7 @@ function submitEdit(commentId, updatedContent) {
         });
     }
 
-    httpRequest('PUT', `/api/comments/${commentId}`, body, success, fail);
+    httpRequest('PUT', `/api/comment/${commentId}`, body, success, fail);
 }
 
 // 댓글 삭제 요청 함수
@@ -432,7 +432,7 @@ function deleteComment(commentId) {
 
 // 댓글 목록 로드
 function loadComments(articleId) {
-    const url = `/api/comments/${articleId}`;
+    const url = `/api/comment/${articleId}`;
     httpRequest('GET', url, null,
         (response) => {
             if (!response.ok) {

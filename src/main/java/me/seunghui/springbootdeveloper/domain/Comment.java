@@ -60,6 +60,7 @@ public class Comment {
 
     @ManyToOne // 자기 참조, 대댓글을 위한 상위 댓글
     @JoinColumn(name = "parent_comment_id")
+    @JsonIgnore
     private Comment parentComment; // 부모 댓글을 참조
 
     @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL, orphanRemoval = true)
