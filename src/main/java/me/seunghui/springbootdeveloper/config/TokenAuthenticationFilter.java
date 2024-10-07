@@ -5,22 +5,30 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
+
+import me.seunghui.springbootdeveloper.config.jwt.JwtPrincipal;
 import me.seunghui.springbootdeveloper.config.jwt.TokenProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 @RequiredArgsConstructor
 @Log4j2
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
     private final TokenProvider tokenProvider; //JWT 토큰을 생성하고 검증하는 역할을 담당하는 클래스
+    private final UserDetailService userDetailService;
+
     private final static String HEADER_AUTHORIZATION = "Authorization"; //Authorization 헤더의 키 값, 즉 클라이언트가 인증 토큰을 보낼 때 사용하는 HTTP 헤더 이름.
     private final static String TOKEN_PREFIX = "Bearer "; //JWT 토큰의 접두사, 일반적으로 "Bearer "로 사용
+
+
 
     @Override
     // 필터링 로직을 구현한 메인 메서드로, 요청을 가로채어 JWT를 처리한 후, 남은 필터 체인을 계속 실행하도록 한다.
@@ -38,41 +46,28 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(request, response); //필터 체인 내의 다음 필터로 요청을 전달함
     }
-
-//    @Override
-//    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-//            throws ServletException, IOException {
-//        String header = request.getHeader("Authorization");
-//        if (header != null && header.startsWith("Bearer ")) {
-//            String token = header.substring(7);
-//            try {
-//                // JWT 검증 및 사용자 정보 추출
-//                UsernamePasswordAuthenticationToken authentication = getAuthentication(token);
-//
-//                if (authentication != null) {
-//                    // 인증 객체가 있으면 SecurityContext에 설정
-//                    SecurityContextHolder.getContext().setAuthentication(authentication);
-//                    log.info("JWT 인증 성공: {}", authentication.getName());
-//                } else {
-//                    log.info("JWT 인증 실패: 인증 객체가 null입니다.");
-//                }
-//            } catch (Exception e) {
-//                log.error("JWT 검증 중 예외 발생: {}", e.getMessage());
+//@Override
+//protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+//        throws ServletException, IOException {
+//    String header = request.getHeader("Authorization");
+//    if (header != null && header.startsWith("Bearer ")) {
+//        String token = header.substring(7);
+//        try {
+//            log.info("JWT 토큰 검증 중: {}", token);
+//            // JWT 검증 및 사용자 인증 처리
+//            UsernamePasswordAuthenticationToken authentication = getAuthentication(token);
+//            if (authentication != null) {
+//                SecurityContextHolder.getContext().setAuthentication(authentication);
+//                log.info("JWT 인증 성공: {}", authentication.getName());
+//            } else {
+//                log.info("JWT 인증 실패: 인증 객체가 null입니다.");
 //            }
+//        } catch (Exception e) {
+//            log.error("JWT 검증 중 예외 발생: {}", e.getMessage());
 //        }
-//        filterChain.doFilter(request, response);
 //    }
-//
-//    private UsernamePasswordAuthenticationToken getAuthentication(String token) {
-//        // JWT 토큰을 검증하고, 인증 정보를 반환하는 로직
-//        // JWT 유효성을 검사하고, 사용자 정보를 추출
-//        // 여기서 사용자 ID를 추출하여 Authentication 객체를 생성합니다.
-//        Long userId = tokenProvider.getUserId(token);  // JWT에서 사용자 ID 추출
-//        if (userId != null) {
-//            return new UsernamePasswordAuthenticationToken(userId, null, new ArrayList<>()); // 권한 없이 인증 객체 생성
-//        }
-//        return null;  // 인증 실패 시 null 반환
-//    }
+//    filterChain.doFilter(request, response);
+//}
 
     private String getAccessToken(String authorizationHeader) {
         if(authorizationHeader != null && authorizationHeader.startsWith(TOKEN_PREFIX)) { //헤더가 존재하고 Bearer로 시작하는지 확인
