@@ -1,309 +1,3 @@
-// // 댓글 작성 요청 함수
-// function submitComment(articleId, commentContent, parentCommentId) {
-//     const requestBody = {
-//         commentContent: commentContent,
-//         parentCommentId: parentCommentId
-//     };
-//
-//     // AJAX 요청으로 댓글 작성
-//     fetch(`/api/comment/${articleId}`, {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/json',
-//             'Authorization': 'Bearer ' + localStorage.getItem('access_token')
-//         },
-//         body: JSON.stringify(requestBody)
-//     }).then(response => response.json())
-//         .then(comment => {
-//             addCommentToDOM(comment);
-//             document.querySelector('#comment-form textarea').value = ''; // 입력 필드 초기화
-//         })
-//         .catch(error => console.error('Error:', error));
-// }
-//
-// // DOM에 새 댓글을 추가하는 함수
-// function addCommentToDOM(comment) {
-//     const commentSection = document.getElementById('comments-section');
-//
-//     // 새 댓글 요소 생성
-//     const commentCard = document.createElement('div');
-//     commentCard.classList.add('card', 'mb-3');
-//
-//     // 부모 댓글이면 일반 댓글, 대댓글이면 들여쓰기
-//     let indentStyle = '';
-//     if (comment.parentCommentId) {
-//         indentStyle = 'margin-left: 20px;';
-//     }
-//
-//     commentCard.innerHTML = `
-//         <div class="card-body" style="${indentStyle}">
-//             <h6 class="card-subtitle mb-2 text-muted">${comment.commentAuthor}</h6>
-//             <p class="card-text">${comment.commentContent}</p>
-//             <p class="text-muted">${new Date(comment.commentCreatedAt).toLocaleString()}</p>
-//             <button class="btn btn-link reply-btn" data-comment-id="${comment.commentId}">Reply</button>
-//         </div>
-//     `;
-//
-//     // 댓글 섹션에 새 댓글 추가
-//     commentSection.appendChild(commentCard);
-//
-//     // 대댓글 작성 폼을 보여줄 수 있는 이벤트 추가
-//     addReplyButtonEvent();
-// }
-//
-// // 댓글 작성 버튼 이벤트
-// document.getElementById('comment-form').addEventListener('submit', function (e) {
-//     e.preventDefault(); // 폼 기본 동작 막기
-//     const commentContent = this.querySelector('textarea').value;
-//     const articleId = this.querySelector('input[name="articleId"]').value;
-//     submitComment(articleId, commentContent, null); // 부모 댓글 없이 새로운 댓글 추가
-// });
-//
-// // 대댓글 작성 폼 추가
-// function addReplyButtonEvent() {
-//     document.querySelectorAll('.reply-btn').forEach(button => {
-//         button.addEventListener('click', function () {
-//             const commentId = this.dataset.commentId;
-//             if (document.querySelector(`#reply-form-${commentId}`)) return; // 이미 대댓글 폼이 있을 경우 무시
-//
-//             const replyForm = document.createElement('form');
-//             replyForm.id = `reply-form-${commentId}`;
-//             replyForm.innerHTML = `
-//                 <div class="form-group mt-2">
-//                     <textarea class="form-control" rows="2" placeholder="대댓글을 입력하세요"></textarea>
-//                     <button type="button"  id="recomment-btn" class="btn btn-primary btn-sm mt-2 submit-reply-btn" data-comment-id="${commentId}">대댓글 작성</button>
-//                 </div>
-//             `;
-//
-//             // 대댓글 작성 폼을 댓글 아래에 추가
-//             this.parentElement.appendChild(replyForm);
-//
-//             // 대댓글 작성 이벤트 연결
-//             document.querySelector(`#reply-form-${commentId} .submit-reply-btn`).addEventListener('click', function () {
-//                 const replyContent = replyForm.querySelector('textarea').value;
-//                 const articleId = document.querySelector('input[name="articleId"]').value;
-//                 submitComment(articleId, replyContent, commentId); // 부모 댓글 ID와 함께 전송
-//                 replyForm.remove(); // 대댓글 작성 후 폼 제거
-//             });
-//         });
-//     });
-// }
-//
-// // 초기 댓글 목록 로드 시 대댓글 버튼에 이벤트 연결
-// addReplyButtonEvent();
-
-
-// // HTTP 요청을 보내는 함수
-// function httpRequest(method, url, body, success, fail) {
-//     const headers = {
-//         Authorization: 'Bearer ' + localStorage.getItem('access_token'),
-//         'Content-Type': 'application/json'  // JSON 형식으로 전송
-//     };
-//
-//     fetch(url, {
-//         method: method,
-//         headers: headers,
-//         body: body,
-//     }).then(response => {
-//         if (response.ok) {
-//             return success(response);  // 응답을 success 콜백으로 전달
-//         }
-//         const refresh_token = getCookie('refresh_token');
-//         if (response.status === 401 && refresh_token) {
-//             fetch('/api/token', {
-//                 method: 'POST',
-//                 headers: {
-//                     Authorization: 'Bearer ' + localStorage.getItem('access_token'),
-//                     'Content-Type': 'application/json'
-//                 },
-//                 body: JSON.stringify({
-//                     refreshToken: getCookie('refresh_token'),
-//                 }),
-//             })
-//                 .then(res => res.ok ? res.json() : Promise.reject())
-//                 .then(result => {
-//                     localStorage.setItem('access_token', result.accessToken);
-//                     httpRequest(method, url, body, success, fail); // 토큰 갱신 후 다시 요청
-//                 })
-//                 .catch(() => fail(response));
-//         } else {
-//             return fail(response);
-//         }
-//     }).catch(error => fail(error));
-// }
-//
-// // 댓글 작성 요청
-// function submitComment(articleId, content, parentCommentId = null) {
-//     const body = {
-//         commentContent: content,
-//         parentCommentId: parentCommentId
-//     };
-//
-//     const url = `/api/comment/${articleId}`;
-//     httpRequest('POST', url, JSON.stringify(body),  // JSON으로 변환해서 전송
-//         () => {
-//             alert('댓글이 추가되었습니다.');
-//             loadComments(articleId); // 댓글 목록 다시 로드
-//             // 댓글 작성 폼의 textarea 비우기 (새 댓글 작성 시)
-//             if (!parentCommentId) {
-//                 document.querySelector('textarea[name="content"]').value = ''; // 메인 댓글 textarea 초기화
-//             } else {
-//                 document.querySelector(`#reply-form-${parentCommentId} textarea`).value = ''; // 대댓글 textarea 초기화
-//             }
-//         },
-//         (error) => {
-//             console.error('댓글 추가 실패:', error);
-//             alert('댓글 추가에 실패했습니다.');
-//         });
-// }
-//
-// // 댓글 목록 로드
-// function loadComments(articleId) {
-//     const url = `/api/comment/${articleId}`;
-//     httpRequest('GET', url, null,
-//         (response) => {
-//             if (!response.ok) {
-//                 console.error('응답에 문제가 있습니다. 상태 코드:', response.status);
-//                 return;
-//             }
-//             response.json().then(comments => {
-//                 renderComments(comments); // 댓글 목록을 화면에 렌더링
-//             }).catch(error => {
-//                 console.error('JSON 파싱 오류:', error);
-//             });
-//         },
-//         (error) => {
-//             console.error('댓글 불러오기 실패:', error);
-//         });
-// }
-//
-// // 댓글 목록 렌더링
-// function renderComments(comments) {
-//     const commentSection = document.getElementById('comments-section');
-//     commentSection.innerHTML = ''; // 기존 댓글 목록 초기화
-//
-//     // 부모 댓글과 대댓글을 트리 구조로 렌더링
-//     const topLevelComments = comments.filter(comment => !comment.parentCommentId);  // 최상위 부모 댓글들만 필터링
-//
-//     topLevelComments.forEach(parentComment => {
-//         renderCommentWithReplies(parentComment, comments, 0);  // 부모 댓글과 대댓글 렌더링
-//     });
-// }
-//
-// // 특정 댓글과 그 대댓글을 렌더링하는 함수
-// function renderCommentWithReplies(comment, allComments, depth) {
-//     const commentSection = document.getElementById('comments-section');
-//
-//     // 대댓글의 최대 깊이 설정 (2단계까지 들여쓰기 허용)
-//     const maxDepth = 1;
-//     const actualDepth = Math.min(depth, maxDepth);
-//
-//     // 댓글 카드 생성
-//     const commentCard = document.createElement('div');
-//     // commentCard.classList.add('card', 'mb-3');
-//     commentCard.style.marginLeft = `${actualDepth * 20}px`;  // 들여쓰기 (depth에 따라)
-//
-//     // 대댓글일 경우 색상 지정
-//     const isReply = comment.parentCommentId !== null;
-//     if (isReply) {
-//         commentCard.classList.add('comment-reply'); // 대댓글 클래스 추가
-//     } else {
-//         commentCard.classList.add('comment-main'); // 새 댓글 클래스 추가
-//     }
-//
-//
-//     commentCard.innerHTML = `
-//         <div class="card-body">
-//             <div class="d-flex justify-content-between align-items-center">
-//                 <h6 class="card-subtitle mb-2 text-muted" id="comment-Author">${comment.commentAuthor}</h6>
-//                 <div class="comment-button">
-//                     <button type="button" id="comment-modify-btn" class="btn btn-primary btn-sm">수정</button>
-//                     <button type="button" id="comment-delete-btn" class="btn btn-secondary btn-sm">삭제</button>
-//                  </div>
-//             </div>
-//
-//             <p class="card-text" id="comment-Content" >${comment.commentContent}</p>
-//             <p class="commentCreatedAt">${comment.commentCreatedAt}</p>
-//             <button class="btn btn-link reply-btn" id="reply-button" data-comment-id="${comment.commentId}">댓글 쓰기</button>
-//             <div id="reply-form-${comment.commentId}" class="reply-form mt-2" style="display: none;">
-//                 <textarea class="form-control" rows="3" placeholder="대댓글을 입력하세요"></textarea>
-//                 <div class="text-right">
-//                 <button type="button" class="btn btn-primary btn-sm mt-2 submit-reply-btn" data-comment-id="${comment.commentId}">댓글 등록</button>
-//                 </div>
-//             </div>
-//         </div>
-//     `;
-//
-//     // 댓글 섹션에 추가
-//     commentSection.appendChild(commentCard);
-//
-//     // 대댓글 작성 버튼에 이벤트 리스너 추가
-//     const replyButton = commentCard.querySelector('.reply-btn');
-//     replyButton.addEventListener('click', (event) => {
-//         const commentId = event.target.getAttribute('data-comment-id');
-//         const replyForm = document.getElementById(`reply-form-${commentId}`);
-//         replyForm.style.display = replyForm.style.display === 'none' ? 'block' : 'none';
-//     });
-//
-//     // 대댓글 작성 버튼에 이벤트 리스너 추가
-//     const submitReplyButton = commentCard.querySelector('.submit-reply-btn');
-//     submitReplyButton.addEventListener('click', (event) => {
-//         const parentCommentId = event.target.getAttribute('data-comment-id');
-//         const content = document.querySelector(`#reply-form-${parentCommentId} textarea`).value;
-//         if (content) {
-//             const articleId = document.getElementById('article-id').value;
-//             submitComment(articleId, content, parentCommentId);
-//         } else {
-//             alert('대댓글 내용을 입력하세요.');
-//         }
-//     });
-//
-//     // 해당 댓글의 대댓글들을 찾고 렌더링
-//     const childComments = allComments.filter(c => c.parentCommentId === comment.commentId);
-//     childComments.forEach(childComment => {
-//         renderCommentWithReplies(childComment, allComments, depth + 1);  // 대댓글 렌더링 (들여쓰기 증가)
-//     });
-// }
-//
-// // 댓글 작성 버튼 클릭 시
-// const commentButton = document.getElementById('comment-btn');
-// if(commentButton) {
-//     commentButton.addEventListener('click', (event) => {
-//         event.preventDefault();  // 기본 동작 막기
-//         const articleId = document.getElementById('article-id').value;
-//         const content = document.querySelector('textarea[name="content"]').value;
-//
-//         if (content) {
-//             submitComment(articleId, content);
-//         } else {
-//             alert('댓글 내용을 입력해주세요.');
-//         }
-//     });
-// }
-//
-// //댓글 수정
-// const comment_modifyButton = document.getElementById('comment-modify-btn');
-// if(comment_modifyButton){
-//     comment_modifyButton.addEventListener('click', (event) => {
-//
-//     });
-// }
-//
-// //댓글 삭제
-// const comment_deleteButton = document.getElementById('comment-delete-btn');
-// if(comment_deleteButton){
-//     comment_deleteButton.addEventListener('click', (event) => {
-//
-//     });
-// }
-//
-// // 페이지 로드 시 댓글 목록 로드
-// window.onload = () => {
-//     const articleId = document.getElementById('article-id').value;
-//     loadComments(articleId);
-// };
-
-
 // HTTP 요청을 보내는 함수
 function httpRequest(method, url, body, success, fail) {
     const headers = {
@@ -317,7 +11,7 @@ function httpRequest(method, url, body, success, fail) {
         body: body,
     }).then(response => {
         if (response.ok) {
-            return success(response);  // 응답을 success 콜백으로 전달
+            return response.json().then(data => success(data));  // JSON 응답을 성공 콜백으로 전달
         }
         const refresh_token = getCookie('refresh_token');
         if (response.status === 401 && refresh_token) {
@@ -350,20 +44,40 @@ function submitComment(articleId, content, parentCommentId = null) {
         parentCommentId: parentCommentId  // 부모 댓글 ID가 있을 경우 대댓글로 처리
     };
 
+    // const url = `/api/comment/${articleId}`;
+    // httpRequest('POST', url, JSON.stringify(body),  // JSON으로 변환해서 전송
+    //     () => {
+    //         loadComments(articleId); // 댓글 목록 다시 로드
+    //         if (!parentCommentId) {
+    //             document.querySelector('textarea[name="content"]').value = ''; // 메인 댓글 textarea 초기화
+    //         } else {
+    //             document.querySelector(`#reply-form-${parentCommentId} textarea`).value = ''; // 대댓글 textarea 초기화
+    //         }
+    //     },
+    //     (error) => {
+    //         console.error('댓글 추가 실패:', error);
+    //         alert('댓글 추가에 실패했습니다.');
+    //     });
     const url = `/api/comment/${articleId}`;
-    httpRequest('POST', url, JSON.stringify(body),  // JSON으로 변환해서 전송
-        () => {
-            loadComments(articleId); // 댓글 목록 다시 로드
+
+    httpRequest('POST', url, JSON.stringify(body),
+        (savedComment) => {  // 성공 시 처리 (savedComment는 서버에서 반환된 댓글 객체)
+            console.log("새로운 댓글:", savedComment);  // 서버에서 반환된 저장된 댓글 객체 출력
+            loadComments(articleId);  // 댓글 목록 다시 로드
             if (!parentCommentId) {
-                document.querySelector('textarea[name="content"]').value = ''; // 메인 댓글 textarea 초기화
+                document.querySelector('textarea[name="content"]').value = '';  // 메인 댓글 초기화
             } else {
-                document.querySelector(`#reply-form-${parentCommentId} textarea`).value = ''; // 대댓글 textarea 초기화
+                document.querySelector(`#reply-form-${parentCommentId} textarea`).value = '';  // 대댓글 textarea 초기화
             }
         },
-        (error) => {
-            console.error('댓글 추가 실패:', error);
-            alert('댓글 추가에 실패했습니다.');
+        (response) => {  // 실패 시 처리
+            console.error('댓글 작성 실패, 상태 코드:', response.status || '응답 없음');
+            alert('댓글 작성에 실패했습니다. 다시 시도해주세요.');
         });
+
+
+
+
 }
 
 // 댓글 수정 요청 함수
@@ -385,10 +99,12 @@ function enableEditComment(commentId, currentContent, commentAuthor) {
     `;
 
     const saveCommentButton = document.getElementById(`save-comment-btn-${commentId}`);
-    saveCommentButton.addEventListener('click', () => {
-        const updatedContent = document.querySelector(`#comment-card-${commentId} textarea[name="content"]`).value;
-        submitEdit(commentId, updatedContent);  // 수정된 내용 저장
-    });
+    if (saveCommentButton) {
+        saveCommentButton.addEventListener('click', () => {
+            const updatedContent = document.querySelector(`#comment-card-${commentId} textarea[name="content"]`).value;
+            submitEdit(commentId, updatedContent);  // 수정된 내용 저장
+        });
+    }
 }
 
 // 댓글 수정 저장 요청
@@ -411,15 +127,16 @@ function submitEdit(commentId, updatedContent) {
     httpRequest('PUT', `/api/comment/${commentId}`, body, success, fail);
 }
 
-// 댓글 삭제 요청 함수
+// 댓글 삭제 요청 함수 (isDeleted를 true로 업데이트)
 function deleteComment(commentId) {
+    const body = JSON.stringify({
+        commentIsDeleted: true,  // 삭제 플래그 설정
+        commentContent: '삭제된 댓글입니다.'  // 삭제된 댓글 내용
+    });
+
     function success() {
-        // 부모 댓글 삭제 시 해당 댓글을 '삭제된 댓글입니다'로 변경
-        const commentCard = document.getElementById(`comment-card-${commentId}`);
-        if (commentCard) {
-            commentCard.innerHTML = `<p>삭제된 댓글입니다</p>`;
-        }
         alert('댓글이 삭제되었습니다.');
+        loadComments(document.getElementById('article-id').value);  // 삭제 후 댓글 목록 새로고침
     }
 
     function fail(response) {
@@ -428,27 +145,47 @@ function deleteComment(commentId) {
         });
     }
 
+    httpRequest('PUT', `/api/comment/${commentId}`, body, success, fail);
 }
 
 // 댓글 목록 로드
+
 function loadComments(articleId) {
     const url = `/api/comment/${articleId}`;
     httpRequest('GET', url, null,
-        (response) => {
+        (data, response) => {  // 응답 데이터를 받고 response 객체도 전달받음
             if (!response.ok) {
                 console.error('응답에 문제가 있습니다. 상태 코드:', response.status);
                 return;
             }
-            response.json().then(comments => {
-                renderComments(comments); // 댓글 목록을 화면에 렌더링
-            }).catch(error => {
-                console.error('JSON 파싱 오류:', error);
-            });
+            renderComments(data); // 댓글 목록을 화면에 렌더링
         },
         (error) => {
             console.error('댓글 불러오기 실패:', error);
         });
 }
+
+// function loadComments(articleId) {
+//     const url = `/api/comment/${articleId}`;
+//     httpRequest('GET', url, null,
+//         (data, response) => {  // 응답 데이터를 받고 response 객체도 전달받음
+//             if (!response.ok) {
+//                 console.error('응답에 문제가 있습니다. 상태 코드:', response.status);
+//                 return;
+//             }
+//
+//             try {
+//                 const jsonData = JSON.parse(data);  // JSON 파싱을 명시적으로 시도
+//                 renderComments(jsonData); // 댓글 목록을 화면에 렌더링
+//             } catch (error) {
+//                 console.error('JSON 파싱 오류:', error);
+//             }
+//         },
+//         (error) => {
+//             console.error('댓글 불러오기 실패:', error);
+//         });
+// }
+
 
 // 댓글 목록 렌더링
 function renderComments(comments) {
@@ -463,13 +200,23 @@ function renderComments(comments) {
     });
 }
 
-// 특정 댓글과 그 대댓글을 렌더링하는 함수
+// const currentUserName = /*[[${currentUserName}]]*/ '';
+
 // 특정 댓글과 그 대댓글을 렌더링하는 함수
 function renderCommentWithReplies(comment, allComments, depth) {
     const commentSection = document.getElementById('comments-section');
     const commentCard = document.createElement('div');
     commentCard.style.marginLeft = `${depth * 20}px`;  // 대댓글 들여쓰기
-
+    // 대댓글 깊이에 따라 클래스 부여
+    // if (depth === 1) {
+    //     // 첫 번째 대댓글 (최상위 댓글의 자식)만 들여쓰기 적용
+    //     commentCard.style.marginLeft = `20px`;
+    // } else if (depth >= 2) {
+    //     // 깊이가 2 이상인 대댓글은 추가 들여쓰기를 하지 않음
+    //     commentCard.style.marginLeft = `20px`;  // 들여쓰기를 고정
+    // } else {
+    //     commentCard.style.marginLeft = `0px`;  // 최상위 댓글
+    // }
     // commentId로 고유한 div 설정
     commentCard.id = `comment-card-${comment.commentId}`;
 
@@ -479,82 +226,100 @@ function renderCommentWithReplies(comment, allComments, depth) {
     } else {
         commentCard.classList.add('comment-main');
     }
+    console.log(`댓글 ${comment.commentId}의${comment.commentAuthor} ${comment.commentCreatedAt} ${comment.commentAuthor}: ${comment.commentIsDeleted}`);
+// 댓글 작성자와 현재 사용자 정보를 로그로 출력
+    console.log("commentAuthor: ", comment.commentAuthor);
+    console.log("currentUserName: ", currentUserName);
 
-    // 부모 댓글이 삭제되었을 경우
-    if (!comment.commentContent) {
+    // 댓글 삭제 여부에 따라 표시
+    if (comment.commentIsDeleted) {
         commentCard.innerHTML = `
-            <div class="card-body">
-                <p>삭제된 댓글입니다</p>
-            </div>
-        `;
+        <div class="card-body">
+            <p>삭제된 댓글입니다</p>
+        </div>
+    `;
+        console.log(`댓글 ${comment.commentId}이(가) 삭제되었습니다.`);
     } else {
         commentCard.innerHTML = `
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h6 class="card-subtitle mb-2 text-muted" id="comment-Author">${comment.commentAuthor}</h6>
-                    <div class="comment-button">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+                <h6 class="card-subtitle mb-2 text-muted" id="comment-Author">${comment.commentAuthor}</h6>
+                <div class="comment-button">
+                        ${comment.commentAuthor === currentUserName ? `
                         <button type="button" id="comment-modify-btn-${comment.commentId}" class="btn btn-primary btn-sm">수정</button>
                         <button type="button" id="comment-delete-btn-${comment.commentId}" class="btn btn-secondary btn-sm">삭제</button>
-                    </div>
-                </div>
-                <p class="card-text" id="comment-${comment.commentId}-content">${comment.commentContent}</p>
-                <p class="commentCreatedAt">${comment.commentCreatedAt}</p>
-                <button class="btn btn-link reply-btn" id="reply-button-${comment.commentId}" data-comment-id="${comment.commentId}">댓글 쓰기</button>
-                <div id="reply-form-${comment.commentId}" class="reply-form mt-2" style="display: none;">
-                    <textarea class="form-control" rows="3" placeholder="대댓글을 입력하세요"></textarea>
-                    <div class="text-right">
-                        <button type="button" class="btn btn-primary btn-sm mt-2 submit-reply-btn" data-comment-id="${comment.commentId}">댓글 등록</button>
-                    </div>
+                        ` : ''}
                 </div>
             </div>
-        `;
+            <p class="card-text" id="comment-${comment.commentId}-content">${comment.commentContent}</p>
+            <p class="commentCreatedAt">${comment.commentCreatedAt}</p>
+            <button class="btn btn-link reply-btn" id="reply-button-${comment.commentId}" data-comment-id="${comment.commentId}">댓글 쓰기</button>
+            <div id="reply-form-${comment.commentId}" class="reply-form mt-2" style="display: none;">
+                <textarea class="form-control" rows="3" placeholder="대댓글을 입력하세요"></textarea>
+                <div class="text-right">
+                    <button type="button" class="btn btn-primary btn-sm mt-2 submit-reply-btn" data-comment-id="${comment.commentId}">댓글 등록</button>
+                </div>
+            </div>
+        </div>
+    `;
     }
 
     commentSection.appendChild(commentCard);
 
     // 수정 버튼에 이벤트 리스너 추가
     const modifyButton = document.getElementById(`comment-modify-btn-${comment.commentId}`);
-    modifyButton.addEventListener('click', () => enableEditComment(comment.commentId, comment.commentContent, comment.commentAuthor));
+    if (modifyButton) {
+        modifyButton.addEventListener('click', () => enableEditComment(comment.commentId, comment.commentContent, comment.commentAuthor));
+    }
 
     // 삭제 버튼에 이벤트 리스너 추가
     const deleteButton = document.getElementById(`comment-delete-btn-${comment.commentId}`);
-    deleteButton.addEventListener('click', () => deleteComment(comment.commentId));
+    if (deleteButton) {
+        deleteButton.addEventListener('click', () => deleteComment(comment.commentId));
+    }
 
     // 대댓글 작성 버튼에 이벤트 리스너 추가
     const replyButton = document.getElementById(`reply-button-${comment.commentId}`);
-    replyButton.addEventListener('click', (event) => {
-        const commentId = event.target.getAttribute('data-comment-id');
-        const replyForm = document.getElementById(`reply-form-${commentId}`);
-        replyForm.style.display = replyForm.style.display === 'none' ? 'block' : 'none';
-    });
+    if (replyButton) {
+        replyButton.addEventListener('click', (event) => {
+            const commentId = event.target.getAttribute('data-comment-id');
+            const replyForm = document.getElementById(`reply-form-${commentId}`);
+            if (replyForm) {
+                replyForm.style.display = replyForm.style.display === 'none' ? 'block' : 'none';
+            }
+        });
+    }
 
     // 대댓글 등록 버튼에 이벤트 리스너 추가
     const submitReplyButton = document.querySelector(`.submit-reply-btn[data-comment-id="${comment.commentId}"]`);
-    submitReplyButton.addEventListener('click', (event) => {
-        const parentCommentId = event.target.getAttribute('data-comment-id');
-        const content = document.querySelector(`#reply-form-${parentCommentId} textarea`).value;
-        if (content) {
-            const articleId = document.getElementById('article-id').value;
-            submitComment(articleId, content, parentCommentId);  // 부모 댓글 ID와 함께 대댓글 등록
-        } else {
-            alert('대댓글 내용을 입력하세요.');
-        }
-    });
+    if (submitReplyButton) {
+        submitReplyButton.addEventListener('click', (event) => {
+            const parentCommentId = event.target.getAttribute('data-comment-id');
+            const content = document.querySelector(`#reply-form-${parentCommentId} textarea`).value;
+            if (content) {
+                const articleId = document.getElementById('article-id').value;
+                submitComment(articleId, content, parentCommentId);  // 부모 댓글 ID와 함께 대댓글 등록
+            } else {
+                alert('대댓글 내용을 입력하세요.');
+            }
+        });
+    }
 
-    // 해당 댓글의 대댓글들을 찾고 렌더링
+    // 자식 댓글은 항상 렌더링 (부모 댓글과 상관없이)
     const childComments = allComments.filter(c => c.parentCommentId === comment.commentId);
     childComments.forEach(childComment => {
-        renderCommentWithReplies(childComment, allComments, depth + 1);  // 대댓글 렌더링 (들여쓰기 증가)
+        renderCommentWithReplies(childComment, allComments, depth+1);  // 대댓글 렌더링 (들여쓰기 증가)
     });
 }
 
 // 댓글 작성 버튼 클릭 시
 const commentButton = document.getElementById('comment-btn');
-if(commentButton) {
+if (commentButton) {
     commentButton.addEventListener('click', (event) => {
         event.preventDefault();  // 기본 동작 막기
         const articleId = document.getElementById('article-id').value;
         const content = document.querySelector('textarea[name="content"]').value;
+
 
         if (content) {
             submitComment(articleId, content);  // 메인 댓글 등록
