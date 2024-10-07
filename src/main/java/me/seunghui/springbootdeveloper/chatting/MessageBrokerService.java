@@ -2,6 +2,7 @@ package me.seunghui.springbootdeveloper.chatting;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
@@ -17,11 +18,11 @@ public class MessageBrokerService {
 
     private final RedisTemplate<String, String> redisTemplate;
     private final RedisMessageListenerContainer redisMessageListenerContainer;
-
-   @Lazy
+    @Lazy
     private final RedisSubscriber redisSubscriber;
+
     @Autowired
-    public MessageBrokerService(RedisTemplate<String, String> redisTemplate, RedisMessageListenerContainer redisMessageListenerContainer, @Lazy RedisSubscriber redisSubscriber) {
+    public MessageBrokerService(@Qualifier("VideoRedisTemplate")RedisTemplate<String, String> redisTemplate, RedisMessageListenerContainer redisMessageListenerContainer, @Lazy RedisSubscriber redisSubscriber) {
         this.redisTemplate = redisTemplate;
         this.redisMessageListenerContainer = redisMessageListenerContainer;
 
