@@ -13,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 @RequiredArgsConstructor
 @Log4j2
@@ -37,28 +38,41 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(request, response); //필터 체인 내의 다음 필터로 요청을 전달함
     }
-//@Override
-//protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-//        throws ServletException, IOException {
-//    String header = request.getHeader("Authorization");
-//    if (header != null && header.startsWith("Bearer ")) {
-//        String token = header.substring(7);
-//        try {
-//            log.info("JWT 토큰 검증 중: {}", token);
-//            // JWT 검증 및 사용자 인증 처리
-//            UsernamePasswordAuthenticationToken authentication = getAuthentication(token);
-//            if (authentication != null) {
-//                SecurityContextHolder.getContext().setAuthentication(authentication);
-//                log.info("JWT 인증 성공: {}", authentication.getName());
-//            } else {
-//                log.info("JWT 인증 실패: 인증 객체가 null입니다.");
+
+//    @Override
+//    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+//            throws ServletException, IOException {
+//        String header = request.getHeader("Authorization");
+//        if (header != null && header.startsWith("Bearer ")) {
+//            String token = header.substring(7);
+//            try {
+//                // JWT 검증 및 사용자 정보 추출
+//                UsernamePasswordAuthenticationToken authentication = getAuthentication(token);
+//
+//                if (authentication != null) {
+//                    // 인증 객체가 있으면 SecurityContext에 설정
+//                    SecurityContextHolder.getContext().setAuthentication(authentication);
+//                    log.info("JWT 인증 성공: {}", authentication.getName());
+//                } else {
+//                    log.info("JWT 인증 실패: 인증 객체가 null입니다.");
+//                }
+//            } catch (Exception e) {
+//                log.error("JWT 검증 중 예외 발생: {}", e.getMessage());
 //            }
-//        } catch (Exception e) {
-//            log.error("JWT 검증 중 예외 발생: {}", e.getMessage());
 //        }
+//        filterChain.doFilter(request, response);
 //    }
-//    filterChain.doFilter(request, response);
-//}
+//
+//    private UsernamePasswordAuthenticationToken getAuthentication(String token) {
+//        // JWT 토큰을 검증하고, 인증 정보를 반환하는 로직
+//        // JWT 유효성을 검사하고, 사용자 정보를 추출
+//        // 여기서 사용자 ID를 추출하여 Authentication 객체를 생성합니다.
+//        Long userId = tokenProvider.getUserId(token);  // JWT에서 사용자 ID 추출
+//        if (userId != null) {
+//            return new UsernamePasswordAuthenticationToken(userId, null, new ArrayList<>()); // 권한 없이 인증 객체 생성
+//        }
+//        return null;  // 인증 실패 시 null 반환
+//    }
 
     private String getAccessToken(String authorizationHeader) {
         if(authorizationHeader != null && authorizationHeader.startsWith(TOKEN_PREFIX)) { //헤더가 존재하고 Bearer로 시작하는지 확인
