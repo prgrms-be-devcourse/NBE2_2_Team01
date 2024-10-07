@@ -2,6 +2,7 @@ package me.seunghui.springbootdeveloper.dto.User;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
@@ -9,4 +10,9 @@ import lombok.Setter;
 public class AddUserRequest {
     private String email;
     private String password;
+    private String nickname;
+//    private MultipartFile profileImage; // Add MultipartFile to handle image uploads
+
+
+
 }

@@ -7,6 +7,7 @@ import me.seunghui.springbootdeveloper.config.oauth.CustomLogoutHandler;
 import me.seunghui.springbootdeveloper.config.oauth.OAuth2AuthorizationRequestBasedOnCookieRepository;
 import me.seunghui.springbootdeveloper.config.oauth.OAuth2SuccessHandler;
 import me.seunghui.springbootdeveloper.config.oauth.Oauth2UserCustomService;
+import me.seunghui.springbootdeveloper.service.UserDetailService;
 import me.seunghui.springbootdeveloper.service.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
@@ -27,8 +29,10 @@ import static org.springframework.boot.autoconfigure.security.servlet.PathReques
 public class WebOAuthSecurityConfig {
     private final Oauth2UserCustomService oauth2UserCustomService;
     private final TokenProvider tokenProvider;
-    private final RefreshTokenRepository refreshTokenRepository;
+    private final UserDetailService userDetailService;
+
     private final UserService userService;
+    private final RefreshTokenRepository refreshTokenRepository;
 
     //스프링 시큐리티의 기본 보안 설정을 비활성화하는 부분
     // 이미지, CSS, JS 파일과 H2 데이터베이스 콘솔에 대한 요청은 보안 필터 체인을 통과하지 않고 바로 접근할 수 있도록 설정한다.
@@ -56,7 +60,7 @@ public class WebOAuthSecurityConfig {
 
         // API 토큰 발급 경로와 파일 업로드 경로는 인증 없이 접근 가능
         http.authorizeRequests()
-                .requestMatchers("/api/token", "/api/upload/**").permitAll() // 인증 필요 없음
+                .requestMatchers("/api/token", "/api/upload/**", "/api/login").permitAll() // 인증 필요 없음
                 .requestMatchers("/api/**").authenticated()  // API 요청은 인증이 필요
                 .anyRequest().permitAll();  // 그 외 모든 요청은 인증 필요 없음
 
@@ -94,7 +98,7 @@ public class WebOAuthSecurityConfig {
     //JWT 토큰을 확인하고 인증하는 커스텀 필터
     @Bean
     public TokenAuthenticationFilter tokenAuthenticationFilter() {
-        return new TokenAuthenticationFilter(tokenProvider);
+        return new TokenAuthenticationFilter(tokenProvider, userDetailService);
     }
 
     // OAuth2 인증 요청을 쿠키에 기반하여 저장하고 관리하는 리포지토리
