@@ -63,11 +63,12 @@ public class ArticleViewController {
 
         // 현재 사용자 정보 가져오기 (로그인한 사용자의 이름 또는 이메일)
         String currentUserName =  SecurityContextHolder.getContext().getAuthentication().getName();
-
+        String currentUserName2=userService.currentUser();
         log.info("Authentication: {}",  SecurityContextHolder.getContext().getAuthentication());
         // 현재 사용자가 게시글의 작성자인지 확인
         boolean isOwner = article.getAuthor().equals(currentUserName);
         log.info("currentUserName: {}", currentUserName);
+        log.info("currentUserName2: {}", currentUserName2);
         log.info("isOwner: {}", isOwner);
 
         // 게시글 정보를 모델에 추가

@@ -53,11 +53,13 @@ public class UserService {
         });
     }
 
-    private void authorizeCommentAuthor(User user) {
+    public String currentUser() {
         String userName = SecurityContextHolder.getContext().getAuthentication().getName(); // 현재 로그인된 사용자 확인
-        if (!user.getEmail().equals(userName)) {
-            throw new IllegalArgumentException("not authorized");
-        }
+//        if (!user.getEmail().equals(userName)) {
+//            throw new IllegalArgumentException("not authorized");
+//        }
+        log.info("userName: {}" , userName);
+        return userName;
     }
     //사용자가 좋아요 누른 게시글 조회
     //사용자가 쓴 게시글 조회
