@@ -32,10 +32,6 @@ public class ArticleService {
     }
 
     // 모든 게시글 조회
-//    public List<Article> findAll() {
-//        return articleRepository.findAll();
-//    }
-    // 모든 게시글 조회
     public List<ArticleResponse> getArticles(){
         List<Article> articles = articleRepository.findAll();
         return articles.stream()
