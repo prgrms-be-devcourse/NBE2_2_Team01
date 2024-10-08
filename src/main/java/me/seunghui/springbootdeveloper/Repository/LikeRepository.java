@@ -1,9 +1,7 @@
 package me.seunghui.springbootdeveloper.Repository;
 
 import me.seunghui.springbootdeveloper.domain.Article;
-import me.seunghui.springbootdeveloper.domain.Comment;
 import me.seunghui.springbootdeveloper.domain.Like;
-import me.seunghui.springbootdeveloper.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -20,4 +18,8 @@ public interface LikeRepository extends JpaRepository<Like, Long> {
 
     @Query("SELECT COUNT(l) FROM Like l WHERE l.article.id = :articleId AND l.likedStatus=true")
     long countLikesByArticleId(@Param("articleId") Long articleId);
+
+
+    @Query("SELECT DISTINCT a FROM Like l JOIN l.article a JOIN l.user u WHERE l.likedStatus = true AND u.email = :email ORDER BY a.createdAt DESC")
+    List<Article> findUserLikedArticles(@Param("email") String email);
 }

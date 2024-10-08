@@ -7,6 +7,8 @@ import me.seunghui.springbootdeveloper.Repository.CommentRepository;
 import me.seunghui.springbootdeveloper.domain.Article;
 import me.seunghui.springbootdeveloper.domain.Comment;
 import me.seunghui.springbootdeveloper.dto.Comment.*;
+import me.seunghui.springbootdeveloper.dto.User.UserCommentedArticlesList;
+import me.seunghui.springbootdeveloper.dto.User.UserCommentsList;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -38,6 +40,18 @@ public class CommentService {
 
         return savedComment;
     }
+
+    // 특정 ID로 게시글 조회
+//    public Comment findById(Long id) {
+//        Article article= articleRepository.findById(id)
+//                .orElseThrow(() -> new IllegalArgumentException("not found: " + id));
+//        long likeCount= likeService.getLikeCount(id);
+//
+//        article.changeLikeCount(likeCount);
+//
+//        articleRepository.save(article);
+//        return article;
+//    }
 
     //2. 게시글에 달린 댓글 목록 조회(페이징)
     public Page<CommentListViewReponse> getComments(Long articleId, CommentPageRequestDTO commentPageRequestDTO) {
@@ -121,6 +135,38 @@ public class CommentService {
     public long getCommentCount(long articleId) {
         return commentRepository.countCommentsByArticleId(articleId);
     }
+
+    //사용자가 작성한 댓글과 해당 게시물 목록 조회
+    public List<UserCommentsList> getUserAllComments(String userName) {
+        List<Comment> comments = commentRepository.findUserComments(userName);
+
+        // Comment 엔티티에서 필요한 데이터를 가공하여 DTO로 변환
+        return comments.stream()
+                .map(comment -> new UserCommentsList(
+                        comment.getCommentId(),
+                        comment.getCommentContent(),
+                        comment.getCommentCreatedAt(),
+                        comment.getArticle().getTitle()  // 게시글 제목 가져오기
+                ))
+                .collect(Collectors.toList());
+    }
+
+    //사용자가 작성한 댓글의 게시물 조회
+    public List<UserCommentedArticlesList> getUserAllArticlesAndComments(String userName) {
+        List<Article> articles = commentRepository.findUserArticlesAndComments(userName);
+
+        // Article 엔티티에서 필요한 데이터를 가공하여 DTO로 변환
+        return articles.stream()
+                .map(article -> new UserCommentedArticlesList(
+                        article.getId(),
+                        article.getTitle(),
+                        article.getCreatedAt(),
+                        article.getViewCount()  // 게시글 조회수 가져오기
+                ))
+                .collect(Collectors.toList());
+    }
+
+
 
     // 게시글의 작성자를 확인하여 권한 검증
     private void authorizeCommentAuthor(Comment comment) {
