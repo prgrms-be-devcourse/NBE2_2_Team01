@@ -12,7 +12,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -22,17 +24,32 @@ public class UserService {
 
     // 사용자 저장 메서드 (회원가입)
     public Long save(AddUserRequest dto) {
-        // 비밀번호를 안전하게 저장하기 위해 BCrypt 해싱 알고리즘 사용
+
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        byte[] profileImageBytes = null;
+        String profileUrl = null;
 
-        // DTO에서 이메일과 비밀번호를 추출하여, 비밀번호를 암호화 후 User 객체 생성
-        return userRepository.save(User.builder()
+        if (!dto.getProfileImage().isEmpty()) {
+            try {
+                profileImageBytes = dto.getProfileImage().getBytes();
+                String fileName = UUID.randomUUID() + "_" + dto.getProfileImage().getOriginalFilename();
+                profileUrl = fileName;
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new RuntimeException("Failed to process the profile image", e);
+            }
+        }
+
+        User user = User.builder()
                 .email(dto.getEmail())
-                .password(encoder.encode(dto.getPassword())) // 비밀번호를 해시 처리
-                        .role(Role.ROLE_USER) // 자동 유저 부여
-                        .nickname(dto.getNickname())
+                .password(encoder.encode(dto.getPassword()))
+                .nickname(dto.getNickname())
+                .profileImage(profileImageBytes)
+                .profileUrl(profileUrl)
+                .role(Role.ROLE_USER)
+                .build();
 
-                .build()).getId(); // 저장된 사용자 레코드의 ID 반환
+        return userRepository.save(user).getId();
     }
 
     // ID로 사용자 조회
