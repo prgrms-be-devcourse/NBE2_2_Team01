@@ -38,7 +38,7 @@
         <img th:src="${profileImage}" alt="Profile Image" class="profile-image" />
 
         <!-- 프로필 이미지 변경 폼 -->
-        <form th:action="@{/mypage/updateProfileImage}" method="post" enctype="multipart/form-data" style="margin-top: 20px;">
+        <form th:action="@{/mypage/edit/updateProfileImage}" method="post" enctype="multipart/form-data" style="margin-top: 20px;">
             <input type="file" name="profileImage" accept="image/*" class="form-control-file">
             <button type="submit" class="btn btn-primary" style="margin-top: 10px;">Change Profile Image</button>
         </form>

@@ -21,17 +21,17 @@ public class MyPageController{
 
     private final MyPageService myPageService;
 
-    @GetMapping("/mypage")
+    @GetMapping("/mypage/edit")
     public String getUserProfile(Model model, @AuthenticationPrincipal UserDetails userDetails) {
         String email = userDetails.getUsername();
         User user = myPageService.getUserByEmail(email);
         model.addAttribute("user", user);
         model.addAttribute("profileImage", user.getProfileImageAsBase64());
 
-        return "mypage";
+        return "mypageedit";
     }
 
-    @PostMapping("/mypage/updateProfileImage")
+    @PostMapping("/mypage/edit/updateProfileImage")
     public String updateProfileImage(@RequestParam("profileImage") MultipartFile profileImage,
                                      @AuthenticationPrincipal UserDetails userDetails) {
         try {
@@ -43,6 +43,6 @@ public class MyPageController{
             e.printStackTrace();
             // 오류 처리 로직 추가
         }
-        return "redirect:/mypage"; // 이미지 변경 후 마이페이지로 리다이렉트
+        return "redirect:/mypageedit"; // 이미지 변경 후 마이페이지로 리다이렉트
     }
 }
