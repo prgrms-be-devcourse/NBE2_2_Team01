@@ -28,8 +28,6 @@ public class MyPageViewController {
         String currentUserName =  SecurityContextHolder.getContext().getAuthentication().getName();
         model.addAttribute("currentUserName", currentUserName);
 
-
-
         return "mypage/mypageMain";
     }
 
