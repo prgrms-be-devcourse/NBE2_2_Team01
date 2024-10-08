@@ -44,6 +44,7 @@ public class ChatListPage {
         return "chatting/chatRoomCreate";
     }
 
+
     @PostMapping("/createRoom")
     public String createRoom(CreateChatForm createChatForm,Principal principal){
         String email = principal.getName();
