@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1대1 채팅</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .chat-container {
+      display: flex;
+      width: 100%;
+      max-width: 900px; /* 전체 너비 */
+      height: 80vh;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      position: relative;
+    }
+
+    .chat-box {
+      flex: 1;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .chat-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .exit-btn {
+      padding: 10px 20px;
+      background-color: #ff4b4b;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      text-decoration: none;  /* a 태그 밑줄 제거 */
+      text-align: center;
+      transition: background-color 0.3s ease;
+    }
+
+    .exit-btn:hover {
+      background-color: #e03e3e;
+    }
+
+    .chat-log {
+      flex-grow: 1;
+      border: 1px solid #ddd;
+      padding: 10px;
+      overflow-y: scroll;
+      margin-bottom: 10px;
+      border-radius: 10px;
+      background-color: #f9f9f9;
+    }
+
+    .chatMessage-container {
+      display: flex;
+      flex-direction: column; /* 수직으로 정렬 */
+      margin-bottom: 10px;
+    }
+
+    .nickname {
+      font-size: 12px;
+      font-weight: bold;
+      margin-bottom: 2px;
+    }
+
+    .sent-nickname {
+      text-align: right; /* 보낸 메시지의 경우 오른쪽 정렬 */
+      margin-right: 10px; /* 여백 조정 */
+    }
+
+    .received-nickname {
+      text-align: left; /* 받은 메시지의 경우 왼쪽 정렬 */
+      margin-left: 10px; /* 여백 조정 */
+    }
+
+    .chatMessage {
+      padding: 10px 15px;
+      max-width: 70%;
+      word-wrap: break-word;
+      border-radius: 15px;
+      position: relative;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .chatMessage.sent {
+      background-color: #dcf8c6;
+      margin-left: auto; /* 오른쪽 정렬 */
+      text-align: right;
+      border-bottom-right-radius: 0;
+    }
+
+    .chatMessage.received {
+      background-color: #f1f0f0;
+      margin-right: auto; /* 왼쪽 정렬 */
+      text-align: left;
+      border-bottom-left-radius: 0;
+    }
+
+    .chatMessage .time {
+      font-size: 10px;
+      color: #888;
+      margin-top: 5px;
+      text-align: right;
+    }
+
+    .chat-input {
+      width: calc(100% - 70px);
+      padding: 10px;
+      border-radius: 20px;
+      border: 1px solid #ddd;
+      margin-bottom: 5px;
+    }
+
+    button {
+      padding: 10px 20px;
+      border: none;
+      background-color: #4CAF50;
+      color: white;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      margin-left: 10px;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    .input-container {
+      display: flex;
+      align-items: center;
+    }
+
+    /* 참여 중인 멤버 리스트 스타일 */
+    .member-list-container {
+      width: 250px;
+      padding: 20px;
+      border-left: 1px solid #ddd;
+      background-color: #f9f9f9;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+
+    .member-list {
+      flex-grow: 1;
+      padding: 10px;
+      background-color: #f1f1f1;
+      border-radius: 10px;
+      overflow-y: auto;
+      max-height: 100%;
+    }
+
+    .member-list h4 {
+      margin-bottom: 5px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .member-list ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .member-list li {
+      font-size: 12px;
+      margin-bottom: 5px;
+    }
+  </style>
+
+</head>
+<body>
+<div class="chat-container">
+  <div class="chat-box">
+    <div class="chat-header">
+      <h2>채팅방</h2>
+      <button id="exitButton" onclick="leaveChatRoom()">나가기</button>
+    </div>
+
+    <div class="chat-log" id="chatLog"></div>
+    <div class="typing-indicator" id="typingIndicator" style="display: none;">상대방이 입력 중...</div>
+    <div class="input-container">
+      <input type="text" id="chatInput" class="chat-input" placeholder="메세지를 입력하세요..." ><!--oninput="notifyTyping()"-->
+      <button onclick="sendMessage()">전송</button>
+    </div>
+  </div>
+
+  <!-- 참여 중인 멤버 리스트 표시 -->
+  <div class="member-list-container">
+    <div class="member-list">
+      <h4>참여 중인 멤버:</h4>
+      <ul>
+        <li th:each="member : ${list}" th:text="${member.nickname}">닉네임</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script th:inline="javascript">
+  const roomId = /*[[${roomId}]]*/ '';
+  const username = /*[[${username}]]*/ '';
+  const nickname = /*[[${nickname}]]*/ '';
+
+  const ws = new WebSocket('wss://localhost:8443/ws/chat/'+roomId);
+  const chatLog = document.getElementById('chatLog');
+  const chatInput = document.getElementById('chatInput');
+
+  ws.onmessage = function(event) {
+    console.log("수신된 메시지: ", event.data); // 수신된 메시지를 확인합니다.
+    const data = JSON.parse(event.data);
+
+    // 만약 수신된 데이터가 멤버 리스트라면
+    if (Array.isArray(data)) {
+      updateMemberList(data); // 멤버 리스트 업데이트
+    } else {
+      // 이후에 메시지 출력 로직
+      displayMessage(data);
+    }
+  };
+
+  function updateMemberList(memberList) {
+    const memberListContainer = document.querySelector('.member-list');
+    memberListContainer.innerHTML = ''; // 기존 멤버 리스트 초기화
+
+    memberList.forEach(member => {
+      const li = document.createElement('li');
+      li.textContent = member; // 멤버의 닉네임 추가
+      memberListContainer.appendChild(li);
+    });
+  }
+
+  function displayMessage(data) {
+    const messageContainer = document.createElement('div');
+    messageContainer.classList.add('chatMessage-container');
+
+    const nicknameElem = document.createElement('div');
+    nicknameElem.classList.add('nickname');
+    nicknameElem.textContent = data.nickname;
+
+    if (data.sender === username) {
+      nicknameElem.classList.add('sent-nickname'); // 보낸 메시지의 경우
+    } else {
+      nicknameElem.classList.add('received-nickname'); // 받은 메시지의 경우
+    }
+    messageContainer.appendChild(nicknameElem);
+
+    const chatMessage = document.createElement('div');
+    chatMessage.classList.add('chatMessage');
+    chatMessage.textContent = data.chatMessage;
+
+    const time = document.createElement('div');
+    time.classList.add('time');
+    time.textContent = new Date(data.sentTime).toLocaleTimeString();
+    chatMessage.appendChild(time);
+
+    if (data.sender === username) {
+      chatMessage.classList.add('sent');
+    } else {
+      chatMessage.classList.add('received');
+    }
+
+    messageContainer.appendChild(chatMessage);
+    chatLog.appendChild(messageContainer);
+    chatLog.scrollTop = chatLog.scrollHeight; // 스크롤을 가장 아래로 이동
+  }
+
+  function checkEnter(event) {
+    if (event.key === "Enter") {
+      sendMessage();  // 엔터키를 누르면 sendMessage 함수 호출
+    }
+  }
+
+  function sendMessage() {
+    const chatMessage = chatInput.value;
+    const messageData = {
+      chatMessage: chatMessage,
+      sentTime: new Date().toISOString(),
+      sender: username
+    };
+    ws.send(JSON.stringify(messageData));
+    chatInput.value = ''; // 입력 필드 초기화
+  }
+
+  // 웹소켓 나가기 함수
+  function leaveChatRoom() {
+    if (ws) {
+      ws.close(); // 웹소켓 연결 종료
+    }
+    // 페이지 이동 등의 추가 동작 수행
+    window.location.href = "/chat/list";
+  }
+
+</script>
+</body>
+</html>

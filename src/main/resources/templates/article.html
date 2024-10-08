@@ -15,7 +15,11 @@
     </div>
 
     <!-- 우측 상단에 로그아웃 버튼 -->
-    <button type="button" class="btn btn-secondary logout-btn" id="logout-btn">로그아웃</button>
+    <div class="header-right">
+        <button type="button" class="btn btn-secondary my-page-btn" id="my-page-btn"
+                th:onclick="|location.href='@{/mypage}'|">마이페이지</button>
+        <button type="button" class="btn btn-secondary logout-btn" id="logout-btn">로그아웃</button>
+    </div>
 </div>
 
 <div class="wrapper">
@@ -27,14 +31,14 @@
                 <div class="col-lg-6 text-left">
                     <button type="button" id="modify-btn"
                             th:onclick="|location.href='@{/new-article?id={articleId}(articleId=${article.id})}'|"
-                            class="btn btn-primary btn-sm">수정</button>
-                    <button type="button" id="delete-btn" class="btn btn-secondary btn-sm">삭제</button>
+                            class="btn btn-primary btn-sm" th:if="${isArticleOwner}">수정</button>
+                    <button type="button" id="delete-btn" class="btn btn-secondary btn-sm" th:if="${isArticleOwner}">삭제</button>
                 </div>
 
                 <!-- 우측에 목록으로 돌아가기 버튼 -->
                 <div class="col-lg-6 text-right">
                     <button type="button" id="return-btn"
-                            th:onclick="|location.href='@{/articles}'|"
+                            th:onclick="|location.href='@{/articles}'; |"
                             class="btn btn-return btn-sm">목록으로 돌아가기</button>
                 </div>
             </div>
@@ -97,7 +101,7 @@
                         <!-- 댓글 작성 폼 -->
                         <div id="comment-form-section" class="mt-4">
                             <h6>댓글 작성</h6>
-                            <h6 class="mb-2 text-muted" th:text="${user}"/>
+                            <h6 class="mb-2 text-muted" th:text="${currentUserName}"/>
 
                             <form id="comment-form">
                                 <input type="hidden" name="articleId" th:value="${article.id}"/>
@@ -123,9 +127,14 @@
     </footer>
 
 </div>
-
+<script>
+    const currentUserName = '[[${currentUserName}]]';   // 기본값 'anonymous'로 설정
+    console.log(currentUserName);
+</script>
 <script src="/js/article.js"></script>
-<script src="/js/comment1.js"></script>
+<script src="/js/comment.js"></script>
 <script src="/js/like.js"></script>
+<script src="/js/token.js"></script>
+
 </body>
 </html>

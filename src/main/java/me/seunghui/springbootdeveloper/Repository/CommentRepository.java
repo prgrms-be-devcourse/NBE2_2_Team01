@@ -1,7 +1,9 @@
 package me.seunghui.springbootdeveloper.Repository;
 
+import me.seunghui.springbootdeveloper.domain.Article;
 import me.seunghui.springbootdeveloper.domain.Comment;
 import me.seunghui.springbootdeveloper.dto.Comment.CommentListViewReponse;
+import me.seunghui.springbootdeveloper.dto.User.UserCommentsList;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -26,14 +28,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     @Query("SELECT c FROM Comment c WHERE c.article.id = :articleId AND c.commentId = :commentId")
     List<Comment> findByCommentId(@Param("articleId") Long articleId, @Param("commentId") Long commentId);
 
-    // 특정 부모 댓글을 포함하여 그 자식 댓글을 모두 조회 (부모 댓글도 포함)
-//    @Query("SELECT c FROM Comment c WHERE c.article.id = :articleId " +
-//            "AND (c.commentId = :commentId OR c.parentComment.commentId = :commentId " +
-//            "OR c.parentComment.commentId IN (SELECT sc.commentId FROM Comment sc WHERE sc.parentComment.commentId = :commentId))")
-//    List<Comment> findParentAndChildCommentsByArticleId(
-//            @Param("articleId") Long articleId,
-//            @Param("commentId") Long commentId
-//    );
 
     // 특정 부모 댓글과 그 자식 댓글을 모두 조회, commentId 순으로 정렬
     @Query("SELECT c FROM Comment c " +
@@ -49,9 +43,17 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     @Query("SELECT COUNT(c) FROM Comment c WHERE c.article.id = :articleId AND c.commentIsHidden = false AND c.commentIsDeleted = false")
     long countCommentsByArticleId(@Param("articleId") Long articleId);
 
-    //특정 상품 번호에 해당하는 모든 리뷰를 페이징하여 반환
-//    @Query("SELECT r FROM Review r WHERE r.product.pno=:pno") //r.product.pno=:pno는 Review 엔티티에서 연결된 Product의 pno 필드와 매개변수 pno가 일치하는 리뷰만 조회하겠다는 의미
-//    Page<ReviewDTO> list(@Param("pno") long pno, Pageable pageable);
+
+    //사용자가 작성한 댓글과 댓글의 게시물 조회
+    @Query("SELECT c,a FROM Comment c JOIN c.article a WHERE c.commentAuthor = :email AND a.id=c.article.id ORDER BY c.commentId DESC")
+    List<Comment> findUserComments(@Param("email") String email);
+
+
+    //사용자가 작성한 댓글의 게시물 조회
+    @Query("SELECT DISTINCT a FROM Comment c JOIN c.article a WHERE c.commentAuthor = :email ORDER BY a.createdAt DESC")
+    List<Article> findUserArticlesAndComments(@Param("email") String email);
+
+
 }
 
 //c.commentId = :commentId: 이 조건은 최상위 부모 댓글을 조회한다.

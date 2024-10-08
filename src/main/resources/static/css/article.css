@@ -23,17 +23,37 @@ body {
 
 
 /* 로그아웃 버튼을 오른쪽 상단에 고정 */
+/*.header-right {*/
+/*    position: absolute;*/
+/*    right: 20px;*/
+/*    top: 20px;*/
+/*}*/
+
+/*.logout-btn {*/
+/*    position: absolute;*/
+/*    top: 20px; !* 상단으로부터의 거리 *!*/
+/*    right: 20px; !* 우측으로부터의 거리 *!*/
+/*    background-color: #555; !* 버튼 배경색 *!*/
+/*    color: #fff;*/
+/*    border: none;*/
+/*    padding: 8px 12px;*/
+/*    cursor: pointer;*/
+/*    font-size: 15px;*/
+/*}*/
+
+/*.logout-btn:hover {*/
+/*    background-color: #777;*/
+/*}*/
 .header-right {
     position: absolute;
-    right: 20px;
-    top: 20px;
+    top: 20px;  /* 상단에서 20px */
+    right: 20px;  /* 우측에서 20px */
+    display: flex;
+    gap: 10px;  /* 버튼 사이의 간격 */
 }
 
-.logout-btn {
-    position: absolute;
-    top: 20px; /* 상단으로부터의 거리 */
-    right: 20px; /* 우측으로부터의 거리 */
-    background-color: #555; /* 버튼 배경색 */
+.my-page-btn, .logout-btn {
+    background-color: #555;  /* 버튼 배경색 */
     color: #fff;
     border: none;
     padding: 8px 12px;
@@ -41,12 +61,12 @@ body {
     font-size: 15px;
 }
 
-.logout-btn:hover {
+.my-page-btn:hover, .logout-btn:hover {
     background-color: #777;
 }
 
 .ck-content{
-    height: 200px;
+    height: auto;
 }
 .articleList-content{
     max-width: 900px;
@@ -290,3 +310,35 @@ footer a:hover {
     color: #656565;
 }
 /*-------------------------- */
+/* 아이콘과 버튼의 정렬 및 간격 조정 */
+.header-right {
+    display: flex; /* flexbox를 사용하여 아이템들을 정렬 */
+    align-items: center; /* 아이템들을 수직 중앙 정렬 */
+    gap: 10px; /* 각 아이템 사이의 간격 설정 */
+}
+
+/* 아이콘 스타일 조정 */
+.header-right .icon {
+    font-size: 20px; /* 아이콘 크기 */
+    color: #333; /* 아이콘 색상 */
+    margin-right: 5px; /* 아이콘과 다음 요소 사이의 간격 */
+    cursor: pointer; /* 클릭 가능한 포인터로 변경 */
+}
+
+.header-right .icon:hover {
+    color: #007bff; /* 마우스 오버 시 색상 변경 */
+}
+
+/* 버튼 스타일 조정 */
+.header-right .btn {
+    margin: 0 5px; /* 버튼 좌우 간격 */
+}
+
+/* 알림 배지 위치 조정 */
+.notification-icon .badge {
+    position: absolute;
+    top: -5px; /* 배지의 상단 위치 */
+    right: -10px; /* 배지의 오른쪽 위치 */
+    font-size: 12px;
+}
+

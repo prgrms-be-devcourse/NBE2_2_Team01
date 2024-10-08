@@ -17,7 +17,7 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @Log4j2
-@RequestMapping("/api/likes")
+@RequestMapping("/api/like")
 public class LikeApiController {
     private final LikeService likeService;
 
