@@ -79,7 +79,7 @@ public class TokenProvider {
 
 
     //JWT 토큰에서 클레임 정보를 가져오는 메서드
-    private Claims getClaims(String token) {
+    public Claims getClaims(String token) {
         return Jwts.parserBuilder()//클레임 조회
                 .setSigningKey(jwtProperties.getSecretKey())
                 .build()

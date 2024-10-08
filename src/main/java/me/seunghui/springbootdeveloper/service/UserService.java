@@ -12,6 +12,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 @Log4j2
@@ -68,6 +70,11 @@ public class UserService {
     //사용자가 좋아요 누른 게시글 조회
     //사용자가 쓴 게시글 조회
     //시용자가 쓴 댓글 조회
+
+    public User findByUsername(String username) {
+        Optional<User> user = userRepository.findByEmail(username);
+        return user.orElseThrow(() -> new IllegalArgumentException("No user found with email: " + username));
+    }
 }
 //전체 동작 흐름
 //사용자 가입 요청이 들어오면, AddUserRequest DTO를 통해 사용자 정보가 전달됩니다.

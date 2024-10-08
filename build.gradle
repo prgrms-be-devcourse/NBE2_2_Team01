@@ -30,6 +30,12 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
+    // 레디스
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.springframework.session:spring-session-data-redis:3.3.2'
+
 
     runtimeOnly 'com.h2database:h2'
 
@@ -64,7 +70,9 @@ dependencies {
 
     implementation 'com.fasterxml.jackson.core:jackson-databind'
 
-
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.springframework.session:spring-session-data-redis:3.3.2'
 
     annotationProcessor(
             'jakarta.persistence:jakarta.persistence-api',

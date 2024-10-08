@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>랜덤 채팅방 선택</title>
+    <style>
+        /* 기존 스타일 유지 */
+    </style>
+</head>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f9;
+        color: #333;
+        margin: 0;
+        padding-top: 60px; /* 헤더 공간 확보 */
+    }
+
+    /* 헤더 스타일 */
+    .header {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        background-color: #333;
+        padding: 15px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: white;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+    }
+
+    .header h1 {
+        margin: 0;
+        font-size: 24px;
+    }
+
+    .header .auth-buttons {
+        display: flex;
+        gap: 15px;
+    }
+
+    .header .auth-buttons a {
+        background-color: #4CAF50;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 4px;
+        text-decoration: none;
+        font-size: 14px;
+        transition: background-color 0.3s ease;
+    }
+
+    .header .auth-buttons a:hover {
+        background-color: #45a049;
+    }
+
+    h1 {
+        color: #333;
+        font-size: 32px;
+        margin-bottom: 10px;
+        text-align: center;
+    }
+
+    h3 {
+        color: #666;
+        font-size: 18px;
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .room-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .room {
+        background-color: #ffffff;
+        border: 2px solid #ddd;
+        border-radius: 12px; /* 둥근 모서리 강조 */
+        padding: 20px; /* 좀 더 여유로운 패딩 */
+        width: 350px; /* 카드의 너비를 약간 더 키움 */
+        margin: 15px 0; /* 상하 마진을 넓게 */
+        text-align: center;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s, box-shadow 0.3s;
+        position: relative; /* 버튼의 위치 조정을 위해 추가 */
+    }
+
+    .room:hover {
+        transform: translateY(-8px); /* 더 부드럽게 떠오르는 효과 */
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .room h2 {
+        margin: 0;
+        font-size: 26px; /* 더 큰 폰트 사이즈 */
+        color: #333;
+    }
+
+    .room p {
+        margin: 10px 0;
+        font-size: 18px;
+        color: #555;
+    }
+
+    .room button {
+        background-color: #4CAF50;
+        border: none;
+        color: white;
+        padding: 10px 20px; /* 버튼의 크기를 좀 더 큼직하게 */
+        border-radius: 6px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, box-shadow 0.3s;
+        position: absolute; /* 버튼 위치를 고정 */
+        bottom: 20px; /* 카드 안에서 버튼이 항상 아래쪽에 위치 */
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .room button:hover {
+        background-color: #45a049;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .room button:focus {
+        outline: none;
+    }
+
+    /* 새로운 채팅 시작하기 버튼 스타일 */
+    .new-chat-button {
+        display: block;
+        margin: 20px auto; /* 가운데 정렬 */
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        width: 200px; /* 길이 축소 */
+        text-align: center;
+    }
+
+    .new-chat-button:hover {
+        background-color: #45a049;
+    }
+
+    .new-chat-button:focus {
+        outline: none;
+    }
+</style>
+<body>
+<!-- 헤더 추가 -->
+<div class="header">
+    <h1>랜덤 채팅 서비스</h1>
+    <div class="auth-buttons">
+        <a href="/member/signIn">로그인</a>
+        <a href="/member/signUpView">회원가입</a>
+    </div>
+</div>
+
+<h1>랜덤 채팅</h1>
+<h3>환영합니다! 원하시는 채팅방에 입장해 주세요.</h3>
+<a href="/chat/create" class="new-chat-button">새로운 채팅 시작하기</a>
+
+<div id="chatRoomList" class="room-container">
+    <div th:each="chatRoom: ${list}" class="room">
+        <h2 th:text="${chatRoom.roomName}">채팅방 이름</h2>
+        <p th:text="${chatRoom.description}"></p>
+        <p th:text="'생성자 : ' + ${chatRoom.creator}"></p>
+        <br/>
+        <br/>
+        <br/>
+        <button th:onclick="'enterRoom(' + ${chatRoom.id} + ')'">채팅방 입장</button>
+    </div>
+</div>
+
+<script>
+    function enterRoom(roomId) {
+        window.location.href = '/chat/room/' + roomId;
+    }
+
+/*    // WebSocket을 통해 채팅방 목록을 실시간으로 업데이트하는 기능
+    const socket = new WebSocket("ws://localhost:8080/ws/chat");*/
+
+  /*  socket.onmessage = function(event) {
+        const chatMessage = event.data;
+        console.log("새로운 메시지:", chatMessage);
+        refreshChatRoomList();  // 채팅방 목록을 새로고침하는 함수 호출
+    };
+
+    function refreshChatRoomList() {
+        // 기존 목록 초기화
+        $('#chatRoomList').empty();
+
+        // 새 목록 불러오기
+        $.ajax({
+            url: '/chat/rooms',
+            method: 'GET',
+            success: function(data) {
+                $('#chatRoomList').html(data); // 새로운 데이터를 렌더링
+            },
+            error: function(error) {
+                console.log('채팅방 목록을 갱신하는 중 오류 발생', error);
+            }
+        });
+    }*/
+</script>
+</body>
+</html>

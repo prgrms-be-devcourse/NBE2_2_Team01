@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Chat Room</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+    }
+
+    h2 {
+      color: #333;
+      text-align: center;
+      margin-bottom: 10px; /* 제목과 카드 사이의 여백 조정 */
+    }
+
+    form {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 400px;
+    }
+
+    div {
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+      color: #555;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+
+    input[type="text"]:focus {
+      border-color: #007BFF;
+      outline: none;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #28a745;
+      color: white;
+      font-size: 16px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #218838;
+    }
+  </style>
+</head>
+<body>
+<h2>새로운 오픈 채팅방 만들기</h2>
+<br/>
+<form id="chatRoomForm" action="/chat/createRoom" method="post">
+  <div>
+    <label for="roomName">채팅방 이름:</label>
+    <input type="text" id="roomName" name="roomName" required placeholder="채팅방 이름을 적어주세요">
+  </div>
+  <div>
+    <label for="description">채팅방 소개글</label>
+    <input type="text" id="description" name="description" required placeholder="간단한 소개글을 적어주세요">
+  </div>
+  <button type="submit">채팅방 만들기</button>
+</form>
+</body>
+</html>
