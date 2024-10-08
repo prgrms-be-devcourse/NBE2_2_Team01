@@ -27,7 +27,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequiredArgsConstructor
 @Log4j2
 public class ArticleViewController {
-    private final UserService userService;
     private final ArticleService articleService;  // 게시글 관련 서비스
     private final CommentService commentService;
     private final LikeService likeService;
@@ -102,5 +101,9 @@ public class ArticleViewController {
         // newArticle.html 템플릿으로 리턴 (새 글 작성/수정 페이지)
         return "newArticle";
     }
+
+
+
+
 
 }

@@ -42,7 +42,6 @@ public class RandomVideoChatHandler extends TextWebSocketHandler {
         // Signaling 데이터 처리
         String payload = message.getPayload();
         Map<String, Object> data = new ObjectMapper().readValue(payload, Map.class);
-
         // 방 ID 추출
         String roomId = (String) session.getAttributes().get("roomId");
         System.out.println("roomId: " + roomId);
@@ -67,8 +66,10 @@ public class RandomVideoChatHandler extends TextWebSocketHandler {
             sendMessageToTextChatSessions(session, new TextMessage(payload));
             //        redisService.saveVideoChatMessageLog(roomId, session.getId(), otherSessionId, chatMessage);
             redisService.saveVideoChatMessageLog(roomId, session.getId(), otherSessionId, chatMessage);
-        } else {
+        } else if ("offer".equals(data.get("type")) || "answer".equals(data.get("type")) || "candidate".equals(data.get("type"))){
             sendMessageToVideoChatSessions(roomId, session, new TextMessage(payload));
+        } else {
+            System.out.println("지원하지 않는 메시지 타입: " + data.get("type"));
         }
     }
 
@@ -116,6 +117,8 @@ public class RandomVideoChatHandler extends TextWebSocketHandler {
                     sendMessage(webSocketSession, message);
                 }
             }
+        } else {
+            System.out.println("해당 방에 대한 세션이 없습니다: " + roomId);
         }
     }
 
@@ -168,13 +171,13 @@ public class RandomVideoChatHandler extends TextWebSocketHandler {
 
     // 매칭된 사용자들에게 매칭 메시지 전송
     private void notifyUsersOfMatch(WebSocketSession user1, WebSocketSession user2, String roomId) {
-        sendMessage(user1, new TextMessage("{\"type\": \"match\", \"roomId\": \"" + roomId + "\", \"message\": \"상대방과 연결되었습니다.\"}"));
-        sendMessage(user2, new TextMessage("{\"type\": \"match\", \"roomId\": \"" + roomId + "\", \"message\": \"상대방과 연결되었습니다.\"}"));
+        // user1은 offerer, user2는 answerer 역할 할당
+        sendMessage(user1, new TextMessage("{\"type\": \"match\", \"roomId\": \"" + roomId + "\", \"role\": \"offerer\", \"message\": \"상대방과 연결되었습니다.\"}"));
+        sendMessage(user2, new TextMessage("{\"type\": \"match\", \"roomId\": \"" + roomId + "\", \"role\": \"answerer\", \"message\": \"상대방과 연결되었습니다.\"}"));
 
-        // 사용자 이름 가져오기
-//        String user1Name = (String) user1.getAttributes().get("username");
-//        String user2Name = (String) user2.getAttributes().get("username");
-
+        // 역할 정보를 세션에 저장
+        user1.getAttributes().put("role", "offerer");
+        user2.getAttributes().put("role", "answerer");
     }
 
     // 방에 유저 추가

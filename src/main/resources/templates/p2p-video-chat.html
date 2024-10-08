@@ -2,14 +2,13 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>랜덤 화상채팅</title>
+    <title>1대1 화상채팅</title>
     <link rel="stylesheet" href="/css/chat-style.css">
-    <!--    <script src="/js/common-chat.js"></script>-->
-    <!--    <script src="/js/random-video-chat.js" defer></script>-->
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
 </head>
 <body>
-<h1>랜덤 화상채팅</h1>
-<button id="startRandomChat">랜덤 채팅 시작</button>
+<h1>1대1 화상채팅</h1>
+<button id="startRandomChat">채팅 시작</button>
 
 <div id="loadingMessage" style="display: none;">
     <p>상대를 검색중입니다...</p>
@@ -31,6 +30,15 @@
 <button id="sendMessage">전송</button>
 
 <script>
+    console.log(typeof jwt_decode);
+    console.log("Access Token: " + localStorage.getItem('access_token'));
+    const accessToken = localStorage.getItem('access_token');
+    const decoded = jwt_decode(accessToken);
+    const email = decoded.email;
+    const id = decoded.id;
+    console.log("이메일:", email);
+    console.log("유저 ID:", id);
+
     let signalingServer;
     let localStream;
     let remoteStream;
@@ -84,10 +92,11 @@
         }
 
         function startVideoChat() {
-            // signalingServer 초기화 전에 peerConnection을 초기화
-            initializePeerConnection();
+            const localVideo = document.getElementById('localVideo');
+            const remoteVideo = document.getElementById('remoteVideo');
+            initializePeerConnection(localVideo, remoteVideo);
 
-            const signalingServerUrl = 'wss://1.232.89.187:8443/ws/p2p-video-chat';
+            const signalingServerUrl = 'wss://1.232.89.187:8443/ws/random-video-chat';
 
             if (signalingServer) {
                 signalingServer.close();  // 기존 연결이 있으면 종료
@@ -95,9 +104,6 @@
             }
 
             signalingServer = new WebSocket(signalingServerUrl);
-
-            const localVideo = document.getElementById('localVideo');
-            const remoteVideo = document.getElementById('remoteVideo');
             const chatBox = document.getElementById('chatBox');
             const messageInput = document.getElementById('messageInput');
             const sendMessageButton = document.getElementById('sendMessage');
@@ -112,10 +118,10 @@
                 switch (data.type) {
                     case 'match':
                         setTimeout(() => {
+                            // initializePeerConnection(localVideo, remoteVideo);
                             alert(data.message);
                             loadingMessage.style.display = 'none';
                             chatControlBox.style.display = 'block';
-                            initializePeerConnection(localVideo, remoteVideo, signalingServerUrl);
                         }, 2000);
                         break;
                     case 'offer':
@@ -129,6 +135,10 @@
                         break;
                     case 'chat':
                         chatBox.innerHTML += `<div>상대방: ${data.message}</div>`;
+                        chatBox.scrollTop = chatBox.scrollHeight;
+                        break;
+                    case 'system':  // 추가: 퇴장 메시지 처리
+                        chatBox.innerHTML += `<div class="system-message">${data.message}</div>`;
                         chatBox.scrollTop = chatBox.scrollHeight;
                         break;
                 }
@@ -151,7 +161,12 @@
             });
         }
 
-        function initializePeerConnection(localVideo, remoteVideo, signalingServerUrl) {
+        function initializePeerConnection(localVideo, remoteVideo) {
+            // localVideo와 remoteVideo가 정상적으로 전달되었는지 확인
+            if (!localVideo || !remoteVideo) {
+                console.error("비디오 요소가 정의되지 않았습니다");
+                return;
+            }
             navigator.mediaDevices.getUserMedia({ video: true, audio: true })
                 .then(stream => {
                     localVideo.srcObject = stream;
@@ -183,13 +198,13 @@
                     signalingServer.send(JSON.stringify({ type: 'offer', offer: peerConnection.localDescription }));
                 })
                 .catch(error => {
-                    console.error("Error in startVideoChat:", error);
+                    console.error("startVideoChat 중 오류:", error);
                 });
         }
 
         function handleOffer(offer) {
-            if (peerConnection.signalingState !== "stable") {
-                console.warn("잘못된 상태에서 offer가 수신되었습니다. 무시합니다.");
+            if (!peerConnection || peerConnection.signalingState !== "stable") {
+                console.warn("offer를 수신할 수 없는 잘못된 상태입니다. 무시합니다.");
                 return;
             }
             if (!processedOffers.has(offer.sdp)) {
@@ -225,21 +240,33 @@
         }
 
         function handleCandidate(candidate) {
-            if (!processedCandidates.has(candidate.candidate)) {
-                processedCandidates.add(candidate.candidate);
-                if (peerConnection.remoteDescription && peerConnection.remoteDescription.type) {
-                    peerConnection.addIceCandidate(new RTCIceCandidate(candidate))
-                        .then(() => {
-                            console.log("ICE 후보 추가 성공:", candidate);
-                        })
-                        .catch(error => {
-                            console.error("ICE 후보 추가 중 오류:", error);
-                        });
-                } else {
-                    pendingCandidates.push(candidate);
-                    console.warn("ICE 후보를 대기 중입니다: 원격 설명이 설정되지 않음");
-                }
+            if (!peerConnection || !peerConnection.remoteDescription) {
+                console.warn("원격 설명이 설정되지 않아 ICE 후보를 대기합니다.");
+                pendingCandidates.push(candidate);
+                return;
             }
+            peerConnection.addIceCandidate(new RTCIceCandidate(candidate))
+                .then(() => {
+                    console.log("ICE 후보 추가 성공:", candidate);
+                })
+                .catch(error => {
+                    console.error("ICE 후보 추가 중 오류:", error);
+                });
+            // if (!processedCandidates.has(candidate.candidate)) {
+            //     processedCandidates.add(candidate.candidate);
+            //     if (peerConnection.remoteDescription && peerConnection.remoteDescription.type) {
+            //         peerConnection.addIceCandidate(new RTCIceCandidate(candidate))
+            //             .then(() => {
+            //                 console.log("ICE 후보 추가 성공:", candidate);
+            //             })
+            //             .catch(error => {
+            //                 console.error("ICE 후보 추가 중 오류:", error);
+            //             });
+            //     } else {
+            //         pendingCandidates.push(candidate);
+            //         console.warn("ICE 후보를 대기 중입니다: 원격 설명이 설정되지 않음");
+            //     }
+            // }
         }
 
         function cleanupVideoChat() {
