@@ -310,3 +310,35 @@ footer a:hover {
     color: #656565;
 }
 /*-------------------------- */
+/* 아이콘과 버튼의 정렬 및 간격 조정 */
+.header-right {
+    display: flex; /* flexbox를 사용하여 아이템들을 정렬 */
+    align-items: center; /* 아이템들을 수직 중앙 정렬 */
+    gap: 10px; /* 각 아이템 사이의 간격 설정 */
+}
+
+/* 아이콘 스타일 조정 */
+.header-right .icon {
+    font-size: 20px; /* 아이콘 크기 */
+    color: #333; /* 아이콘 색상 */
+    margin-right: 5px; /* 아이콘과 다음 요소 사이의 간격 */
+    cursor: pointer; /* 클릭 가능한 포인터로 변경 */
+}
+
+.header-right .icon:hover {
+    color: #007bff; /* 마우스 오버 시 색상 변경 */
+}
+
+/* 버튼 스타일 조정 */
+.header-right .btn {
+    margin: 0 5px; /* 버튼 좌우 간격 */
+}
+
+/* 알림 배지 위치 조정 */
+.notification-icon .badge {
+    position: absolute;
+    top: -5px; /* 배지의 상단 위치 */
+    right: -10px; /* 배지의 오른쪽 위치 */
+    font-size: 12px;
+}
+
