@@ -13,11 +13,11 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class CreateChatForm {
     private String roomName;
-    private String creator;
+    private String email;
     private String description;
 
-    public ChatRoom toEntity(String creator) {
-        return new ChatRoom(null,roomName,creator,description, LocalDateTime.now());
+    public ChatRoom toEntity(String email) {
+        return new ChatRoom(null,roomName,email,description, LocalDateTime.now());
     }
 
 }

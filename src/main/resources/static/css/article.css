@@ -23,17 +23,37 @@ body {
 
 
 /* 로그아웃 버튼을 오른쪽 상단에 고정 */
+/*.header-right {*/
+/*    position: absolute;*/
+/*    right: 20px;*/
+/*    top: 20px;*/
+/*}*/
+
+/*.logout-btn {*/
+/*    position: absolute;*/
+/*    top: 20px; !* 상단으로부터의 거리 *!*/
+/*    right: 20px; !* 우측으로부터의 거리 *!*/
+/*    background-color: #555; !* 버튼 배경색 *!*/
+/*    color: #fff;*/
+/*    border: none;*/
+/*    padding: 8px 12px;*/
+/*    cursor: pointer;*/
+/*    font-size: 15px;*/
+/*}*/
+
+/*.logout-btn:hover {*/
+/*    background-color: #777;*/
+/*}*/
 .header-right {
     position: absolute;
-    right: 20px;
-    top: 20px;
+    top: 20px;  /* 상단에서 20px */
+    right: 20px;  /* 우측에서 20px */
+    display: flex;
+    gap: 10px;  /* 버튼 사이의 간격 */
 }
 
-.logout-btn {
-    position: absolute;
-    top: 20px; /* 상단으로부터의 거리 */
-    right: 20px; /* 우측으로부터의 거리 */
-    background-color: #555; /* 버튼 배경색 */
+.my-page-btn, .logout-btn {
+    background-color: #555;  /* 버튼 배경색 */
     color: #fff;
     border: none;
     padding: 8px 12px;
@@ -41,7 +61,7 @@ body {
     font-size: 15px;
 }
 
-.logout-btn:hover {
+.my-page-btn:hover, .logout-btn:hover {
     background-color: #777;
 }
 
