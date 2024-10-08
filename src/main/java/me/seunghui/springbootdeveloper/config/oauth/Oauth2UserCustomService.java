@@ -3,6 +3,7 @@ package me.seunghui.springbootdeveloper.config.oauth;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import me.seunghui.springbootdeveloper.Repository.UserRepository;
+import me.seunghui.springbootdeveloper.domain.Role;
 import me.seunghui.springbootdeveloper.domain.User;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -64,6 +65,7 @@ public class Oauth2UserCustomService extends DefaultOAuth2UserService {
                     return User.builder()
                             .email(email)
                             .nickname(name)
+                            .role(Role.ROLE_USER)
                             .build();
                 });
         log.info("여기까지감3");
