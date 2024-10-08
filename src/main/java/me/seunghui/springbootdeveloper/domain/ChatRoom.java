@@ -21,8 +21,8 @@ public class ChatRoom {
     @Column(name = "room_name")
     private String roomName;
 
-    @Column(name = "creator",nullable = false)
-    private String creator;  // 채팅방 생성자 닉네임
+    @Column(name = "email",nullable = false)
+    private String email;  // 채팅방 생성자 닉네임
 
     @Column(name = "description")
     private String description;

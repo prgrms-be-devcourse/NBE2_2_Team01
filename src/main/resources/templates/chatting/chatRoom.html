@@ -219,7 +219,7 @@
   const username = /*[[${username}]]*/ '';
   const nickname = /*[[${nickname}]]*/ '';
 
-  const ws = new WebSocket('ws://localhost:8080/ws/chat/'+roomId);
+  const ws = new WebSocket('wss://localhost:8443/ws/chat/'+roomId);
   const chatLog = document.getElementById('chatLog');
   const chatInput = document.getElementById('chatInput');
 

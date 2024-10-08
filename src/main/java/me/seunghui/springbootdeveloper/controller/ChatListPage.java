@@ -1,5 +1,7 @@
 package me.seunghui.springbootdeveloper.controller;
 
+import com.nimbusds.oauth2.sdk.auth.JWTAuthentication;
+import lombok.extern.slf4j.Slf4j;
 import me.seunghui.springbootdeveloper.chat.ChatRoomService;
 import me.seunghui.springbootdeveloper.config.jwt.JwtPrincipal;
 import me.seunghui.springbootdeveloper.domain.ChatRoom;
@@ -7,6 +9,7 @@ import me.seunghui.springbootdeveloper.domain.User;
 import me.seunghui.springbootdeveloper.dto.chat.CreateChatForm;
 import me.seunghui.springbootdeveloper.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.security.Principal;
 
 @Controller
+@Slf4j
 @RequestMapping("/chat")
 public class ChatListPage {
 
@@ -40,27 +44,12 @@ public class ChatListPage {
         return "chatting/chatRoomCreate";
     }
 
-//    @PostMapping("/createRoom")
-//    public String createRoom(CreateChatForm createChatForm, Principal principal){
-//        User user = userService.findByEmail(principal.getName());
-//        String nickname = user.getNickname();
-//        ChatRoom chatRoom = createChatForm.toEntity(nickname);
-//        chatRoomService.save(chatRoom);
-//        return "redirect:/chat/list";
-//    }
-
-//    @PostMapping("/createRoom")
-//    public String createRoom(CreateChatForm createChatForm, JwtPrincipal jwtPrincipal){
-//        User user = userService.findByEmail(jwtPrincipal.getName());
-//        String nickname = user.getNickname();
-//        ChatRoom chatRoom = createChatForm.toEntity(nickname);
-//        chatRoomService.save(chatRoom);
-//        return "redirect:/chat/list";
-//    }
 
     @PostMapping("/createRoom")
-    public String createRoom(CreateChatForm createChatForm, JwtPrincipal jwtPrincipal){
-        ChatRoom chatRoom = createChatForm.toEntity(jwtPrincipal.getName());
+    public String createRoom(CreateChatForm createChatForm,Principal principal){
+        String email = principal.getName();
+        log.info("email: {}", email);
+        ChatRoom chatRoom = createChatForm.toEntity(email);
         chatRoomService.save(chatRoom);
         return "redirect:/chat/list";
     }
