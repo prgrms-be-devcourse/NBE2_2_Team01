@@ -16,10 +16,15 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+@CrossOrigin(origins = "http://localhost:8080")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/articles")
+@RequestMapping("/api/article")
 @Log4j2
 public class ArticleApiController {
 
@@ -68,13 +73,7 @@ public class ArticleApiController {
         return ResponseEntity.ok().body(new ArticleResponse(article)); // 조회된 게시글을 반환
     }
 
-    // 게시글 삭제 API (DELETE)
-    // 특정 게시글을 삭제
-    @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> deleteArticle(@PathVariable("id") Long id) {
-        articleService.delete(id); // 게시글 삭제 서비스 호출
-        return ResponseEntity.ok().build(); // 성공 시 200 OK 반환
-    }
+
 
     // 게시글 수정 API (PUT)
     // 게시글을 수정하고, 선택적으로 파일도 함께 수정
@@ -88,6 +87,25 @@ public class ArticleApiController {
         Article updatedArticle = articleService.update(id, request, files);
         return ResponseEntity.ok().body(updatedArticle); // 수정된 게시글 반환
     }
+
+    // 게시글 삭제 API (DELETE)
+    // 특정 게시글을 삭제
+    @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> deleteArticle(@PathVariable("id") Long id) {
+//        articleService.delete(id); // 게시글 삭제 서비스 호출
+//        return ResponseEntity.ok().build(); // 성공 시 200 OK 반환 -->응답 본문 없음
+        try {
+            articleService.delete(id);
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Article deleted successfully");
+            return ResponseEntity.ok().body(response);  // JSON 응답 반환
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Collections.singletonMap("message", "Error deleting article"));
+        }
+    }
+
+
 }
 //consumes = MediaType.MULTIPART_FORM_DATA_VALUE를 작성한 이유는
 // 서버가 해당 요청이 multipart/form-data 형식으로 전송된다는 것을 명시적으로 알리기 위함
