@@ -11,7 +11,7 @@ public class AddUserRequest {
     private String email;
     private String password;
     private String nickname;
-//    private MultipartFile profileImage; // Add MultipartFile to handle image uploads
+    private MultipartFile profileImage;
 
 
 
