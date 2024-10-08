@@ -27,15 +27,30 @@ if (deleteButton) {
             location.replace('/articles');
         }
 
+        // function fail(response) {
+        //     response.text().then(text => {
+        //         alert('삭제에 실패했습니다');
+        //         location.replace('/articles');
+        //     });
+        // }
         function fail(response) {
-            response.text().then(text => {
-                alert('삭제에 실패했습니다');
+            console.log("Fail function called");  // fail 함수 호출 확인
+            response.json().then(data => {  // JSON 응답 처리
+                console.log("Response JSON:", data);
+                if (response.status === 500) {
+                    alert('서버에서 문제가 발생했습니다: ' + data.message);
+                } else {
+                    alert('삭제에 실패했습니다: ' + data.message);
+                }
                 location.replace('/articles');
+            }).catch(error => {
+                console.log("JSON 처리 실패:", error);
+                alert('삭제 과정에서 문제가 발생했습니다.');
             });
         }
 
         if (userConfirmed) {
-            httpRequest('DELETE', `/api/articles/${id}`, null, success, fail);
+            httpRequest('DELETE', `/api/article/${id}`, null, success, fail);
         } else {
             event.preventDefault();
         }
@@ -78,7 +93,7 @@ if (modifyButton) {
             });
         }
 
-        httpRequest('PUT', `/api/articles/${id}`, body, success, fail);
+        httpRequest('PUT', `/api/article/${id}`, body, success, fail);
     });
 }
 
@@ -116,7 +131,7 @@ if (createButton) {
             });
         }
 
-        httpRequest('POST', '/api/articles', body, success, fail);
+        httpRequest('POST', '/api/article', body, success, fail);
     });
 }
 
@@ -149,6 +164,7 @@ function httpRequest(method, url, body, success, fail) {
         method: method,
         headers: headers,  // Content-Type 설정하지 않음
         body: body, // FormData 객체 전달
+        // credentials: 'include'
     }).then(response => {
         if (response.ok) {
             return success();
@@ -165,6 +181,7 @@ function httpRequest(method, url, body, success, fail) {
                 body: JSON.stringify({
                     refreshToken: getCookie('refresh_token'),
                 }),
+                // credentials: 'include'
             })
                 .then(res => res.ok ? res.json() : Promise.reject())
                 .then(result => {
