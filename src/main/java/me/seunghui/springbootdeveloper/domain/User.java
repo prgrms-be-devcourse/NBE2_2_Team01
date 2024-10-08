@@ -9,6 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Base64;
 import java.util.Collection;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +60,14 @@ public class User implements UserDetails {
         this.profileImage = profileImage;
         this.profileUrl = profileUrl;  // URL 저장(이미지 구별, 호출)
         this.role = role;
+    }
+
+    // 프로필 이미지를 Base64 문자열로 변환
+    public String getProfileImageAsBase64() {
+        if (profileImage != null) {
+            return "data:image/png;base64," + Base64.getEncoder().encodeToString(profileImage);
+        }
+        return null;
     }
 
     //사용자 이름 변경
