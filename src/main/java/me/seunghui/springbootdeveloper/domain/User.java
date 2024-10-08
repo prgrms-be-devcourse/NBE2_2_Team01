@@ -70,6 +70,12 @@ public class User implements UserDetails {
         return null;
     }
 
+
+    // 프로필 이미지 변경 메소드 추가
+    public void setProfileImage(byte[] profileImage) {
+        this.profileImage = profileImage;
+    }
+
     //사용자 이름 변경
     public User update(String nickname) {
         this.nickname = nickname;

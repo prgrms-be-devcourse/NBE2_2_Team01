@@ -9,6 +9,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @Controller
 @RequiredArgsConstructor
@@ -24,5 +29,20 @@ public class MyPageController{
         model.addAttribute("profileImage", user.getProfileImageAsBase64());
 
         return "mypage";
+    }
+
+    @PostMapping("/mypage/updateProfileImage")
+    public String updateProfileImage(@RequestParam("profileImage") MultipartFile profileImage,
+                                     @AuthenticationPrincipal UserDetails userDetails) {
+        try {
+            String email = userDetails.getUsername();
+            // 파일을 byte[]로 변환하고 서비스에 전달하여 저장
+            byte[] imageBytes = profileImage.getBytes();
+            myPageService.updateProfileImage(email, imageBytes);
+        } catch (IOException e) {
+            e.printStackTrace();
+            // 오류 처리 로직 추가
+        }
+        return "redirect:/mypage"; // 이미지 변경 후 마이페이지로 리다이렉트
     }
 }
