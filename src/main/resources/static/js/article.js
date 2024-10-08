@@ -50,7 +50,7 @@ if (deleteButton) {
         }
 
         if (userConfirmed) {
-            httpRequest('DELETE', `/api/articles/${id}`, null, success, fail);
+            httpRequest('DELETE', `/api/article/${id}`, null, success, fail);
         } else {
             event.preventDefault();
         }
@@ -93,7 +93,7 @@ if (modifyButton) {
             });
         }
 
-        httpRequest('PUT', `/api/articles/${id}`, body, success, fail);
+        httpRequest('PUT', `/api/article/${id}`, body, success, fail);
     });
 }
 
@@ -131,7 +131,7 @@ if (createButton) {
             });
         }
 
-        httpRequest('POST', '/api/articles', body, success, fail);
+        httpRequest('POST', '/api/article', body, success, fail);
     });
 }
 
@@ -164,6 +164,7 @@ function httpRequest(method, url, body, success, fail) {
         method: method,
         headers: headers,  // Content-Type 설정하지 않음
         body: body, // FormData 객체 전달
+        // credentials: 'include'
     }).then(response => {
         if (response.ok) {
             return success();
@@ -180,6 +181,7 @@ function httpRequest(method, url, body, success, fail) {
                 body: JSON.stringify({
                     refreshToken: getCookie('refresh_token'),
                 }),
+                // credentials: 'include'
             })
                 .then(res => res.ok ? res.json() : Promise.reject())
                 .then(result => {

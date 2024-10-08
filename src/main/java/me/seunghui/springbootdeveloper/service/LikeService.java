@@ -8,10 +8,14 @@ import me.seunghui.springbootdeveloper.Repository.UserRepository;
 import me.seunghui.springbootdeveloper.domain.Article;
 import me.seunghui.springbootdeveloper.domain.Like;
 import me.seunghui.springbootdeveloper.domain.User;
+import me.seunghui.springbootdeveloper.dto.User.UserCommentedArticlesList;
+import me.seunghui.springbootdeveloper.dto.User.UserLikedArticlesList;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -70,6 +74,24 @@ public class LikeService {
         // 좋아요가 존재하고 likedStatus가 true이면 true 반환
         return like.isPresent() && like.get().isLikedStatus();
     }
+
+    //사용자가 좋아요 누른 게시물 조회
+    public List<UserLikedArticlesList> getUserAllArticlesAndLikes(String userName) {
+        List<Article> articles = likeRepository.findUserLikedArticles(userName);
+
+        // Article 엔티티에서 필요한 데이터를 가공하여 DTO로 변환
+        return articles.stream()
+                .map(article -> new UserLikedArticlesList(
+                        article.getId(),
+                        article.getTitle(),
+                        article.getCreatedAt(),
+                        article.getViewCount()  // 게시글 조회수 가져오기
+                ))
+                .collect(Collectors.toList());
+    }
+
+
+
 
     @Transactional
     public long getLikeCount(long articleId) {

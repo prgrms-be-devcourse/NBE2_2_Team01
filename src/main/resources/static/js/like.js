@@ -68,7 +68,7 @@ if (likeButton) {
             alert('좋아요를 실패했습니다. 로그인 후 이용해주세요! ');  // 오류 메시지 출력
         }
 
-        httpRequest('POST', '/api/likes', body, success, fail);
+        httpRequest('POST', '/api/like', body, success, fail);
 
     });
 }
@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const likeIcon = document.getElementById('like-icon');
 
     // 서버로 현재 게시글에 대한 좋아요 상태 요청 (userId는 서버에서 처리)
-    fetch(`/api/likes/status?articleId=${articleId}`, {
+    fetch(`/api/like/status?articleId=${articleId}`, {
         method: 'GET',
         headers: {
             Authorization: 'Bearer ' + localStorage.getItem('access_token'),  // JWT 토큰 전송

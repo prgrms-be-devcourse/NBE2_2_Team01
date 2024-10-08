@@ -1,5 +1,6 @@
 package me.seunghui.springbootdeveloper.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -31,6 +32,7 @@ public class InsertedFile {
 
     @ManyToOne // 여러 개의 InsertedFile이 하나의 Article에 속함
     @JoinColumn(name = "article_id", nullable = false) // 외래키 설정
+    @JsonIgnore
     private Article article; // InsertedFile이 속한 Article 객체를 참조
 
 
