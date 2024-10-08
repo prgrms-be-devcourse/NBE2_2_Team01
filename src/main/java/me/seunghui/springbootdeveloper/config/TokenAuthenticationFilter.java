@@ -6,14 +6,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
+import lombok.extern.log4j.Log4j2;
 import me.seunghui.springbootdeveloper.config.jwt.JwtPrincipal;
 import me.seunghui.springbootdeveloper.config.jwt.TokenProvider;
-import me.seunghui.springbootdeveloper.domain.Role;
-import me.seunghui.springbootdeveloper.domain.User;
 import me.seunghui.springbootdeveloper.service.UserDetailService;
-import me.seunghui.springbootdeveloper.service.UserService;
-import lombok.extern.log4j.Log4j2;
-
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -22,6 +18,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 @RequiredArgsConstructor
@@ -45,26 +42,8 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         String token = getAccessToken(authorizationHeader); //헤더에서 Bearer 접두사를 제거한 실제 JWT 토큰을 추출
         //가져온 토큰이 유효한지 확인하고, 유효한 때는 인증 정보를 설정
         if(tokenProvider.validToken(token)){ //토큰의 유효성을 검사한다. 토큰이 유효하면 true를 반환
-
-            // 변경 사항 (강민)
-            // 아래의 코드 2줄 -> principal 객체가 없어서 동작이 안되는 걸로 알고있음
             Authentication auth = tokenProvider.getAuthentication(token); // 유효한 토큰인 경우, 토큰을 사용해 인증 정보를 가져온다.
             SecurityContextHolder.getContext().setAuthentication(auth); //인증 정보를 Spring Security의 SecurityContext에 저장한다. 이렇게 설정된 인증 정보는 이후 요청이 처리될 때 참고된다.
-
-            // 따라서, 아래의 부분에서 인증 객체를 수동으로 설정해서 집어 넣을 생각
-            String username = tokenProvider.getEmail(token);
-            User user = (User) userDetailService.loadUserByUsername(username);
-            Role role = Role.ROLE_USER;
-            // 인증 객체 생성
-            UsernamePasswordAuthenticationToken authenticationToken =
-                    new UsernamePasswordAuthenticationToken(
-                            new JwtPrincipal(user.getUsername()),
-                            null,
-                            Arrays.asList(new SimpleGrantedAuthority(role.getAuthority()))
-                    );
-
-            SecurityContext context = SecurityContextHolder.getContext();
-            context.setAuthentication(authenticationToken);
         }
 
         filterChain.doFilter(request, response); //필터 체인 내의 다음 필터로 요청을 전달함
@@ -96,10 +75,6 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         if(authorizationHeader != null && authorizationHeader.startsWith(TOKEN_PREFIX)) { //헤더가 존재하고 Bearer로 시작하는지 확인
             return authorizationHeader.substring(TOKEN_PREFIX.length()); //Bearer 부분을 제거하고 순수한 토큰만 추출하여 반환
         }
-        logger.info(" 토큰 인증 필터 : 헤더 " + authorizationHeader);
-        logger.info(" 토큰 인증 필터 : 홀더 " + SecurityContextHolder.getContext().getAuthentication());
-
-
         return null;
     }
 }

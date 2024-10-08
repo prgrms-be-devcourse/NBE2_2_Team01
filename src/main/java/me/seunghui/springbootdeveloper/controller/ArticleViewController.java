@@ -3,6 +3,7 @@ package me.seunghui.springbootdeveloper.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import me.seunghui.springbootdeveloper.domain.Article;
+import me.seunghui.springbootdeveloper.domain.Comment;
 import me.seunghui.springbootdeveloper.dto.Article.ArticleListViewResponse;
 import me.seunghui.springbootdeveloper.dto.Article.ArticleViewResponse;
 import me.seunghui.springbootdeveloper.dto.Article.PageRequestDTO;
@@ -63,19 +64,20 @@ public class ArticleViewController {
 
         // 현재 사용자 정보 가져오기 (로그인한 사용자의 이름 또는 이메일)
         String currentUserName =  SecurityContextHolder.getContext().getAuthentication().getName();
-        String currentUserName2=userService.currentUser();
         log.info("Authentication: {}",  SecurityContextHolder.getContext().getAuthentication());
         // 현재 사용자가 게시글의 작성자인지 확인
-        boolean isOwner = article.getAuthor().equals(currentUserName);
+        boolean isArticleOwner = article.getAuthor().equals(currentUserName);
+
         log.info("currentUserName: {}", currentUserName);
-        log.info("currentUserName2: {}", currentUserName2);
-        log.info("isOwner: {}", isOwner);
+        log.info("articleAuthor:{}", article.getAuthor());
+        //log.info("isOwner: {}", isOwner);
 
         // 게시글 정보를 모델에 추가
         model.addAttribute("article", article);
-
-        model.addAttribute("user", currentUserName);
+        model.addAttribute("isArticleOwner", isArticleOwner);
+        model.addAttribute("currentUserName", currentUserName);
         model.addAttribute("comments", commentListPage.getContent());
+        //model.addAttribute("isCommentOwner", commentListPage.);
         model.addAttribute("page", commentListPage);
         model.addAttribute("likeCount", likeCount);
         model.addAttribute("commentCount", commentCount);

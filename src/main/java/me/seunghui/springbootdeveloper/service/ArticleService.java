@@ -2,9 +2,12 @@ package me.seunghui.springbootdeveloper.service;//package me.seunghui.springboot
 
 import lombok.RequiredArgsConstructor;
 import me.seunghui.springbootdeveloper.Repository.ArticleRepository;
+import me.seunghui.springbootdeveloper.Repository.CommentRepository;
 import me.seunghui.springbootdeveloper.domain.Article;
 import me.seunghui.springbootdeveloper.domain.InsertedFile;
 import me.seunghui.springbootdeveloper.dto.Article.*;
+import me.seunghui.springbootdeveloper.dto.User.UserArticlesList;
+import me.seunghui.springbootdeveloper.dto.User.UserCommentedArticlesList;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -14,10 +17,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class ArticleService {
     private final ArticleRepository articleRepository;
+    private final CommentRepository commentRepository;
     private final FileUploadService fileUploadService;
     private final LikeService likeService;
 
@@ -92,6 +98,16 @@ public class ArticleService {
         Pageable pageable = pageRequestDTO.getPageable(sort);
         return articleRepository.searchDTO(pageable); // QueryDSL을 통한 동적 검색
     }
+
+    //사용자가 작성한 목록 조회
+    public List<UserArticlesList> getUserAllArticles(String userName){
+        List<Article> articles = articleRepository.findUserArticles(userName);
+        return articles.stream()
+                .map(UserArticlesList::new) // Article 엔티티를 ArticleResponse DTO로 변환
+                .toList();
+    }
+
+
 
 
     // 게시글의 작성자를 확인하여 권한 검증
