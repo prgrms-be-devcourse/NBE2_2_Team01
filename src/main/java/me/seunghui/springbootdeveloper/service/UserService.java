@@ -13,6 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -29,11 +32,15 @@ public class UserService {
         byte[] profileImageBytes = null;
         String profileUrl = null;
 
+
         if (!dto.getProfileImage().isEmpty()) {
             try {
                 profileImageBytes = dto.getProfileImage().getBytes();
+
                 String fileName = UUID.randomUUID() + "_" + dto.getProfileImage().getOriginalFilename();
+
                 profileUrl = fileName;
+
             } catch (IOException e) {
                 e.printStackTrace();
                 throw new RuntimeException("Failed to process the profile image", e);
