@@ -1,6 +1,7 @@
 package me.seunghui.springbootdeveloper.controller;
 
 import me.seunghui.springbootdeveloper.chat.ChatRoomService;
+import me.seunghui.springbootdeveloper.config.jwt.JwtPrincipal;
 import me.seunghui.springbootdeveloper.domain.ChatRoom;
 import me.seunghui.springbootdeveloper.domain.User;
 import me.seunghui.springbootdeveloper.dto.chat.CreateChatForm;
@@ -39,11 +40,27 @@ public class ChatListPage {
         return "chatting/chatRoomCreate";
     }
 
+//    @PostMapping("/createRoom")
+//    public String createRoom(CreateChatForm createChatForm, Principal principal){
+//        User user = userService.findByEmail(principal.getName());
+//        String nickname = user.getNickname();
+//        ChatRoom chatRoom = createChatForm.toEntity(nickname);
+//        chatRoomService.save(chatRoom);
+//        return "redirect:/chat/list";
+//    }
+
+//    @PostMapping("/createRoom")
+//    public String createRoom(CreateChatForm createChatForm, JwtPrincipal jwtPrincipal){
+//        User user = userService.findByEmail(jwtPrincipal.getName());
+//        String nickname = user.getNickname();
+//        ChatRoom chatRoom = createChatForm.toEntity(nickname);
+//        chatRoomService.save(chatRoom);
+//        return "redirect:/chat/list";
+//    }
+
     @PostMapping("/createRoom")
-    public String createRoom(CreateChatForm createChatForm, Principal principal){
-        User user = userService.findByEmail(principal.getName());
-        String nickname = user.getNickname();
-        ChatRoom chatRoom = createChatForm.toEntity(nickname);
+    public String createRoom(CreateChatForm createChatForm, JwtPrincipal jwtPrincipal){
+        ChatRoom chatRoom = createChatForm.toEntity(jwtPrincipal.getName());
         chatRoomService.save(chatRoom);
         return "redirect:/chat/list";
     }
