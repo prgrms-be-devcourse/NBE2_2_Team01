@@ -77,7 +77,7 @@ body {
     margin-bottom: 0px;
 }
 article section p{
-   padding-bottom: 50px;
+    padding-bottom: 50px;
 }
 
 #comments{
@@ -341,4 +341,12 @@ footer a:hover {
     right: -10px; /* 배지의 오른쪽 위치 */
     font-size: 12px;
 }
-
+.header-section .btn {
+    margin: 5px;
+    padding: 10px 20px;
+    background-color: #444;
+    color: white;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+}
