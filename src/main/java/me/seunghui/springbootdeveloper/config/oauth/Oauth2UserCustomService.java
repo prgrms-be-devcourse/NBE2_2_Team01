@@ -12,7 +12,11 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -38,6 +42,18 @@ public class Oauth2UserCustomService extends DefaultOAuth2UserService {
     //유저가 있으면 업데이트, 없으면 유저 생성
     private User savedOrUpdate(OAuth2User oAuth2User) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        byte[] profileImageBytes = null;
+        String profileUrl = null;
+
+        try {
+            // 기본 프로필 이미지 설정
+            File defaultImage = new File("src/main/resources/static/img/default.jpeg");
+            profileImageBytes = Files.readAllBytes(defaultImage.toPath());
+            profileUrl = "default.jpeg";  // 기본 이미지의 URL 고정
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to load the default profile image", e);
+        }
 
         Map<String, Object> attributes = oAuth2User.getAttributes(); //OAuth2 사용자 정보(email, name 등)를 속성 맵으로 가져온다.
 
@@ -56,6 +72,8 @@ public class Oauth2UserCustomService extends DefaultOAuth2UserService {
             name = (String) attributes.get("name");
         }
 
+        String finalProfileUrl = profileUrl;
+        byte[] finalProfileImageBytes = profileImageBytes;
         User user = userRepository.findByEmail(email)
                 .map(entity -> {
                     // 로그 추가
@@ -65,11 +83,16 @@ public class Oauth2UserCustomService extends DefaultOAuth2UserService {
                 .orElseGet(() -> {
                     // 로그 추가
                     System.out.println("User not found, creating new user with email: " + email);
+
+
+
                     return User.builder()
                             .email(email)
-                            .nickname(name)
-                            .role(Role.ROLE_USER)
                             .password(encoder.encode("123456"))
+                            .nickname(name)
+                            .profileImage(finalProfileImageBytes)
+                            .profileUrl(finalProfileUrl)
+                            .role(Role.ROLE_USER)
                             .build();
                 });
         log.info("여기까지감3");
