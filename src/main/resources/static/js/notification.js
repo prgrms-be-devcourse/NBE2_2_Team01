@@ -21,8 +21,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const body = document.querySelector('body');
     const currentUserId = body.getAttribute('data-user-id');
 
+
     // WebSocket 연결
     const socket = new WebSocket('wss://localhost:8443/ws/notifications');
+    socket.onmessage = function (event) {
+        const data = JSON.parse(event.data);
+        console.log("Received WebSocket data:", data);
+        if (data.type === 'NEW_NOTIFICATION') {
+            fetchUnreadNotificationCount();  // 새 알림이 올 때마다 읽지 않은 알림 수 갱신
+        }
+    };
 
     socket.onopen = function () {
         console.log('WebSocket 연결이 열렸습니다.');
@@ -83,6 +91,38 @@ document.addEventListener('DOMContentLoaded', () => {
         setAlarmBtn.onclick = createCustomAlarm; // 알람 설정 모드로 변경
     });
 
+    function fetchUnreadNotificationCount() {
+        if (!currentUserId) {
+            console.error('User ID is null or undefined.');
+            return;
+        }
+
+        console.log("Fetching unread notification count...");
+        fetch('/api/notifications/unread-count', {
+            method: 'GET',
+            credentials: 'include' // 인증 정보를 포함하여 요청
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Error fetching unread count: ${response.statusText}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log("Fetched unread count data:", data);
+                const unreadCount = data.unreadCount || 0;
+                notificationCount.textContent = unreadCount;
+                notificationCount.classList.toggle('hidden', unreadCount === 0);
+            })
+            .catch(error => {
+                console.error('Error fetching unread notification count:', error);
+                notificationCount.textContent = '0'; // 오류 발생 시 0으로 설정
+                notificationCount.classList.add('hidden'); // 알림 배지 숨김
+            });
+    }
+
+    // 페이지 로드 시마다 알림 수 갱신
+    fetchUnreadNotificationCount();
     // 알람 설정 버튼 클릭 핸들러
     function createCustomAlarm() {
         const message = document.getElementById('message').value;
@@ -373,6 +413,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             })
             .catch(error => console.error('Error marking notification as read:', error));
+
     }
 
     // 웹소켓으로부터 알림 수신
@@ -384,6 +425,7 @@ document.addEventListener('DOMContentLoaded', () => {
         currentCount += 1;
         notificationCount.textContent = currentCount;
         notificationCount.classList.remove('hidden');
+        fetchUnreadNotificationCount();
 
         switch (data.dataType) {
             case 'Notification':

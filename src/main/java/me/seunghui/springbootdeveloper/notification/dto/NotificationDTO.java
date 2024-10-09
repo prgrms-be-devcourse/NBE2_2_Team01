@@ -23,6 +23,7 @@ public class NotificationDTO {
     private String recipient;
     private Long targetId;
     private Long userId; // User의 ID만 포함
+    private String makeId;
     private String userEmail; // 필요 시 User의 이메일 포함
     private String dataType;
 
@@ -36,6 +37,7 @@ public class NotificationDTO {
                 .recipient(notification.getRecipient())
                 .targetId(notification.getTargetId())
                 .userId(notification.getUser().getId())
+                .makeId(notification.getMakeId())
                 .dataType("Notification")
                 .userEmail(notification.getUser().getEmail()) // User 엔티티에 email 필드가 있다고 가정
                 .build();
@@ -49,6 +51,7 @@ public class NotificationDTO {
                 .message(dto.getMessage())
                 .recipient(dto.getRecipient())
                 .targetId(dto.getTargetId())
+                .makeId(dto.getMakeId())
                 // User 설정은 서비스 레이어에서 처리해야 함
                 .build();
         return notification;

@@ -8,8 +8,10 @@ import me.seunghui.springbootdeveloper.Repository.UserRepository;
 import me.seunghui.springbootdeveloper.domain.Article;
 import me.seunghui.springbootdeveloper.domain.Like;
 import me.seunghui.springbootdeveloper.domain.User;
-import me.seunghui.springbootdeveloper.dto.User.UserCommentedArticlesList;
 import me.seunghui.springbootdeveloper.dto.User.UserLikedArticlesList;
+import me.seunghui.springbootdeveloper.notification.entity.Notification;
+import me.seunghui.springbootdeveloper.notification.enums.AlarmType;
+import me.seunghui.springbootdeveloper.notification.repository.NotificationRepository;
 import me.seunghui.springbootdeveloper.notification.service.NotificationService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +28,9 @@ public class LikeService {
     private final ArticleRepository articleRepository;
     private final UserRepository userRepository;
     private final NotificationService notificationService;
-// public boolean addLike(Long articleId, Long userId,String userName)
+    private final NotificationRepository notificationRepository;
+
+    // public boolean addLike(Long articleId, Long userId,String userName)
     //게시글에 맞는 좋아요 생성
     @Transactional
     public boolean addLike(Long articleId,String userName) {
@@ -34,9 +38,11 @@ public class LikeService {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid article ID"));
         User user = userRepository.findByEmail(userName)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
+
         log.info("ArticleId:{} " , articleId);
         Optional<Like> existingLike = likeRepository.findByArticleAndUser(articleId, user.getId());
 
+        boolean isRead=notificationService.likeIsRead(article.getAuthor(),userName, AlarmType.LIKE);
         if(user.getEmail()==userName){
             log.info("email: {} already exists", user.getEmail());
             log.info("userName: {} already exists", userName);
@@ -45,12 +51,12 @@ public class LikeService {
             log.info("userName: {}", userName);
         }
 
-
         if (existingLike.isPresent()) {
             Like updateLike=existingLike.get();
             // 현재 상태를 반대로 변경
             updateLike.changeLikedStatus(updateLike.isLikedStatus());
-            if(updateLike.isLikedStatus()){
+
+            if(updateLike.isLikedStatus()&&!isRead){
                 notificationService.sendLikeNotification(articleId, userName);
             }
             likeRepository.save(updateLike); // 변경 사항 저장

@@ -4,7 +4,10 @@ package me.seunghui.springbootdeveloper.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import me.seunghui.springbootdeveloper.domain.Like;
+
 import me.seunghui.springbootdeveloper.dto.Like.LikeRequest;
+import me.seunghui.springbootdeveloper.notification.entity.Notification;
+import me.seunghui.springbootdeveloper.notification.service.NotificationService;
 import me.seunghui.springbootdeveloper.service.LikeService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +23,7 @@ import java.util.Map;
 @RequestMapping("/api/like")
 public class LikeApiController {
     private final LikeService likeService;
-
+    private final NotificationService notificationService;
 //    @PostMapping("/{articleId}")
 //    public ResponseEntity<Like> addLike(@PathVariable Long articleId, Principal principal) {
 //        Like savedLike = likeService.saveLike(articleId, principal.getName());
@@ -37,7 +40,6 @@ public class LikeApiController {
     public ResponseEntity<Map<String, Object>> toggleLike(@RequestBody LikeRequest request, Principal principal) {
         // `addLike` 메서드가 boolean 값을 반환하고, 그것을 그대로 사용
         boolean likedStatus = likeService.addLike(request.getArticleId(), principal.getName());
-
         // 좋아요 수 가져오기
         long likeCount = likeService.getLikeCount(request.getArticleId());
 

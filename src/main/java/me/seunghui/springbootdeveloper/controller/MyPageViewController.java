@@ -6,6 +6,8 @@ import lombok.extern.log4j.Log4j2;
 import me.seunghui.springbootdeveloper.dto.Article.ArticleListViewResponse;
 import me.seunghui.springbootdeveloper.dto.Article.PageRequestDTO;
 import me.seunghui.springbootdeveloper.dto.User.UserArticlesList;
+import me.seunghui.springbootdeveloper.dto.User.UserCommentsList;
+import me.seunghui.springbootdeveloper.dto.User.UserLikedArticlesList;
 import me.seunghui.springbootdeveloper.service.ArticleService;
 import me.seunghui.springbootdeveloper.service.CommentService;
 import me.seunghui.springbootdeveloper.service.LikeService;
@@ -48,7 +50,7 @@ public class MyPageViewController {
         List<UserArticlesList> userArticlesLists = articleService.getUserAllArticles(currentUserName);
 
         model.addAttribute("userArticlesLists", userArticlesLists);
-        return "mypage/mypageMain";
+        return "mypage/articles";
     }
 
     @GetMapping("/comments")  // "/articles" 경로로 GET 요청을 처리
@@ -56,7 +58,9 @@ public class MyPageViewController {
 
         String currentUserName =  SecurityContextHolder.getContext().getAuthentication().getName();
         model.addAttribute("currentUserName", currentUserName);
+        List<UserCommentsList> userCommentsLists=commentService.getUserAllComments(currentUserName);
 
+        model.addAttribute("userCommentsLists", userCommentsLists);
 
         return "mypage/comments";
     }
@@ -66,11 +70,13 @@ public class MyPageViewController {
 
         String currentUserName =  SecurityContextHolder.getContext().getAuthentication().getName();
         model.addAttribute("currentUserName", currentUserName);
+        List<UserLikedArticlesList> userLikedArticlesLists = likeService.getUserAllArticlesAndLikes(currentUserName);
+        model.addAttribute("userLikedArticlesLists", userLikedArticlesLists);
 
         return "mypage/likes";
     }
 
-    @GetMapping("/chats")  // "/articles" 경로로 GET 요청을 처리
+    @GetMapping("/chat-history")  // "/articles" 경로로 GET 요청을 처리
     public String myPageChats(Model model) {
 
         String currentUserName =  SecurityContextHolder.getContext().getAuthentication().getName();
