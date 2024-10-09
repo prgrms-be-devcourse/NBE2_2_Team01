@@ -2,6 +2,8 @@ package me.seunghui.springbootdeveloper.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import me.seunghui.springbootdeveloper.Repository.ArticleRepository;
+import me.seunghui.springbootdeveloper.Repository.CommentRepository;
 import me.seunghui.springbootdeveloper.Repository.UserRepository;
 import me.seunghui.springbootdeveloper.domain.Role;
 import me.seunghui.springbootdeveloper.domain.Comment;
@@ -24,6 +26,8 @@ import java.util.UUID;
 @Log4j2
 public class UserService {
     private final UserRepository userRepository; // 사용자 정보를 처리하는 레포지토리
+    private final ArticleRepository articleRepository;
+    private final CommentRepository commentRepository;
 
     // 사용자 저장 메서드 (회원가입)
     public Long save(AddUserRequest dto) {
@@ -71,6 +75,19 @@ public class UserService {
                 .orElseThrow(() -> new IllegalArgumentException("No user found with email: " + email));
     }
 
+    //사용자 탈퇴
+    @Transactional
+    public void deleteUserByUsername(String username) {
+        User user=userRepository.findByEmail(username)
+                        .orElseThrow(()->new IllegalArgumentException("No user found with email: " + username));
+
+        // 사용자 이메일로 작성된 게시글과 댓글의 작성자 필드를 "탈퇴한 사용자입니다."로 변경
+        articleRepository.updateAuthorToDeleted(username);
+        commentRepository.updateCommentAuthorToDeleted(username);
+        userRepository.delete(user);
+    }
+
+
     // 특정 사용자의 닉네임을 null로 설정하는 메서드 (이메일로 사용자 조회)
     @Transactional // 데이터 변경 시 트랜잭션을 보장함
     public void setNicknameNullByEmail(String email) {
@@ -83,14 +100,6 @@ public class UserService {
         });
     }
 
-    public String currentUser() {
-        String userName = SecurityContextHolder.getContext().getAuthentication().getName(); // 현재 로그인된 사용자 확인
-//        if (!user.getEmail().equals(userName)) {
-//            throw new IllegalArgumentException("not authorized");
-//        }
-        log.info("userName: {}" , userName);
-        return userName;
-    }
     //사용자가 좋아요 누른 게시글 조회
     //사용자가 쓴 게시글 조회
     //시용자가 쓴 댓글 조회

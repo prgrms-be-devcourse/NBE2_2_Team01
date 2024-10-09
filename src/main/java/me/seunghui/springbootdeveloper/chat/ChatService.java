@@ -9,4 +9,5 @@ public interface ChatService {
     void handleUserConnection(WebSocketSession session, String roomId, String principal, ConcurrentHashMap<String, Map<String, WebSocketSession>> roomSessions);
     void handleUserDisconnection(WebSocketSession session, String roomId, String principal);
     void memberListUpdated(String roomId, ConcurrentHashMap<String, Map<String, WebSocketSession>> roomSessions);
+    int getUserCount(String roomId);
 }

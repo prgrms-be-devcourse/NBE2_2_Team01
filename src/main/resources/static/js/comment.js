@@ -44,20 +44,7 @@ function submitComment(articleId, content, parentCommentId = null) {
         parentCommentId: parentCommentId  // 부모 댓글 ID가 있을 경우 대댓글로 처리
     };
 
-    // const url = `/api/comment/${articleId}`;
-    // httpRequest('POST', url, JSON.stringify(body),  // JSON으로 변환해서 전송
-    //     () => {
-    //         loadComments(articleId); // 댓글 목록 다시 로드
-    //         if (!parentCommentId) {
-    //             document.querySelector('textarea[name="content"]').value = ''; // 메인 댓글 textarea 초기화
-    //         } else {
-    //             document.querySelector(`#reply-form-${parentCommentId} textarea`).value = ''; // 대댓글 textarea 초기화
-    //         }
-    //     },
-    //     (error) => {
-    //         console.error('댓글 추가 실패:', error);
-    //         alert('댓글 추가에 실패했습니다.');
-    //     });
+
     const url = `/api/comment/${articleId}`;
 
     httpRequest('POST', url, JSON.stringify(body),
@@ -74,9 +61,6 @@ function submitComment(articleId, content, parentCommentId = null) {
             console.error('댓글 작성 실패, 상태 코드:', response.status || '응답 없음');
             alert('댓글 작성에 실패했습니다. 다시 시도해주세요.');
         });
-
-
-
 
 }
 
@@ -207,16 +191,7 @@ function renderCommentWithReplies(comment, allComments, depth) {
     const commentSection = document.getElementById('comments-section');
     const commentCard = document.createElement('div');
     commentCard.style.marginLeft = `${depth * 20}px`;  // 대댓글 들여쓰기
-    // 대댓글 깊이에 따라 클래스 부여
-    // if (depth === 1) {
-    //     // 첫 번째 대댓글 (최상위 댓글의 자식)만 들여쓰기 적용
-    //     commentCard.style.marginLeft = `20px`;
-    // } else if (depth >= 2) {
-    //     // 깊이가 2 이상인 대댓글은 추가 들여쓰기를 하지 않음
-    //     commentCard.style.marginLeft = `20px`;  // 들여쓰기를 고정
-    // } else {
-    //     commentCard.style.marginLeft = `0px`;  // 최상위 댓글
-    // }
+
     // commentId로 고유한 div 설정
     commentCard.id = `comment-card-${comment.commentId}`;
 
@@ -243,7 +218,7 @@ function renderCommentWithReplies(comment, allComments, depth) {
         commentCard.innerHTML = `
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-center">
-                <h6 class="card-subtitle mb-2 text-muted" id="comment-Author">${comment.commentAuthor}</h6>
+                <h6 class="card-subtitle mb-2 text-muted" id="comment-Author" style="margin-top: 8px">${comment.commentAuthor}</h6>
                 <div class="comment-button">
                         ${comment.commentAuthor === currentUserName ? `
                         <button type="button" id="comment-modify-btn-${comment.commentId}" class="btn btn-primary btn-sm">수정</button>
@@ -253,7 +228,11 @@ function renderCommentWithReplies(comment, allComments, depth) {
             </div>
             <p class="card-text" id="comment-${comment.commentId}-content">${comment.commentContent}</p>
             <p class="commentCreatedAt">${comment.commentCreatedAt}</p>
-            <button class="btn btn-link reply-btn" id="reply-button-${comment.commentId}" data-comment-id="${comment.commentId}">댓글 쓰기</button>
+<!--            <button class="btn btn-link reply-btn" id="reply-button-${comment.commentId}" data-comment-id="${comment.commentId}">댓글 쓰기</button>-->
+            ${
+            comment.commentAuthor !== "탈퇴한 사용자입니다." ?
+                `<button class="btn btn-link reply-btn" id="reply-button-${comment.commentId}" data-comment-id="${comment.commentId}">댓글 쓰기</button>` : ''
+                }
             <div id="reply-form-${comment.commentId}" class="reply-form mt-2" style="display: none;">
                 <textarea class="form-control" rows="3" placeholder="대댓글을 입력하세요"></textarea>
                 <div class="text-right">
@@ -319,7 +298,6 @@ if (commentButton) {
         event.preventDefault();  // 기본 동작 막기
         const articleId = document.getElementById('article-id').value;
         const content = document.querySelector('textarea[name="content"]').value;
-
 
         if (content) {
             submitComment(articleId, content);  // 메인 댓글 등록

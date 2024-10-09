@@ -22,7 +22,34 @@ if (createButton) {
                     localStorage.setItem('access_token', token);
 
                     alert('Login successful.');
-                    location.replace(`/articles?token=`+token)
+
+
+                    const headers = new Headers();
+                    headers.append('Authorization', `Bearer ${token}`);
+
+                    // // 로그인 후 추가로 서버에 요청을 보냅니다.
+                    // const body = JSON.stringify({
+                    //     // 필요에 따라 서버에 보낼 데이터를 구성합니다.
+                    //     message: "User logged in",
+                    //     token: token  // 생성된 토큰을 전송합니다.
+                    // });
+
+                    const body = JSON.stringify({}); // 빈 객체를 JSON 문자열로 변환합니다.
+
+
+                    // HTTP 요청을 보냅니다.
+                    httpRequest('POST', '/api/login', body,
+                        () => {
+                            // 요청 성공 시
+                            console.log('Token sent to server successfully.');
+                            location.replace(`/articles?token=` + token);
+                        },
+                        (errorResponse) => {
+                            // 요청 실패 시 무시하고 이동 (어차피 http 요청이 한번만 날아가면 됨)
+                            location.replace(`/articles?token=` + token); // 실패 후에도 리디렉션
+                        }
+                    );
+
                 } else {
                     alert('Login failed: Access token not received.');
                 }
@@ -35,4 +62,24 @@ if (createButton) {
             alert('An error occurred. Please try again later.');
         });
     });
+}
+
+// HTTP 요청을 보내는 함수
+function httpRequest(method, url, body, success, fail) {
+    const headers = {
+        Authorization: 'Bearer ' + localStorage.getItem('access_token'),
+        'Content-Type': 'application/json'  // JSON 형식으로 전송
+    };
+
+    fetch(url, {
+        method: method,
+        headers: headers,
+        body: body, // 요청 본문
+    }).then(response => {
+        if (response.ok) {
+            return success();
+        } else {
+            return fail(response);
+        }
+    }).catch(error => fail(error));
 }
