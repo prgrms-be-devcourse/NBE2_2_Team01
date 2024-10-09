@@ -76,7 +76,7 @@ public class ChatServiceImpl implements ChatService {
         if (roomSessions.containsKey(roomId)) {
             Map<String, WebSocketSession> sessionsInRoom = roomSessions.get(roomId);
 
-            // 현재 방의 모든 사용자 이름을 수집합니다.
+            // 현재 방의 모든 사용자 이름
             List<String> memberList = new ArrayList<>();
             for (String sessionId : sessionsInRoom.keySet()) {
                 WebSocketSession session = sessionsInRoom.get(sessionId);
@@ -91,7 +91,7 @@ public class ChatServiceImpl implements ChatService {
             // 멤버 목록을 JSON 형식으로 변환
             String memberListJson = new Gson().toJson(memberList);
 
-            // 각 세션에 멤버 목록을 전송합니다.
+            // 각 세션에 멤버 목록을 전송
             for (WebSocketSession session : sessionsInRoom.values()) {
                 try {
                     session.sendMessage(new TextMessage(memberListJson));
@@ -102,6 +102,12 @@ public class ChatServiceImpl implements ChatService {
 
             log.info("접속자 정보 룸/ 닉네임{}: {}", roomId, memberList);
         }
+    }
+
+    //chat/list 화면에서 해당 채팅방의 접속자 수를 반환
+    @Override
+    public int getUserCount(String roomId) {
+        return roomSessions.containsKey(roomId) ? roomSessions.get(roomId).size() : 0;
     }
 
 }
