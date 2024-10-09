@@ -42,11 +42,11 @@ if (createButton) {
                         () => {
                             // 요청 성공 시
                             console.log('Token sent to server successfully.');
-                            location.replace(`/articles?token=` + token);
+                            location.replace(`/?token=` + token);
                         },
                         (errorResponse) => {
                             // 요청 실패 시 무시하고 이동 (어차피 http 요청이 한번만 날아가면 됨)
-                            location.replace(`/articles?token=` + token); // 실패 후에도 리디렉션
+                            location.replace(`/?token=` + token); // 실패 후에도 리디렉션
                         }
                     );
 
