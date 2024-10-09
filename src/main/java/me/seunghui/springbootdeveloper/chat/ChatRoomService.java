@@ -26,4 +26,6 @@ public class ChatRoomService implements ChatRoomServiceInterface{
         return chatRoomRepository.findAll();
     }
 
+
+
 }
