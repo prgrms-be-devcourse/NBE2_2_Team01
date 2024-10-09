@@ -425,8 +425,6 @@ document.addEventListener('DOMContentLoaded', () => {
         currentCount += 1;
         notificationCount.textContent = currentCount;
         notificationCount.classList.remove('hidden');
-        fetchUnreadNotificationCount();
-
         switch (data.dataType) {
             case 'Notification':
                 handleNotification(data);
@@ -437,6 +435,7 @@ document.addEventListener('DOMContentLoaded', () => {
             default:
                 console.warn(`알 수 없는 알림 타입입니다: ${data.dataType}`);
         }
+        fetchUnreadNotificationCount();
     };
 
     // 일반 알림 처리

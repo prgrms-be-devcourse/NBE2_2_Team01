@@ -8,10 +8,12 @@ html, body {
     min-height: 100vh;
 
 }
-.text-center{
-    font-family: "나눔고딕 ExtraBold";
-    font-weight: bolder;
+
+.mb-3{
+    font-family: "Nanum Gothic", sans-serif;
+    font-weight: 800;
 }
+
 body {
     flex: 1; /* body가 flex 컨테이너의 남은 공간을 차지하도록 설정 */
 }

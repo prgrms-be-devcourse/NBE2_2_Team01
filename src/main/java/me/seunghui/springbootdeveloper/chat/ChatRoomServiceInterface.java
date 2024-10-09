@@ -8,4 +8,5 @@ import java.util.List;
 public interface ChatRoomServiceInterface {
     void save(ChatRoom chatRoom);
     List<ChatRoom> list();
+
 }

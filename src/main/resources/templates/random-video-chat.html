@@ -30,14 +30,9 @@
     <button id="sendMessage">전송</button>
 
     <script>
-        // console.log(typeof jwt_decode);
-        // console.log("Access Token: " + localStorage.getItem('access_token'));
-        // const accessToken = localStorage.getItem('access_token');
-        // const decoded = jwt_decode(accessToken);
-        // const email = decoded.email;
-        // const id = decoded.id;
-        // console.log("이메일:", email);
-        // console.log("유저 ID:", id);
+        console.log(typeof jwt_decode);
+        console.log("Access Token: " + localStorage.getItem('access_token'));
+        const accessToken = localStorage.getItem('access_token');
 
         let signalingServer;
         let localStream;
@@ -89,12 +84,23 @@
                 resetForNewChat();
             }
 
+            // accessToken을 URL에 포함시키는 함수
+            function getSignalingServerUrl(accessToken) {
+                const baseUrl = 'wss://1.232.89.187:8443/ws/random-video-chat';
+                if (accessToken) {
+                    return `${baseUrl}?accessToken=${encodeURIComponent(accessToken)}`;
+                }
+                return baseUrl;
+            }
+
             function startVideoChat() {
                 const localVideo = document.getElementById('localVideo');
                 const remoteVideo = document.getElementById('remoteVideo');
 
 
-                const signalingServerUrl = 'wss://1.232.89.187:8443/ws/random-video-chat';
+                // WebSocket URL 생성
+                const signalingServerUrl = getSignalingServerUrl(accessToken);
+
 
                 if (signalingServer) {
                     signalingServer.close();  // 기존 연결이 있으면 종료
@@ -108,8 +114,9 @@
 
                 signalingServer.onopen = () => {
                     console.log("랜덤채팅 대기열에 추가되었습니다.");
-                    signalingServer.send(JSON.stringify({ type: 'random' })); // 대기열에 추가 요청
+                    signalingServer.send(JSON.stringify({ type: 'random'})); // 대기열에 추가 요청 시 사용자 정보 포함
                 };
+
                 initializePeerConnection(localVideo, remoteVideo);
                 signalingServer.onmessage = message => {
                     const data = JSON.parse(message.data);

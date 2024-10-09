@@ -22,7 +22,7 @@ public class MessageBrokerService {
     private final RedisSubscriber redisSubscriber;
 
     @Autowired
-    public MessageBrokerService(@Qualifier("VideoRedisTemplate")RedisTemplate<String, String> redisTemplate, RedisMessageListenerContainer redisMessageListenerContainer, @Lazy RedisSubscriber redisSubscriber) {
+    public MessageBrokerService(RedisTemplate<String, String> redisTemplate, RedisMessageListenerContainer redisMessageListenerContainer, @Lazy RedisSubscriber redisSubscriber) {
         this.redisTemplate = redisTemplate;
         this.redisMessageListenerContainer = redisMessageListenerContainer;
 

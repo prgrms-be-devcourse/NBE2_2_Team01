@@ -28,7 +28,7 @@ public class MyPageController{
         model.addAttribute("user", user);
         model.addAttribute("profileImage", user.getProfileImageAsBase64());
 
-        return "mypageedit";
+        return "mypage/mypageedit";
     }
 
     @PostMapping("/mypage/edit/updateProfileImage")
@@ -43,6 +43,6 @@ public class MyPageController{
             e.printStackTrace();
             // 오류 처리 로직 추가
         }
-        return "redirect:/mypageedit"; // 이미지 변경 후 마이페이지로 리다이렉트
+        return "redirect:/mypage/edit"; // 이미지 변경 후 마이페이지로 리다이렉트
     }
 }

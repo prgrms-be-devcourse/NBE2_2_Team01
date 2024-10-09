@@ -5,12 +5,19 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import me.seunghui.springbootdeveloper.Repository.RefreshTokenRepository;
+import me.seunghui.springbootdeveloper.config.jwt.JwtPrincipal;
 import me.seunghui.springbootdeveloper.config.jwt.TokenProvider;
 import me.seunghui.springbootdeveloper.domain.RefreshToken;
+import me.seunghui.springbootdeveloper.domain.Role;
 import me.seunghui.springbootdeveloper.domain.User;
 import me.seunghui.springbootdeveloper.service.UserService;
 import me.seunghui.springbootdeveloper.util.CookieUtil;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -18,6 +25,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.Map;
 
 // Spring Security의 SimpleUrlAuthenticationSuccessHandler를 확장한 OAuth2SuccessHandler 클래스
@@ -40,16 +48,36 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
-        OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal(); //인증된 사용자의 정보를 OAuth2User 객체로부터 가져온다.
-        log.info("OAuth2User 정보: {}", oAuth2User.getAttributes());
-        log.info("여기까지감1");
-        // Refresh token 생성 및 쿠키에 저장
-       // User user = userService.findByEmail((String) oAuth2User.getAttributes().get("email")); //인증된 사용자의 이메일을 통해 User 객체를 조회
 
+        // OAuth2AuthenticationToken으로 캐스팅
+        OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
+
+        // 인증된 사용자의 정보를 OAuth2User 객체로부터 가져온다.
+        OAuth2User oAuth2User = oauthToken.getPrincipal();
+        log.info("OAuth2User 정보: {}", oAuth2User.getAttributes());
+
+        // 이메일 추출
         String email = null;
+
         // 구글 OAuth일 경우
         if (oAuth2User.getAttributes().containsKey("email")) {
             email = (String) oAuth2User.getAttributes().get("email");
+            log.info("구글 email: {}", email);
+
+            // 인증 객체 생성
+            Role role = Role.ROLE_USER; // 사용자 역할
+            UsernamePasswordAuthenticationToken authenticationToken =
+                    new UsernamePasswordAuthenticationToken(
+                            new JwtPrincipal(getEmailFromOAuth2User(oAuth2User)), // 새로운 JwtPrincipal 생성
+                            null,
+                            Arrays.asList(new SimpleGrantedAuthority(role.getAuthority()))
+                    );
+
+            // SecurityContext에 인증(토큰) 객체 저장
+            SecurityContext context = SecurityContextHolder.getContext();
+            context.setAuthentication(authenticationToken);
+            log.info("OAuth 로그인 시 생성 & 저장된 인증 정보: {}", context.getAuthentication());
+
         }
         // 카카오톡 OAuth일 경우
         else if (oAuth2User.getAttributes().containsKey("kakao_account")) {
@@ -82,7 +110,9 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
     }
 
-    //생성된 리프레시 토큰을 전달받아 데이터베이스에 저장
+
+
+        //생성된 리프레시 토큰을 전달받아 데이터베이스에 저장
     //사용자의 userId로 기존 리프레시 토큰이 있는지 확인하고, 있으면 업데이트하고, 없으면 새로 생성하여 저장
     private void saveRefreshToken(Long userId, String newRefreshToken, String email) {
         RefreshToken refreshToken = refreshTokenRepository.findByUserId(userId)
@@ -116,6 +146,18 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
                 .queryParam("token", token)
                 .build()
                 .toUriString();
+    }
+
+    // 이메일 추출을 위한 메서드
+    private String getEmailFromOAuth2User(OAuth2User oAuth2User) {
+        String email = null;
+        if (oAuth2User.getAttributes().containsKey("email")) {
+            email = (String) oAuth2User.getAttributes().get("email");
+        } else if (oAuth2User.getAttributes().containsKey("kakao_account")) {
+            Map<String, Object> kakaoAccount = (Map<String, Object>) oAuth2User.getAttributes().get("kakao_account");
+            email = (String) kakaoAccount.get("email");
+        }
+        return email;
     }
 
 
