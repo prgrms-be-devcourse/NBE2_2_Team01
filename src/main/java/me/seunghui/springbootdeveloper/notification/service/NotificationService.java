@@ -51,7 +51,7 @@ public class NotificationService {
                     .orElseThrow(() -> new IllegalArgumentException("수신자를 찾을 수 없습니다."));
             if(!article.getAuthor().equals(fromAuthor)) {
             // 알림 메시지 생성
-            String message = fromAuthor + "님이 회원님의 게시물을 좋아합니다.";
+            String message = fromAuthor + "님이 회원님의 "+article.getTitle() +" 게시물을 좋아합니다.";
 
             // 알림 엔티티 생성
             Notification notification = Notification.builder()
@@ -100,7 +100,7 @@ public class NotificationService {
 
             if(!article.getAuthor().equals(fromAuthor)) {
             // 알림 메시지 생성
-            String message = fromAuthor + "님이 회원님의 게시물에 댓글을 남겼습니다.";
+            String message = fromAuthor + "님이 회원님의 "+article.getTitle() +" 게시물에 댓글을 남겼습니다.";
 
             // 알림 엔티티 생성
             Notification notification = Notification.builder()
