@@ -17,8 +17,8 @@ public class VideoChatLogDTO {
 
 
     private String video_chat_id; // 화상채팅 방 id
-    private String user_id; // 본인 고유번호
-    private String other_user_id; // 상대 고유번호
+    private Long user_id; // 본인 고유번호
+    private Long other_user_id; // 상대 고유번호
     private LocalDateTime video_chat_create_at; // 화상채팅 시작 날짜 및 시각
     private LocalDateTime video_chat_end_at; // 화상채팅 종료 날짜 및 시각
 

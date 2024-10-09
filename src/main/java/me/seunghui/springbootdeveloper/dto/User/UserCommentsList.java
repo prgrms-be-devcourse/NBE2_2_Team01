@@ -10,17 +10,19 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 public class UserCommentsList {
-    private Long commentId;
+//    private Long commentId;
     private String commentContent;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDateTime commentCreatedAt;
     private String articleTitle;
+    private Long articleId;
 
-    public UserCommentsList(Long commentId,String commentContent, LocalDateTime commentCreatedAt, String articleTitle) {
-        this.commentId = commentId;
+    public UserCommentsList(String commentContent, LocalDateTime commentCreatedAt, String articleTitle,Long articleId) {
+//        this.commentId = commentId;
         this.commentContent = commentContent;
         this.commentCreatedAt = commentCreatedAt;
         this.articleTitle = articleTitle;
+        this.articleId = articleId;
     }
 
 }

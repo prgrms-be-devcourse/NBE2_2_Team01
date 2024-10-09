@@ -6,6 +6,7 @@ import me.seunghui.springbootdeveloper.domain.Comment;
 import me.seunghui.springbootdeveloper.dto.Comment.AddCommentRequest;
 import me.seunghui.springbootdeveloper.dto.Comment.CommentResponse;
 import me.seunghui.springbootdeveloper.dto.Comment.UpdateCommentRequest;
+import me.seunghui.springbootdeveloper.notification.service.NotificationService;
 import me.seunghui.springbootdeveloper.service.CommentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -24,12 +25,20 @@ import java.util.Map;
 @RequestMapping("/api/comment")
 public class CommentApiController {
     private final CommentService commentService;
+    private final NotificationService notificationService;
     //1. 게시글에 맞는 한개 댓글 생성
     @PostMapping("/{articleId}")
     public ResponseEntity<Comment> addComment(@PathVariable("articleId") Long articleId,
                                               @RequestBody AddCommentRequest request
                                                 , Principal principal) {
         Comment savedComment=commentService.saveComment(request,articleId,principal.getName());
+        String userName = principal.getName();
+
+        try {
+            notificationService.sendCommentNotification(articleId, userName);
+        } catch (Exception e) {
+            log.error("댓글 알림 전송 실패: {}", e.getMessage(), e);
+        }
         return ResponseEntity.status(HttpStatus.CREATED).body(savedComment);
     }
 

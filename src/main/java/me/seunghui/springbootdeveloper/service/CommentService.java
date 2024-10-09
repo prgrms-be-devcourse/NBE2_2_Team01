@@ -143,10 +143,11 @@ public class CommentService {
         // Comment 엔티티에서 필요한 데이터를 가공하여 DTO로 변환
         return comments.stream()
                 .map(comment -> new UserCommentsList(
-                        comment.getCommentId(),
+//                        comment.getCommentId(),
                         comment.getCommentContent(),
                         comment.getCommentCreatedAt(),
-                        comment.getArticle().getTitle()  // 게시글 제목 가져오기
+                        comment.getArticle().getTitle(),  // 게시글 제목 가져오기
+                        comment.getArticle().getId()
                 ))
                 .collect(Collectors.toList());
     }

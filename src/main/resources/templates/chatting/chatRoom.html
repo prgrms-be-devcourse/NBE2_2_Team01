@@ -301,11 +301,14 @@
 
   // 웹소켓 나가기 함수
   function leaveChatRoom() {
-    if (ws) {
-      ws.close(); // 웹소켓 연결 종료
+    const confirmLeave = confirm("채팅방을 나가시겠습니까? 내용이 모두 삭제됩니다.");
+    if (confirmLeave) {
+      if (ws) {
+        ws.close(); // 웹소켓 연결 종료
+      }
+      // 페이지 이동 등의 추가 동작 수행
+      window.location.href = "/chat/list";
     }
-    // 페이지 이동 등의 추가 동작 수행
-    window.location.href = "/chat/list";
   }
 
 </script>

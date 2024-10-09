@@ -29,8 +29,6 @@ public class MyPageController{
         model.addAttribute("user", user);
         model.addAttribute("profileImage", user.getProfileImageAsBase64());
 
-
-
         return "mypage/mypageedit";
     }
 

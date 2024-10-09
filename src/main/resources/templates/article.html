@@ -65,8 +65,14 @@
                         </section>
 
                         <div class="likeAndCommentCountSvg">
-                            <button id="like-button" class="like-button" th:value="${article.id}" th:attr="article-id=${article.id}">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"  class="bi bi-heart not-liked" viewBox="0 0 16 16" id="like-icon">
+<!--                            <button id="like-button" class="like-button" th:value="${article.id}" th:attr="article-id=${article.id}">-->
+<!--                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"  class="bi bi-heart not-liked" viewBox="0 0 16 16" id="like-icon">-->
+<!--                                    <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/>-->
+<!--                                </svg>-->
+<!--                            </button>-->
+                            <button id="like-button" class="like-button" th:value="${article.id}" th:attr="article-id=${article.id}"
+                                    th:disabled="${article.author == '탈퇴한 사용자입니다.' || #lists.contains(comments, '탈퇴한 사용자입니다.') ? true : false}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="bi bi-heart not-liked" viewBox="0 0 16 16" id="like-icon">
                                     <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/>
                                 </svg>
                             </button>
@@ -87,10 +93,10 @@
                             <div th:each="comment : ${comments}">
                                 <div class="card mb-3" th:style="${comment.parentCommentId != null} ? 'margin-left: 20px;' : ''">
                                     <div class="card-body">
-                                        <!--                                    <h6 class="card-subtitle mb-2 text-muted" th:text="${comment.commentAuthor}"></h6>-->
-                                        <!--                                    <p class="card-text" th:text="${comment.commentContent}"></p>-->
-                                        <!--                                    <p class="text-muted" th:text="${#temporals.format(comment.commentCreatedAt, 'yyyy-MM-dd HH:mm')}"></p>-->
-                                        <!--                                    <button class="btn btn-link reply-btn" th:data-comment-id="${comment.commentId}">Reply</button>-->
+                                                                            <h6 class="card-subtitle mb-2 text-muted" th:text="${comment.commentAuthor}"></h6>
+                                                                            <p class="card-text" th:text="${comment.commentContent}"></p>
+                                                                            <p class="text-muted" th:text="${#temporals.format(comment.commentCreatedAt, 'yyyy-MM-dd HH:mm')}"></p>
+                                                                            <button class="btn btn-link reply-btn" th:data-comment-id="${comment.commentId}">Reply</button>
                                         <!-- comment1.js에 html 코드가 작성되어있음 -->
                                     </div>
                                 </div>
@@ -99,7 +105,7 @@
 
 
                         <!-- 댓글 작성 폼 -->
-                        <div id="comment-form-section" class="mt-4">
+                        <div id="comment-form-section" class="mt-4" th:if="${article.author != '탈퇴한 사용자입니다.' && !#lists.contains(comments, '탈퇴한 사용자입니다.')}">
                             <h6>댓글 작성</h6>
                             <h6 class="mb-2 text-muted" th:text="${currentUserName}"/>
 
