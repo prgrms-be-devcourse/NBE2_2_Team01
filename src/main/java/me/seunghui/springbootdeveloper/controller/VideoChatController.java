@@ -13,7 +13,6 @@ public class VideoChatController {
 
     @GetMapping("/random-video-chat")
     public String randomVideoChat() {
-        System.out.println("접속됨?");
         return "random-video-chat";
     }
 

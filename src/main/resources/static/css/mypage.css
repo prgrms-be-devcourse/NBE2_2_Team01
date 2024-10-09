@@ -141,7 +141,80 @@ button {
     background-color: #ff2424;
 }
 
+.table-bordered{
+    table-layout: auto; /* 각 열의 크기를 자동으로 조정 */
+    width: 100%; /* 100% 크기로 설정 */
+}
 
+.table-bordered thead{
+    font-size: 12px;
+}
+.table-bordered tbody{
+    font-size: 13px;
+}
+
+.table-bordered th, .table-bordered td {
+    text-align: center;
+    border: none;
+    vertical-align: middle;
+    padding: 8px 0px 8px 0px;
+}
+.table-bordered th {
+    border-bottom: 2px solid #dee2e6; /* 헤더 아래에만 줄 추가 */
+}
+
+.table-bordered td {
+    border-bottom: 1px solid #dee2e6; /* 각 행의 아래에만 줄 추가 */
+}
+
+
+.card-title a{
+    color: black;
+}
+
+/* 제목을 링크처럼 보이게 하고 클릭 시 밑줄 추가 */
+.card-title-link {
+    color: #090909;
+    text-decoration: none;
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+
+    display: inline-block;
+    text-align: left; /* 왼쪽 정렬 */
+
+}
+
+.card-title-link:hover {
+    text-decoration: underline;
+    color: #656565;
+}
+
+/*-----------------*/
+/* 댓글 리스트 */
+.comment-link {
+    text-decoration: none;  /* 기본 상태에서 밑줄 제거 */
+    color: black;
+
+}
+
+.comment-link:hover {
+    text-decoration: underline;  /* 호버 시 밑줄 표시 */
+}
+
+.comment-link p {
+    font-family: "나눔고딕";
+    font-size: 13px;
+    margin: 0;
+    padding: 0;
+    transition: color 0.3s ease;  /* 색상 변경 애니메이션 */
+}
+
+.comment-link:hover p {
+    color: #007bff;  /* 호버 시 모든 텍스트 색상 변경 */
+}
 
 
 /*---------바닥----------*/
@@ -151,6 +224,7 @@ footer {
     text-align: center;
     padding: 2rem;
     margin-top: auto; /* footer를 항상 페이지 하단에 배치 */
+    /*position: absolute;*/
 }
 
 footer a {
@@ -163,55 +237,37 @@ footer a:hover {
 
 }
 
+/* Footer 스타일 */
 
-/*------------articleList의 제목 설정--------------- */
-/*.table-bordered{*/
-/*    table-layout: auto; !* 각 열의 크기를 자동으로 조정 *!*/
-/*    width: 100%; !* 100% 크기로 설정 *!*/
-/*}*/
-
-/*.table-bordered thead{*/
-/*    font-size: 12px;*/
-/*}*/
-/*.table-bordered tbody{*/
-/*    font-size: 13px;*/
-/*}*/
-
-/*.table-bordered th, .table-bordered td {*/
+/*footer {*/
+/*    bottom: 0;*/
+/*    left: 0;*/
+/*    width: 100%;*/
+/*    height: 100px;*/
+/*    background-color: #D9D9D9;*/
+/*    display: flex;*/
+/*    align-items: center;*/
+/*    justify-content: center;*/
 /*    text-align: center;*/
-/*    border: none;*/
-/*    vertical-align: middle;*/
-/*    padding: 8px 0px 8px 0px;*/
-/*}*/
-/*.table-bordered th {*/
-/*    border-bottom: 2px solid #dee2e6; !* 헤더 아래에만 줄 추가 *!*/
+/*    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);*/
+/*    z-index: 1000;*/
 /*}*/
 
-/*.table-bordered td {*/
-/*    border-bottom: 1px solid #dee2e6; !* 각 행의 아래에만 줄 추가 *!*/
+/*!* Footer 내부 텍스트 및 링크 스타일 *!*/
+/*#footer-senior-center {*/
+/*    font-size: 16px;*/
+/*    color: #343a40;*/
+/*    height: 100%;*/
+/*    text-align: center;*/
+/*    line-height: 100px;*/
 /*}*/
 
-/*.card-title a{*/
-/*    color: black;*/
-/*}*/
-
-/* 제목을 링크처럼 보이게 하고 클릭 시 밑줄 추가 */
-/*.card-title-link {*/
-/*    color: #090909;*/
+/*#footer-senior-center a {*/
+/*    color: #f1f1f1;*/
 /*    text-decoration: none;*/
-/*    cursor: pointer;*/
-/*    white-space: nowrap;*/
-/*    overflow: hidden;*/
-/*    text-overflow: ellipsis;*/
-/*    max-width: 100%;*/
-
-/*    display: inline-block;*/
-/*    text-align: left; !* 왼쪽 정렬 *!*/
-
 /*}*/
 
-/*.card-title-link:hover {*/
+/*#footer-senior-center a:hover {*/
 /*    text-decoration: underline;*/
-/*    color: #656565;*/
+/*    color: #ccc;*/
 /*}*/
-/*-------------------------- */

@@ -1,6 +1,8 @@
 package me.seunghui.springbootdeveloper.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import me.seunghui.springbootdeveloper.chat.ChatRoomService;
+import me.seunghui.springbootdeveloper.chat.ChatService;
 import me.seunghui.springbootdeveloper.domain.User;
 import me.seunghui.springbootdeveloper.service.UserService;
 import org.springframework.stereotype.Controller;
