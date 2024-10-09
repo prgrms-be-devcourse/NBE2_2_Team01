@@ -1,0 +1,182 @@
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap');
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100vh;
+    margin: 0;
+    background-color: #dbdfe8;
+}
+
+.video-container {
+    width: 1800px;
+    height: 600px;
+    display: flex;
+    /*border: black 1px solid;*/
+    justify-content: center; /* 가로 중앙 정렬 */
+    align-items: center; /* 세로 중앙 정렬 */
+    position: relative;
+}
+.video-inner-container{
+    position: relative;
+}
+
+video {
+    width: 850px;
+    height: auto;
+    min-height: 575px;
+    border: 2px solid #cfcfcf;
+    margin: 10px;
+    background-color: #f7f6fc;
+}
+
+.vc-user-profile {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* 정 중앙으로 이동 */
+    z-index: 10;
+}
+
+
+.controls-chat-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    width: 1800px;
+}
+
+.control-container {
+    width: 900px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.chat-container{
+    width: 900px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#chatBox {
+    width: 798px;
+    height: 198px;
+    border-width: 2px 2px 0 2px;
+    border-style: solid;
+    border-color: #cfcfcf;
+    overflow-y: auto;
+    background-color: #fff;
+}
+
+#chatSendBox {
+    display: inline-flex; /* 인풋과 버튼을 한 줄에 붙이기 */
+    align-items: center;  /* 요소들이 세로로 중앙 정렬되도록 함 */
+}
+#messageInput {
+    width: 731px;
+    height: 32px;
+    transition: border-color 0.3s;
+    border-width: 1px 0 2px 2px;
+    border-style: solid;
+    border-color: #cfcfcf;
+    outline: none;
+}
+
+#sendMessage{
+    height: 37px;
+    width: 65px;
+    padding: 6px 6px;
+    font-size: 16px;
+    background-color: #7be58a;
+    color: #fff;
+    border: none;
+    border-radius: 0 0 20px 0;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+#sendMessage:hover {
+    background-color: #59a664;
+}
+
+/*채팅 시작 버튼*/
+#startRandomChat{
+    box-sizing: border-box;
+    appearance: none;
+    background-color: transparent;
+    border: 2px solid #5988ff; /* $red을 red로 교체 */
+    border-radius: 0.6em;
+    color: #243479; /* $red을 red로 교체 */
+    cursor: pointer;
+    display: flex;
+    align-self: center;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1;
+    margin: 20px;
+    padding: 1.2em 2.8em;
+    text-decoration: none;
+    text-align: center;
+    text-transform: uppercase;
+    font-family: "Nanum Gothic", sans-serif;
+    font-weight: 700;
+}
+#startRandomChat:hover,
+#startRandomChat:focus {
+    color: #fff;
+    outline: 0;
+}
+
+/* Button 1 */
+#startRandomChat {
+    transition: box-shadow 300ms ease-in-out, color 300ms ease-in-out;
+}
+
+#startRandomChat:hover {
+    box-shadow: 0 0 40px 40px #5988ff inset; /* $red을 red로 교체 */
+}
+
+.start-chat-button{
+    display: flex;           /* Flexbox 사용 */
+    align-items: center;      /* 수직 중앙 정렬 */
+    justify-content: center;  /* 수평 중앙 정렬 */
+    gap: 10px;
+}
+@keyframes shake {
+    0% { transform: translate(0, 0); }
+    20% { transform: translate(-2px, 2px); }
+    40% { transform: translate(2px, -2px); }
+    60% { transform: translate(-2px, 2px); }
+    80% { transform: translate(2px, -2px); }
+    100% { transform: translate(0, 0); }
+}
+.start-chat-button svg {
+    transition: transform 0.2s;
+}
+.start-chat-button:hover svg {
+    animation: shake 0.5s; /* 애니메이션 실행 */
+}
+
+
+.loader {
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top: 4px solid #fff;
+    width: 30px;
+    height: 30px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.system-message {
+    color: red;
+    font-weight: bold;
+    text-align: center;
+}

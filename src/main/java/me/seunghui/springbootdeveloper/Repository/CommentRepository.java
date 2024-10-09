@@ -7,8 +7,10 @@ import me.seunghui.springbootdeveloper.dto.User.UserCommentsList;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -53,6 +55,11 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     @Query("SELECT DISTINCT a FROM Comment c JOIN c.article a WHERE c.commentAuthor = :email ORDER BY a.createdAt DESC")
     List<Article> findUserArticlesAndComments(@Param("email") String email);
 
+    //탈회한 사용자 표시
+    @Modifying
+    @Transactional
+    @Query("UPDATE Comment c SET c.commentAuthor = '탈퇴한 사용자입니다.' WHERE c.commentAuthor = :email")
+    void updateCommentAuthorToDeleted(@Param("email") String email);
 
 }
 
