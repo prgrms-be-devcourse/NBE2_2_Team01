@@ -15,7 +15,7 @@ public class CreateChatForm {
     private String roomName;
     private String email;
     private String description;
-    private int Count;
+   /* private int Count;*/
 
     public ChatRoom toEntity(String email) {
         return new ChatRoom(null,roomName,email,description, LocalDateTime.now());

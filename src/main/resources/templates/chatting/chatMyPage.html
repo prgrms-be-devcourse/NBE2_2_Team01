@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat Room Management</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 50px auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 32px;
+      color: #333;
+    }
+
+    .category {
+      margin-top: 40px;
+    }
+
+    .category h2 {
+      font-size: 24px;
+      color: #555;
+      border-bottom: 2px solid #ddd;
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+    }
+
+    .card {
+      background-color: white;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .content {
+      flex-grow: 1;
+    }
+
+    .card h3 {
+      margin: 0 0 10px;
+      font-size: 20px;
+      color: #333;
+    }
+
+    .card p {
+      margin: 0;
+      font-size: 16px;
+      color: #666;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .card button {
+      padding: 10px 15px;
+      background-color: #4CAF50;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .card button.delete, .card button.leave {
+      background-color: #f44336;
+    }
+
+    .card button:hover {
+      opacity: 0.9;
+    }
+
+    /* 추가된 스타일: 헤더 버튼 */
+    .header {
+      text-align: right;
+      padding: 10px;
+      background-color: #333;
+    }
+
+    .header button {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      border: none;
+      color: white;
+      font-size: 14px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .header button:hover {
+      background-color: #45a049;
+    }
+
+  </style>
+</head>
+<body>
+
+<!-- 추가된 헤더 -->
+<div class="header">
+  <button onclick="location.href='/chat/list'">채팅 메인으로</button>
+</div>
+
+<div class="container">
+  <h1>My Chat Rooms</h1>
+  <div class="category">
+    <h2>참여 중인 채팅방</h2>
+    <div class="card">
+      <div class="content">
+        <h3>Chat Room 1</h3>
+        <p>Created by: UserA</p>
+      </div>
+      <div class="buttons">
+        <button>입장하기</button>
+        <button class="leave">나가기</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div  class="content">
+        <h3>Chat Room 2</h3>
+        <p>Created by: UserB</p>
+      </div>
+      <div class="buttons">
+        <button>입장하기</button>
+        <button class="leave">나가기</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="category">
+    <h2>내가 만든 채팅방</h2>
+    <div id="createRoomList" class="content">
+      <!-- 채팅방 목록을 순회하며 표시 -->
+      <div th:each="createRoom : ${create}" class="card">
+        <div class="content">
+          <h3 th:text="${createRoom.roomName}">채팅방 이름</h3>
+          <p  th:text="${createRoom.getCreatedDate()}">생성 날짜</p>
+        </div>
+        <!-- 입장 및 삭제 버튼 -->
+        <div class="buttons">
+          <button th:onclick="|enterRoom('${createRoom.id}')|">입장하기</button>
+          <button th:onclick="|deleteRoom(${createRoom.id})|">삭제하기</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function enterRoom(roomId) {
+    window.location.href = '/chat/room/' + roomId;
+  }
+
+  function deleteRoom(roomId) {
+    if (confirm("정말로 채팅방을 삭제하시겠습니까?")) {
+      fetch(`/chat/room/delete/${roomId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+              .then(response => {
+                if (response.ok) {
+                  alert("채팅방이 성공적으로 삭제되었습니다.");
+                  // 페이지를 새로고침하여 목록을 업데이트합니다.
+                  window.location.reload();
+                } else {
+                  alert("채팅방 삭제에 실패했습니다.");
+                }
+              })
+              .catch(error => {
+                console.error('Error:', error);
+                alert("서버 오류가 발생했습니다.");
+              });
+    }
+  }
+</script>
+</body>
+</html>
