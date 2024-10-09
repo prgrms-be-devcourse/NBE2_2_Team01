@@ -25,28 +25,6 @@ body {
 
 
 
-/* 로그아웃 버튼을 오른쪽 상단에 고정 */
-/*.header-right {*/
-/*    position: absolute;*/
-/*    right: 20px;*/
-/*    top: 20px;*/
-/*}*/
-
-/*.logout-btn {*/
-/*    position: absolute;*/
-/*    top: 20px; !* 상단으로부터의 거리 *!*/
-/*    right: 20px; !* 우측으로부터의 거리 *!*/
-/*    background-color: #555; !* 버튼 배경색 *!*/
-/*    color: #fff;*/
-/*    border: none;*/
-/*    padding: 8px 12px;*/
-/*    cursor: pointer;*/
-/*    font-size: 15px;*/
-/*}*/
-
-/*.logout-btn:hover {*/
-/*    background-color: #777;*/
-/*}*/
 .header-right {
     position: absolute;
     top: 20px;  /* 상단에서 20px */
@@ -71,8 +49,9 @@ body {
 .ck-content{
     height: auto;
 }
+
 .articleList-content{
-    max-width: 900px;
+    width: 800px;
     margin: 0 auto;
     padding: 20px;
     flex: 1; /* flex 속성 추가로 콘텐츠가 페이지에서 여유 공간을 채우도록 설정 */
@@ -80,7 +59,7 @@ body {
 
 /* 콘텐츠 영역의 스타일 */
 .content {
-    max-width: 800px;
+    width: 800px;
     margin: 0 auto;
     padding: 20px;
     flex: 1; /* flex 속성 추가로 콘텐츠가 페이지에서 여유 공간을 채우도록 설정 */
@@ -265,6 +244,7 @@ footer a:hover {
 /*------------articleList의 제목 설정--------------- */
 .table-bordered{
     table-layout: auto; /* 각 열의 크기를 자동으로 조정 */
+
     width: 100%; /* 100% 크기로 설정 */
 }
 
@@ -277,10 +257,11 @@ footer a:hover {
 
 .table-bordered th, .table-bordered td {
     text-align: center;
-    border: none;
+    border: none; /* 전체 border 제거 */
     vertical-align: middle;
     padding: 8px 0px 8px 0px;
 }
+
 .table-bordered th {
     border-bottom: 2px solid #dee2e6; /* 헤더 아래에만 줄 추가 */
 }
@@ -314,6 +295,21 @@ footer a:hover {
     color: #656565;
 }
 /*-------------------------- */
+/*이미지, 게시글작성자, 작성일 조회수 나란히*/
+
+.text-muted.fst-italic.mb-2.d-flex {
+    display: flex;
+    align-items: center;
+}
+
+
+.profile-image {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+/*---------------------*/
 /* 아이콘과 버튼의 정렬 및 간격 조정 */
 .header-right {
     display: flex; /* flexbox를 사용하여 아이템들을 정렬 */

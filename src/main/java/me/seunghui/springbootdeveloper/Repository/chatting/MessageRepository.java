@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface MessageRepository extends JpaRepository<ChatMessage, Long> {
+    void deleteByChatRoom_Id(Long roomId);
 }
