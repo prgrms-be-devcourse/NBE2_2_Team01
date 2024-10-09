@@ -161,13 +161,11 @@
                         <input type="hidden" id="article-id"  th:value="${article.id}">
                         <header class="mb-4">
                             <h3 class="fw-bolder mb-1" style="font-family:'나눔고딕'" th:text="${article.title}"></h3>
-<!--                            <div class="text-muted fst-italic mb-2" th:text="|${article.author}-->
-<!--                                    ${#temporals.format(article.createdAt, 'yyyy-MM-dd HH:mm')} |"></div>-->
-<!--                            <p>조회수: <span th:text="${article.viewCount}"></span></p>-->
-                            <div class="text-muted fst-italic mb-2">
-                                <span th:text="${article.author}"></span>
-                                <span th:text="${#temporals.format(article.createdAt, 'yyyy-MM-dd HH:mm')}"></span>
-                                | 조회수: <span th:text="${article.viewCount}"></span>
+                            <div class="text-muted fst-italic mb-2 d-flex align-items-center">
+                                <img th:src="${profileImage}" alt="Profile Image" class="profile-image" style="margin: 0px" />
+                                <span th:text="${article.author}"style="margin-left: 10px"></span>
+                                <span th:text="${#temporals.format(article.createdAt, 'yyyy-MM-dd HH:mm')}"style="margin-left: 10px" ></span>
+                                | 조회수: <span th:text="${article.viewCount}"style="margin-left: 10px"></span>
                             </div>
 
                         </header>
@@ -177,11 +175,7 @@
                         </section>
 
                         <div class="likeAndCommentCountSvg">
-<!--                            <button id="like-button" class="like-button" th:value="${article.id}" th:attr="article-id=${article.id}">-->
-<!--                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"  class="bi bi-heart not-liked" viewBox="0 0 16 16" id="like-icon">-->
-<!--                                    <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/>-->
-<!--                                </svg>-->
-<!--                            </button>-->
+
                             <button id="like-button" class="like-button" th:value="${article.id}" th:attr="article-id=${article.id}"
                                     th:disabled="${article.author == '탈퇴한 사용자입니다.' || #lists.contains(comments, '탈퇴한 사용자입니다.') ? true : false}">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="bi bi-heart not-liked" viewBox="0 0 16 16" id="like-icon">
@@ -219,7 +213,10 @@
                         <!-- 댓글 작성 폼 -->
                         <div id="comment-form-section" class="mt-4" th:if="${article.author != '탈퇴한 사용자입니다.' && !#lists.contains(comments, '탈퇴한 사용자입니다.')}">
                             <h6>댓글 작성</h6>
-                            <h6 class="mb-2 text-muted" th:text="${currentUserName}"/>
+                            <div class="d-flex align-items-center mb-2">
+                                <img th:src="${currrentUserImage}" alt="Profile Image" class="profile-image" style="margin: 0px" />
+                                <h6 class="text-muted ml-2" th:text="${currentUserName}"></h6>
+                            </div>
 
                             <form id="comment-form">
                                 <input type="hidden" name="articleId" th:value="${article.id}"/>

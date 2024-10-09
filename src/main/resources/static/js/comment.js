@@ -149,27 +149,6 @@ function loadComments(articleId) {
         });
 }
 
-// function loadComments(articleId) {
-//     const url = `/api/comment/${articleId}`;
-//     httpRequest('GET', url, null,
-//         (data, response) => {  // 응답 데이터를 받고 response 객체도 전달받음
-//             if (!response.ok) {
-//                 console.error('응답에 문제가 있습니다. 상태 코드:', response.status);
-//                 return;
-//             }
-//
-//             try {
-//                 const jsonData = JSON.parse(data);  // JSON 파싱을 명시적으로 시도
-//                 renderComments(jsonData); // 댓글 목록을 화면에 렌더링
-//             } catch (error) {
-//                 console.error('JSON 파싱 오류:', error);
-//             }
-//         },
-//         (error) => {
-//             console.error('댓글 불러오기 실패:', error);
-//         });
-// }
-
 
 // 댓글 목록 렌더링
 function renderComments(comments) {
@@ -184,7 +163,7 @@ function renderComments(comments) {
     });
 }
 
-// const currentUserName = /*[[${currentUserName}]]*/ '';
+
 
 // 특정 댓글과 그 대댓글을 렌더링하는 함수
 function renderCommentWithReplies(comment, allComments, depth) {

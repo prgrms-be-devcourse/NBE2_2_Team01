@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import me.seunghui.springbootdeveloper.domain.Article;
 import me.seunghui.springbootdeveloper.domain.Comment;
+import me.seunghui.springbootdeveloper.domain.User;
 import me.seunghui.springbootdeveloper.dto.Article.ArticleListViewResponse;
 import me.seunghui.springbootdeveloper.dto.Article.ArticleViewResponse;
 import me.seunghui.springbootdeveloper.dto.Article.PageRequestDTO;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Log4j2
 public class ArticleViewController {
     private final ArticleService articleService;  // 게시글 관련 서비스
+    private final UserService userService;
     private final CommentService commentService;
     private final LikeService likeService;
 
@@ -70,13 +72,17 @@ public class ArticleViewController {
         log.info("currentUserName: {}", currentUserName);
         log.info("articleAuthor:{}", article.getAuthor());
         //log.info("isOwner: {}", isOwner);
+        User articleUser=userService.findByEmail(article.getAuthor());
+        String currrentUserImage=userService.findByEmail(currentUserName).getProfileImageAsBase64();
 
         // 게시글 정보를 모델에 추가
         model.addAttribute("article", article);
+        model.addAttribute("profileImage", articleUser.getProfileImageAsBase64());
         model.addAttribute("isArticleOwner", isArticleOwner);
         model.addAttribute("currentUserName", currentUserName);
+        model.addAttribute("currrentUserImage", currrentUserImage);
+
         model.addAttribute("comments", commentListPage.getContent());
-        //model.addAttribute("isCommentOwner", commentListPage.);
         model.addAttribute("page", commentListPage);
         model.addAttribute("likeCount", likeCount);
         model.addAttribute("commentCount", commentCount);
