@@ -199,10 +199,10 @@
                             <div th:each="comment : ${comments}">
                                 <div class="card mb-3" th:style="${comment.parentCommentId != null} ? 'margin-left: 20px;' : ''">
                                     <div class="card-body">
-                                                                            <h6 class="card-subtitle mb-2 text-muted" th:text="${comment.commentAuthor}"></h6>
-                                                                            <p class="card-text" th:text="${comment.commentContent}"></p>
-                                                                            <p class="text-muted" th:text="${#temporals.format(comment.commentCreatedAt, 'yyyy-MM-dd HH:mm')}"></p>
-                                                                            <button class="btn btn-link reply-btn" th:data-comment-id="${comment.commentId}">Reply</button>
+                                        <h6 class="card-subtitle mb-2 text-muted" th:text="${comment.commentAuthor}"></h6>
+                                        <p class="card-text" th:text="${comment.commentContent}"></p>
+                                        <p class="text-muted" th:text="${#temporals.format(comment.commentCreatedAt, 'yyyy-MM-dd HH:mm')}"></p>
+                                        <button class="btn btn-link reply-btn" th:data-comment-id="${comment.commentId}">Reply</button>
                                         <!-- comment1.js에 html 코드가 작성되어있음 -->
                                     </div>
                                 </div>

@@ -86,6 +86,7 @@ public class UserService {
                 .orElseThrow(() -> new IllegalArgumentException("No user found with email: " + email));
     }
 
+
     //사용자 탈퇴
     @Transactional
     public void deleteUserByUsername(String username) {
