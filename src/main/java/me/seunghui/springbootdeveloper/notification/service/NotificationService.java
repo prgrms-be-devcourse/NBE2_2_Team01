@@ -29,21 +29,23 @@ public class NotificationService {
     private final ApplicationEventPublisher eventPublisher;
     private final CommentAlarmService commentAlarmService;
 
-    /**
-     * 게시글에 좋아요를 누른 경우 알림 생성 및 전송
-     *
-     * @param articleId  좋아요를 누른 게시글 ID
-     * @param fromAuthor 좋아요를 누른 사용자의 이름 (이메일)
-     */
+
+    public boolean likeIsRead(String recipient,String makeId,AlarmType alarmType) {
+        Notification notification1=notificationRepository
+                .findByRecipientAndMakeIdAndAlarmTypeIsLikeAndIsReadFalse(recipient
+                ,makeId,alarmType);
+        return notification1 != null;
+    }
+//    게시글에 좋아요를 누른 경우 알림 생성 및 전송
     public void sendLikeNotification(Long articleId, String fromAuthor) {
         try {
             // 게시글 조회
+
             Article article = articleRepository.findById(articleId)
                     .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
 
             // 게시글 작성자
             String toAuthor = article.getAuthor();
-
             // 수신자 사용자 조회
             User recipientUser = userRepository.findByEmail(toAuthor)
                     .orElseThrow(() -> new IllegalArgumentException("수신자를 찾을 수 없습니다."));
@@ -57,6 +59,7 @@ public class NotificationService {
                     .message(message)
                     .recipient(toAuthor)
                     .isRead(false)
+                    .makeId(fromAuthor)
                     .targetId(articleId)
                     .user(recipientUser)
                     .build();
@@ -105,6 +108,7 @@ public class NotificationService {
                     .message(message)
                     .recipient(toAuthor)
                     .isRead(false)
+                    .makeId(fromAuthor)
                     .targetId(articleId)
                     .user(recipientUser)
                     .build();

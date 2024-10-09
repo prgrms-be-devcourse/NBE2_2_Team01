@@ -6,6 +6,10 @@ import me.seunghui.springbootdeveloper.domain.User;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -20,18 +24,27 @@ public class MyPageService {
 
 
     @Transactional
-    public void updateProfileImage(String email, byte[] profileImage) {
+    public void updateProfileImage(String email, MultipartFile profileImage ) {
         // Optional로 반환된 객체를 처리
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        // 프로필 이미지 설정
-        user.setProfileImage(profileImage);
+        String profileUrl = null;
+        byte[] profileImageBytes = null;
 
-        // 변경 사항 저장
+        if (profileImage != null) {
+            try {
+                profileImageBytes = profileImage.getBytes();
+                String fileName = UUID.randomUUID() + "_" + profileImage.getOriginalFilename();
+                profileUrl = fileName;
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new RuntimeException("Failed to process the profile image", e);
+            }
+        }
+        user.setProfileImage(profileImageBytes, profileUrl);
         userRepository.save(user);
     }
-
-
 }
 

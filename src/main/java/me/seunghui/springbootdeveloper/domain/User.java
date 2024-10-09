@@ -72,8 +72,9 @@ public class User implements UserDetails {
 
 
     // 프로필 이미지 변경 메소드 추가
-    public void setProfileImage(byte[] profileImage) {
+    public void setProfileImage(byte[] profileImage, String profileUrl) {
         this.profileImage = profileImage;
+        this.profileUrl = profileUrl;
     }
 
     //사용자 이름 변경

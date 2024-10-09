@@ -22,6 +22,7 @@ public class NotificationMapper {
                 .message(notification.getMessage())
                 .recipient(notification.getRecipient())
                 .targetId(notification.getTargetId())
+                .makeId(notification.getMakeId())
                 .userId(notification.getUser().getId())
                 .userEmail(notification.getUser().getEmail()) // User 엔티티의 이메일 필드 사용
                 .dataType("Notification") // 고정된 데이터 타입 값 설정
@@ -42,6 +43,7 @@ public class NotificationMapper {
                 .isRead(dto.getIsRead())
                 .message(dto.getMessage())
                 .recipient(dto.getRecipient())
+                .makeId(dto.getMakeId())
                 .targetId(dto.getTargetId())
                 .build();
     }
