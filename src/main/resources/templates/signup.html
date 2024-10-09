@@ -69,32 +69,30 @@
                 <h2>경로당 서비스 : "회원가입"</h2>
                 <p class="text-center mt-2 mb-4"> 경로당에서 필요한 정보를 입력해주세요!  </p>
 
-
                 <div class = "mb-2">
-                    <form th:action="@{/user}" method="POST">
+                    <form th:action="@{/user}" method="POST" enctype="multipart/form-data"> <!-- Add enctype attribute -->
                         <!-- 토큰을 추가하여 CSRF 공격 방지 -->
                         <input type="hidden" th:name="${_csrf?.parameterName}" th:value="${_csrf?.token}" />
 
-
                         <div class="mb-3">
                             <label class="form-label">이메일</label>
-                            <input type="email" class="form-control" name="email">
+                            <input type="email" class="form-control" name="email" required>
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label">비밀번호</label>
-                            <input type="password" class="form-control" name="password">
+                            <input type="password" class="form-control" name="password" required>
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label">닉네임</label>
-                            <input type="nickname" class="form-control" name="nickname">
+                            <input type="text" class="form-control" name="nickname" required>
                         </div>
 
-<!--                        <div class="mb-3">-->
-<!--                            <label class="form-label">프로필 이미지</label>-->
-<!--                            <input type="profileImage" class="form-control" name="profileImage">-->
-<!--                        </div>-->
+                        <div class="mb-3">
+                            <label class="form-label">프로필 이미지</label>
+                            <input type="file" class="form-control" name="profileImage" accept="image/*"> <!-- Use type="file" -->
+                        </div>
 
                         <button type="submit" class="btn btn-primary">회원가입 완료</button>
                     </form>

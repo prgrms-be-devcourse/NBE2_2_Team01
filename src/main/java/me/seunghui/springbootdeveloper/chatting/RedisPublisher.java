@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 public class RedisPublisher {
 
     @Autowired
-    @Qualifier("VideoRedisTemplate")
     private RedisTemplate<String, String> redisTemplate;
 
     public void publish(String roomId, String message) {

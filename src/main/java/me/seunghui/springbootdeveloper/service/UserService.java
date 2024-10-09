@@ -2,6 +2,8 @@ package me.seunghui.springbootdeveloper.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import me.seunghui.springbootdeveloper.Repository.ArticleRepository;
+import me.seunghui.springbootdeveloper.Repository.CommentRepository;
 import me.seunghui.springbootdeveloper.Repository.UserRepository;
 import me.seunghui.springbootdeveloper.domain.Role;
 import me.seunghui.springbootdeveloper.domain.Comment;
@@ -12,27 +14,53 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 @Log4j2
 public class UserService {
     private final UserRepository userRepository; // 사용자 정보를 처리하는 레포지토리
+    private final ArticleRepository articleRepository;
+    private final CommentRepository commentRepository;
 
     // 사용자 저장 메서드 (회원가입)
     public Long save(AddUserRequest dto) {
-        // 비밀번호를 안전하게 저장하기 위해 BCrypt 해싱 알고리즘 사용
+
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        byte[] profileImageBytes = null;
+        String profileUrl = null;
 
-        // DTO에서 이메일과 비밀번호를 추출하여, 비밀번호를 암호화 후 User 객체 생성
-        return userRepository.save(User.builder()
+
+        if (!dto.getProfileImage().isEmpty()) {
+            try {
+                profileImageBytes = dto.getProfileImage().getBytes();
+
+                String fileName = UUID.randomUUID() + "_" + dto.getProfileImage().getOriginalFilename();
+
+                profileUrl = fileName;
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new RuntimeException("Failed to process the profile image", e);
+            }
+        }
+
+        User user = User.builder()
                 .email(dto.getEmail())
-                .password(encoder.encode(dto.getPassword())) // 비밀번호를 해시 처리
-                        .role(Role.ROLE_USER) // 자동 유저 부여
-                        .nickname(dto.getNickname())
+                .password(encoder.encode(dto.getPassword()))
+                .nickname(dto.getNickname())
+                .profileImage(profileImageBytes)
+                .profileUrl(profileUrl)
+                .role(Role.ROLE_USER)
+                .build();
 
-                .build()).getId(); // 저장된 사용자 레코드의 ID 반환
+        return userRepository.save(user).getId();
     }
 
     // ID로 사용자 조회
@@ -47,6 +75,19 @@ public class UserService {
                 .orElseThrow(() -> new IllegalArgumentException("No user found with email: " + email));
     }
 
+    //사용자 탈퇴
+    @Transactional
+    public void deleteUserByUsername(String username) {
+        User user=userRepository.findByEmail(username)
+                        .orElseThrow(()->new IllegalArgumentException("No user found with email: " + username));
+
+        // 사용자 이메일로 작성된 게시글과 댓글의 작성자 필드를 "탈퇴한 사용자입니다."로 변경
+        articleRepository.updateAuthorToDeleted(username);
+        commentRepository.updateCommentAuthorToDeleted(username);
+        userRepository.delete(user);
+    }
+
+
     // 특정 사용자의 닉네임을 null로 설정하는 메서드 (이메일로 사용자 조회)
     @Transactional // 데이터 변경 시 트랜잭션을 보장함
     public void setNicknameNullByEmail(String email) {
@@ -59,14 +100,6 @@ public class UserService {
         });
     }
 
-    public String currentUser() {
-        String userName = SecurityContextHolder.getContext().getAuthentication().getName(); // 현재 로그인된 사용자 확인
-//        if (!user.getEmail().equals(userName)) {
-//            throw new IllegalArgumentException("not authorized");
-//        }
-        log.info("userName: {}" , userName);
-        return userName;
-    }
     //사용자가 좋아요 누른 게시글 조회
     //사용자가 쓴 게시글 조회
     //시용자가 쓴 댓글 조회

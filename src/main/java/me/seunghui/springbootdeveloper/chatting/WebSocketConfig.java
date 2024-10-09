@@ -1,5 +1,7 @@
 package me.seunghui.springbootdeveloper.chatting;
 import lombok.RequiredArgsConstructor;
+import me.seunghui.springbootdeveloper.notification.config.component.SessionHandshakeInterceptor;
+import me.seunghui.springbootdeveloper.notification.service.handler.NotificationHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -25,12 +27,18 @@ public class WebSocketConfig implements WebSocketConfigurer {
     private final ChatHandler chatHandler;
 
     private final RandomVideoChatHandler randomVideoChatHandler;
+    private final NotificationHandler notificationHandler;
+    private final SessionHandshakeInterceptor sessionHandshakeInterceptor;
 
     public WebSocketConfig(WebSocketHandshakeInterceptor webSocketHandshakeInterceptor, @Lazy ChatHandler chatHandler,
-                           RandomVideoChatHandler randomVideoChatHandler) {
+                           RandomVideoChatHandler randomVideoChatHandler
+                           ,NotificationHandler notificationHandler
+                            ,SessionHandshakeInterceptor sessionHandshakeInterceptor) {
         this.webSocketHandshakeInterceptor = webSocketHandshakeInterceptor;
         this.chatHandler = chatHandler;
         this.randomVideoChatHandler = randomVideoChatHandler;
+        this.notificationHandler = notificationHandler;
+        this.sessionHandshakeInterceptor = sessionHandshakeInterceptor;
     }
 
     @Override
@@ -40,12 +48,13 @@ public class WebSocketConfig implements WebSocketConfigurer {
                 .addInterceptors(webSocketHandshakeInterceptor)
                 .setAllowedOrigins("*");
 
-        registry.addHandler(new p2pVideoChatHandler(), "/ws/p2p-video-chat")
-                .setAllowedOrigins("*");
-
         // 랜덤 화상채팅 WebSocket 핸들러 추가
         registry.addHandler(randomVideoChatHandler, "/ws/random-video-chat")
                 .setAllowedOrigins("*");
+
+        registry.addHandler(notificationHandler, "/ws/notifications")
+                .addInterceptors(sessionHandshakeInterceptor)
+                .setAllowedOrigins("*"); // CORS 설정 필요 시 조정
     }
 
     @Bean

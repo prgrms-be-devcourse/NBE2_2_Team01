@@ -159,8 +159,7 @@
 <div class="header">
     <h1>랜덤 채팅 서비스</h1>
     <div class="auth-buttons">
-        <a href="/member/signIn">로그인</a>
-        <a href="/member/signUpView">회원가입</a>
+        <a href="/chat/page">채팅방 관리</a>
     </div>
 </div>
 
@@ -173,6 +172,7 @@
         <h2 th:text="${chatRoom.roomName}">채팅방 이름</h2>
         <p th:text="${chatRoom.description}"></p>
         <p th:text="'생성자 : ' + ${chatRoom.email}"></p>
+       <!-- <p th:text="'접속자 : ' + ${chatRoom.count}"></p>-->
         <br/>
         <br/>
         <br/>
