@@ -48,9 +48,6 @@ public class WebSocketConfig implements WebSocketConfigurer {
                 .addInterceptors(webSocketHandshakeInterceptor)
                 .setAllowedOrigins("*");
 
-        registry.addHandler(new p2pVideoChatHandler(), "/ws/p2p-video-chat")
-                .setAllowedOrigins("*");
-
         // 랜덤 화상채팅 WebSocket 핸들러 추가
         registry.addHandler(randomVideoChatHandler, "/ws/random-video-chat")
                 .setAllowedOrigins("*");

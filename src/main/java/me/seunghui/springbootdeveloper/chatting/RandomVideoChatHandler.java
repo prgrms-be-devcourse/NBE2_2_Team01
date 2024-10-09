@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
+import me.seunghui.springbootdeveloper.config.jwt.TokenProvider;
 import me.seunghui.springbootdeveloper.dto.chat.VideoChatLogDTO;
 import me.seunghui.springbootdeveloper.service.RedisService;
 import me.seunghui.springbootdeveloper.service.VideoChatLogService;
@@ -13,8 +14,10 @@ import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +36,7 @@ public class RandomVideoChatHandler extends TextWebSocketHandler {
 
     private final RedisService redisService;
     private final VideoChatLogService videoChatLogService;
+    private final TokenProvider tokenProvider;
 
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
@@ -64,8 +68,20 @@ public class RandomVideoChatHandler extends TextWebSocketHandler {
         // 채팅 또는 signaling 처리
         if ("chat".equals(data.get("type"))) {
             sendMessageToTextChatSessions(session, new TextMessage(payload));
-            //        redisService.saveVideoChatMessageLog(roomId, session.getId(), otherSessionId, chatMessage);
-            redisService.saveVideoChatMessageLog(roomId, session.getId(), otherSessionId, chatMessage);
+
+            // 상대방 세션에서 userId 가져오기
+            Map<String, WebSocketSession> sessionsInRoom = textChatSessions.get(roomId);
+            if (sessionsInRoom != null) {
+                WebSocketSession otherSession = sessionsInRoom.get(otherSessionId);
+                if (otherSession != null) {
+                    Long otherUserId = (Long) otherSession.getAttributes().get("userId");
+                    Long currentUserId = (Long) session.getAttributes().get("userId");
+                    System.out.println("currentUserId : " + currentUserId);
+                    System.out.println("otherUserId : " + otherUserId);
+                    redisService.saveVideoChatMessageLog(roomId, currentUserId, otherUserId, chatMessage);
+                }
+            }
+
         } else if ("offer".equals(data.get("type")) || "answer".equals(data.get("type")) || "candidate".equals(data.get("type"))){
             sendMessageToVideoChatSessions(roomId, session, new TextMessage(payload));
         } else {
@@ -147,6 +163,10 @@ public class RandomVideoChatHandler extends TextWebSocketHandler {
             String roomId = UUID.randomUUID().toString(); // 고유한 방 ID 생성
             System.out.println("matchUsers : " + roomId);
 
+            // 세션 속성에서 userId 가져오기
+            Long user1Id = (Long) user1.getAttributes().get("userId");
+            Long user2Id = (Long) user2.getAttributes().get("userId");
+
             // 매칭된 사용자에게 방 ID와 연결 메시지 전송
             notifyUsersOfMatch(user1, user2, roomId);
 
@@ -162,8 +182,8 @@ public class RandomVideoChatHandler extends TextWebSocketHandler {
 
             videoChatLogService.videoChatStartTimeLog(VideoChatLogDTO.builder()
                     .video_chat_id(roomId)
-                    .user_id(user1.getId())
-                    .other_user_id(user2.getId())
+                    .user_id(user1Id)
+                    .other_user_id(user2Id)
                     .build());
 
         }
@@ -224,6 +244,16 @@ public class RandomVideoChatHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         System.out.println("User connected: " + session.getId());
+        Long userId = 0L;
+        URI uri = session.getUri();
+        if (uri != null) {
+            UriComponentsBuilder builder = UriComponentsBuilder.fromUri(uri);
+            String accessToken = builder.build().getQueryParams().getFirst("accessToken");
+            if (accessToken != null) {
+                userId = tokenProvider.getUserId(accessToken);
+                session.getAttributes().put("userId", userId);
+            }
+        }
 
         // 이미 대기열에 있지 않으면 추가
         if (!waitingUsers.contains(session)) {
