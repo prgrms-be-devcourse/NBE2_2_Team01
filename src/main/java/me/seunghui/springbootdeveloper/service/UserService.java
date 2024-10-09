@@ -71,6 +71,14 @@ public class UserService {
                 .orElseThrow(() -> new IllegalArgumentException("No user found with email: " + email));
     }
 
+    //사용자 탈퇴
+    public void deleteUserByUsername(String username) {
+        User user=userRepository.findByEmail(username)
+                        .orElseThrow(()->new IllegalArgumentException("No user found with email: " + username));
+        userRepository.delete(user);
+    }
+
+
     // 특정 사용자의 닉네임을 null로 설정하는 메서드 (이메일로 사용자 조회)
     @Transactional // 데이터 변경 시 트랜잭션을 보장함
     public void setNicknameNullByEmail(String email) {
@@ -83,14 +91,6 @@ public class UserService {
         });
     }
 
-    public String currentUser() {
-        String userName = SecurityContextHolder.getContext().getAuthentication().getName(); // 현재 로그인된 사용자 확인
-//        if (!user.getEmail().equals(userName)) {
-//            throw new IllegalArgumentException("not authorized");
-//        }
-        log.info("userName: {}" , userName);
-        return userName;
-    }
     //사용자가 좋아요 누른 게시글 조회
     //사용자가 쓴 게시글 조회
     //시용자가 쓴 댓글 조회

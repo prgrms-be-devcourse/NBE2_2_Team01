@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -57,6 +58,16 @@ public class UserApiController {
         // 로그아웃 완료 후 로그인 페이지로 리다이렉트
         return "redirect:/login";
     }
+
+
+    //사용자 탈퇴
+    @DeleteMapping("/api/user")
+    public ResponseEntity<Void> deleteUser() {
+        String currentUserName = SecurityContextHolder.getContext().getAuthentication().getName();
+        userService.deleteUserByUsername(currentUserName);
+        return ResponseEntity.ok().build();
+    }
+
 
     //사용자가 작성한 게시글 목록 조회
     @GetMapping(value = "/api/user/articles", produces = MediaType.APPLICATION_JSON_VALUE)
