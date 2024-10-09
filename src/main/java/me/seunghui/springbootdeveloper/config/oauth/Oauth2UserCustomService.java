@@ -5,6 +5,7 @@ import lombok.extern.log4j.Log4j2;
 import me.seunghui.springbootdeveloper.Repository.UserRepository;
 import me.seunghui.springbootdeveloper.domain.Role;
 import me.seunghui.springbootdeveloper.domain.User;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -36,6 +37,8 @@ public class Oauth2UserCustomService extends DefaultOAuth2UserService {
 
     //유저가 있으면 업데이트, 없으면 유저 생성
     private User savedOrUpdate(OAuth2User oAuth2User) {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
         Map<String, Object> attributes = oAuth2User.getAttributes(); //OAuth2 사용자 정보(email, name 등)를 속성 맵으로 가져온다.
 
         // OAuth2User의 속성 출력
@@ -66,6 +69,7 @@ public class Oauth2UserCustomService extends DefaultOAuth2UserService {
                             .email(email)
                             .nickname(name)
                             .role(Role.ROLE_USER)
+                            .password(encoder.encode("123456"))
                             .build();
                 });
         log.info("여기까지감3");
