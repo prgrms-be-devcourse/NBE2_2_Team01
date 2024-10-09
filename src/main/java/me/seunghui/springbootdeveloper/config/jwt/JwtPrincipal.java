@@ -3,11 +3,13 @@ package me.seunghui.springbootdeveloper.config.jwt;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
+import java.io.Serializable;
 import java.security.Principal;
 
 @Data
 @RequiredArgsConstructor
-public class JwtPrincipal implements Principal {
+public class JwtPrincipal implements Principal, Serializable {
+    private static final long serialVersionUID = 1L; // serialVersionUID 추가
 
     private final String username;
 
