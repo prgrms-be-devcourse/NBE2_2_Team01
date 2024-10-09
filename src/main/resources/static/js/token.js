@@ -13,6 +13,7 @@ function deleteCookie(name) {
     document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/;';
 }
 
+
 // 로그아웃 버튼이 존재하는지 확인하고, 클릭 이벤트 리스너 추가
 const logoutButton = document.getElementById('logout-btn');
 if (logoutButton) {
