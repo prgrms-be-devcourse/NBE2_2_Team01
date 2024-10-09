@@ -10,6 +10,7 @@ html, body {
 }
 .text-center{
     font-family: "나눔고딕 ExtraBold";
+    font-weight: bolder;
 }
 body {
     flex: 1; /* body가 flex 컨테이너의 남은 공간을 차지하도록 설정 */
