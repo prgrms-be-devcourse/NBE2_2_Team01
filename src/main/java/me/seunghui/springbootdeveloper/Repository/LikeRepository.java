@@ -22,4 +22,5 @@ public interface LikeRepository extends JpaRepository<Like, Long> {
 
     @Query("SELECT DISTINCT a FROM Like l JOIN l.article a JOIN l.user u WHERE l.likedStatus = true AND u.email = :email ORDER BY a.createdAt DESC")
     List<Article> findUserLikedArticles(@Param("email") String email);
+
 }

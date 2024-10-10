@@ -13,7 +13,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -42,12 +44,21 @@ public class UserService {
                 profileImageBytes = dto.getProfileImage().getBytes();
 
                 String fileName = UUID.randomUUID() + "_" + dto.getProfileImage().getOriginalFilename();
-
                 profileUrl = fileName;
 
             } catch (IOException e) {
                 e.printStackTrace();
                 throw new RuntimeException("Failed to process the profile image", e);
+            }
+        } else {
+            try {
+                File defaultImage = new File("src/main/resources/static/img/default.jpeg");
+                profileImageBytes = Files.readAllBytes(defaultImage.toPath());
+                String fileName = UUID.randomUUID() + "_default.jpeg" ;
+                profileUrl = fileName;
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new RuntimeException("Failed to load the default profile image", e);
             }
         }
 

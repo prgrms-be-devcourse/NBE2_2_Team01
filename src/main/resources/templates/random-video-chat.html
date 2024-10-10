@@ -3,31 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <title>랜덤 화상채팅</title>
-    <link rel="stylesheet" href="/css/chat-style.css">
+    <link rel="stylesheet" href="/css/VChat-style.css">
     <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
 </head>
 <body>
-    <h1>랜덤 화상채팅</h1>
-    <button id="startRandomChat">랜덤 채팅 시작</button>
 
-    <div id="loadingMessage" style="display: none;">
-        <p>상대를 검색중입니다...</p>
-        <div class="loader"></div> <!-- 로딩 아이콘 -->
+    <div class="video-container">
+        <div class="video-inner-container">
+            <video id="localVideo" autoplay playsinline></video>
+            <div class="vc-user-profile">
+                <svg width="480" height="480"  viewBox="0 0 480 480" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M316.4 277.2C293.696 292.076 267.143 300.001 240 300.001C212.857 300.001 186.304 292.076 163.6 277.2C134.324 290.964 109.298 312.363 91.1551 339.146C73.012 365.929 62.4223 397.107 60.5 429.4C60.4117 430.769 60.6059 432.141 61.0704 433.431C61.5349 434.721 62.2597 435.902 63.2 436.9C64.141 437.887 65.2741 438.672 66.5295 439.205C67.7849 439.738 69.1361 440.009 70.5 440H410C411.364 440.009 412.715 439.738 413.97 439.205C415.226 438.672 416.359 437.887 417.3 436.9C418.24 435.902 418.965 434.721 419.43 433.431C419.894 432.141 420.088 430.769 420 429.4C418.031 397.055 407.366 365.841 389.132 339.052C370.898 312.264 345.77 290.895 316.4 277.2Z" fill="#DBDFE8"/>
+                    <path d="M240 280C306.274 280 360 226.274 360 160C360 93.7258 306.274 40 240 40C173.726 40 120 93.7258 120 160C120 226.274 173.726 280 240 280Z" fill="#DBDFE8"/>
+                </svg>
+            </div>
+        </div>
+        <div class="video-inner-container">
+            <video id="remoteVideo" autoplay playsinline></video>
+            <div class="vc-user-profile">
+                <svg width="480" height="480"  viewBox="0 0 480 480" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <<path d="M316.4 277.2C293.696 292.076 267.143 300.001 240 300.001C212.857 300.001 186.304 292.076 163.6 277.2C134.324 290.964 109.298 312.363 91.1551 339.146C73.012 365.929 62.4223 397.107 60.5 429.4C60.4117 430.769 60.6059 432.141 61.0704 433.431C61.5349 434.721 62.2597 435.902 63.2 436.9C64.141 437.887 65.2741 438.672 66.5295 439.205C67.7849 439.738 69.1361 440.009 70.5 440H410C411.364 440.009 412.715 439.738 413.97 439.205C415.226 438.672 416.359 437.887 417.3 436.9C418.24 435.902 418.965 434.721 419.43 433.431C419.894 432.141 420.088 430.769 420 429.4C418.031 397.055 407.366 365.841 389.132 339.052C370.898 312.264 345.77 290.895 316.4 277.2Z" fill="#DBDFE8"/>
+                    <path d="M240 280C306.274 280 360 226.274 360 160C360 93.7258 306.274 40 240 40C173.726 40 120 93.7258 120 160C120 226.274 173.726 280 240 280Z" fill="#DBDFE8"/>
+                </svg>
+            </div>
+        </div>
     </div>
 
-    <div id="chatControls" style="display: none;">
-        <button id="disconnectChat">연결 끊기</button>
-        <button id="findAnother">다른 상대 찾기</button>
+    <div class="controls-chat-wrapper">
+        <div class="control-container">
+            <button id="startRandomChat">
+                <div class="start-chat-button">
+                    <svg width="30" height="30" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M29.924 25.3299C29.924 25.8899 30.374 26.3299 30.924 26.3299C32.064 26.3299 32.984 27.2599 32.984 28.3899C32.984 28.9399 33.434 29.3899 33.984 29.3899C34.534 29.3899 34.984 28.9399 34.984 28.3899C34.984 26.1499 33.164 24.3299 30.924 24.3299C30.374 24.3299 29.924 24.7799 29.924 25.3299ZM46.2039 29.3899C46.7639 29.3899 47.2039 28.9399 47.2039 28.3899C47.2039 19.4099 39.9039 12.1099 30.924 12.1099C30.374 12.1099 29.924 12.5599 29.924 13.1099C29.924 13.6599 30.374 14.1099 30.924 14.1099C38.804 14.1099 45.2039 20.5199 45.2039 28.3899C45.2039 28.9399 45.6539 29.3899 46.2039 29.3899Z" fill="#212121"/>
+                        <path d="M39.094 28.39C39.094 28.94 39.544 29.39 40.094 29.39C40.644 29.39 41.094 28.94 41.094 28.39C41.094 22.78 36.534 18.22 30.924 18.22C30.374 18.22 29.924 18.67 29.924 19.22C29.924 19.78 30.374 20.22 30.924 20.22C35.434 20.22 39.094 23.89 39.094 28.39ZM30.924 6C30.374 6 29.924 6.45 29.924 7C29.924 7.55 30.374 8 30.924 8C42.174 8 51.324 17.15 51.324 28.39C51.324 28.94 51.764 29.39 52.324 29.39C52.874 29.39 53.324 28.94 53.324 28.39C53.324 16.04 43.274 6 30.924 6ZM40.694 38.93L39.384 39.64C37.174 40.85 34.374 40.44 32.584 38.65L22.024 28.09C20.234 26.3 19.824 23.5 21.034 21.28L21.744 19.98C22.544 18.5 22.834 16.84 22.594 15.18C22.3673 13.5234 21.6012 11.9875 20.414 10.81C18.954 9.35 17.014 8.55 14.944 8.55C12.874 8.55 10.924 9.35 9.46402 10.81L8.95402 11.33C6.25402 14.03 5.94402 18.68 8.07402 24.44C10.084 29.94 14.134 35.9 19.454 41.22C27.564 49.33 36.594 54 43.074 54C45.634 54 47.804 53.27 49.344 51.73L49.864 51.21C50.5841 50.4907 51.1553 49.6364 51.5448 48.6961C51.9343 47.7557 52.1345 46.7478 52.134 45.73C52.12 43.6803 51.3054 41.7173 49.864 40.26C47.454 37.85 43.684 37.31 40.694 38.93Z" fill="#212121"/>
+                    </svg>
+                    <span>랜덤 채팅 시작</span>
+                </div>
+            </button>
+
+            <div id="loadingMessage" style="display: none;">
+                <p>상대를 검색중입니다...</p>
+                <div class="loader"></div> <!-- 로딩 아이콘 -->
+            </div>
+
+            <div id="chatControls" style="display: none;">
+                <button id="disconnectChat">연결 끊기</button>
+                <button id="findAnother">다른 상대 찾기</button>
+            </div>
+        </div>
+
+        <div class="chat-container">
+            <div id="chatBox"></div>
+            <div id="chatSendBox">
+                <input type="text" id="messageInput" placeholder="메시지를 입력하세요">
+                <button id="sendMessage">전송</button>
+            </div>
+        </div>
     </div>
 
-    <div class="container">
-        <video id="localVideo" autoplay playsinline></video>
-        <video id="remoteVideo" autoplay playsinline></video>
-        <div id="chatBox"></div>
-    </div>
-
-    <input type="text" id="messageInput" placeholder="메시지를 입력하세요">
-    <button id="sendMessage">전송</button>
+</body>
 
     <script>
         console.log(typeof jwt_decode);
@@ -54,10 +88,16 @@
             const findAnotherButton = document.getElementById('findAnother');
             const startRandomChatButton = document.getElementById('startRandomChat');
             const loadingMessage = document.getElementById('loadingMessage');
+            const vcUserProfiles = document.getElementsByClassName('vc-user-profile');
 
             startRandomChatButton.onclick = function() {
                 startRandomChatButton.style.display = 'none';
                 loadingMessage.style.display = 'block';
+
+                for (let i = 0; i < vcUserProfiles.length; i++) {
+                    vcUserProfiles[i].style.display = 'none';
+                }
+
                 startVideoChat();
             };
 
@@ -377,5 +417,5 @@
 
         });
     </script>
-</body>
+
 </html>

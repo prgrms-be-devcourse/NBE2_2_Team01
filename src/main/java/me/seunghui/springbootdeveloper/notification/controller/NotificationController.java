@@ -11,11 +11,15 @@ import me.seunghui.springbootdeveloper.notification.entity.CoustomAlarm;
 import me.seunghui.springbootdeveloper.notification.entity.Notification;
 import me.seunghui.springbootdeveloper.notification.service.CoustomAlarmService;
 import me.seunghui.springbootdeveloper.notification.service.NotificationService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -63,13 +67,22 @@ public class NotificationController {
      * @param principal 로그인된 사용자 정보
      * @return 읽지 않은 알림 수
      */
+//    @GetMapping("/unread-count")
+//    public ResponseEntity<Long> getUnreadNotificationCount(Principal principal) {
+//        String author = getAuthor(principal);
+//        Long unreadCount = notificationService.getUnreadNotificationsCount(author);
+//        return ResponseEntity.ok(unreadCount);
+//    }
     @GetMapping("/unread-count")
-    public ResponseEntity<Long> getUnreadNotificationCount(Principal principal) {
-        String author = getAuthor(principal);
-        Long unreadCount = notificationService.getUnreadNotificationsCount(author);
-        return ResponseEntity.ok(unreadCount);
-    }
+    public ResponseEntity<Map<String, Long>> getUnreadNotificationCount(Principal principal) {
 
+            String username = principal.getName();
+            Long unreadCount = notificationService.getUnreadNotificationsCount(username);
+            Map<String, Long> response = new HashMap<>();
+            response.put("unreadCount", unreadCount);
+            return ResponseEntity.ok(response);
+
+    }
     /**
      * 특정 알림을 읽음으로 처리
      *

@@ -102,6 +102,7 @@ public class CoustomAlarmService { // 클래스 이름 수정
                 .message(notification.getMessage())
                 .recipient(notification.getUserId())
                 .isRead(false)
+                .makeId(recipientUser.getEmail())
                 .targetId(recipientUser.getId())
                 .user(recipientUser)
                 .build();

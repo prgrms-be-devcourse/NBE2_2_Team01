@@ -16,10 +16,11 @@
       height: 100vh;
     }
 
+    /* 채팅창 컨테이너 스타일 */
     .chat-container {
       display: flex;
       width: 100%;
-      max-width: 900px; /* 전체 너비 */
+      max-width: 900px;
       height: 80vh;
       background-color: white;
       border-radius: 10px;
@@ -27,6 +28,7 @@
       position: relative;
     }
 
+    /* 채팅 박스 내부 레이아웃 */
     .chat-box {
       flex: 1;
       padding: 20px;
@@ -35,6 +37,7 @@
       justify-content: space-between;
     }
 
+    /* 채팅방 상단 헤더 스타일 */
     .chat-header {
       display: flex;
       justify-content: space-between;
@@ -42,21 +45,24 @@
       margin-bottom: 20px;
     }
 
+    /* 나가기 버튼 스타일 */
     .exit-btn {
       padding: 10px 20px;
       background-color: #ff4b4b;
       color: white;
       border: none;
       border-radius: 20px;
-      text-decoration: none;  /* a 태그 밑줄 제거 */
+      text-decoration: none;
       text-align: center;
       transition: background-color 0.3s ease;
     }
 
+    /* 나가기 버튼 호버 시 색상 변경 */
     .exit-btn:hover {
       background-color: #e03e3e;
     }
 
+    /* 채팅 로그 영역 스타일 */
     .chat-log {
       flex-grow: 1;
       border: 1px solid #ddd;
@@ -67,28 +73,33 @@
       background-color: #f9f9f9;
     }
 
-    .chatMessage-container {
+    /* 채팅 메시지 컨테이너 스타일 */
+    .openChatMessage-container {
       display: flex;
-      flex-direction: column; /* 수직으로 정렬 */
+      flex-direction: column;
       margin-bottom: 10px;
     }
 
+    /* 닉네임 스타일 */
     .nickname {
       font-size: 12px;
       font-weight: bold;
       margin-bottom: 2px;
     }
 
+    /* 보낸 메시지 닉네임 스타일 */
     .sent-nickname {
-      text-align: right; /* 보낸 메시지의 경우 오른쪽 정렬 */
-      margin-right: 10px; /* 여백 조정 */
+      text-align: right;
+      margin-right: 10px;
     }
 
+    /* 받은 메시지 닉네임 스타일 */
     .received-nickname {
-      text-align: left; /* 받은 메시지의 경우 왼쪽 정렬 */
-      margin-left: 10px; /* 여백 조정 */
+      text-align: left;
+      margin-left: 10px;
     }
 
+    /* 채팅 메시지 스타일 */
     .chatMessage {
       padding: 10px 15px;
       max-width: 70%;
@@ -97,29 +108,27 @@
       position: relative;
       font-size: 14px;
       line-height: 1.4;
+      color: black;
+      background-color: #f1f0f0;
     }
 
+    /* 보낸 메시지 스타일 */
     .chatMessage.sent {
       background-color: #dcf8c6;
-      margin-left: auto; /* 오른쪽 정렬 */
+      margin-left: auto;
       text-align: right;
       border-bottom-right-radius: 0;
     }
 
+    /* 받은 메시지 스타일 */
     .chatMessage.received {
       background-color: #f1f0f0;
-      margin-right: auto; /* 왼쪽 정렬 */
+      margin-right: auto;
       text-align: left;
       border-bottom-left-radius: 0;
     }
 
-    .chatMessage .time {
-      font-size: 10px;
-      color: #888;
-      margin-top: 5px;
-      text-align: right;
-    }
-
+    /* 채팅 입력 필드 스타일 */
     .chat-input {
       width: calc(100% - 70px);
       padding: 10px;
@@ -128,6 +137,7 @@
       margin-bottom: 5px;
     }
 
+    /* 전송 버튼 스타일 */
     button {
       padding: 10px 20px;
       border: none;
@@ -139,10 +149,12 @@
       margin-left: 10px;
     }
 
+    /* 전송 버튼 호버 시 색상 변경 */
     button:hover {
       background-color: #45a049;
     }
 
+    /* 입력 필드 및 버튼을 수평 정렬 */
     .input-container {
       display: flex;
       align-items: center;
@@ -159,6 +171,7 @@
       justify-content: flex-start;
     }
 
+    /* 멤버 리스트 영역 스타일 */
     .member-list {
       flex-grow: 1;
       padding: 10px;
@@ -168,18 +181,21 @@
       max-height: 100%;
     }
 
+    /* 멤버 리스트 제목 스타일 */
     .member-list h4 {
       margin-bottom: 5px;
       font-size: 14px;
       font-weight: bold;
     }
 
+    /* 멤버 리스트 항목 스타일 */
     .member-list ul {
       list-style: none;
       padding: 0;
       margin: 0;
     }
 
+    /* 멤버 리스트 항목 텍스트 스타일 */
     .member-list li {
       font-size: 12px;
       margin-bottom: 5px;
@@ -192,18 +208,24 @@
   <div class="chat-box">
     <div class="chat-header">
       <h2>채팅방</h2>
+      <!-- 나가기 버튼 클릭 시 leaveChatRoom 함수 호출 -->
       <button id="exitButton" onclick="leaveChatRoom()">나가기</button>
     </div>
 
+    <!-- 채팅 로그가 표시될 영역 -->
     <div class="chat-log" id="chatLog"></div>
+
+    <!-- 입력 중 상태를 표시할 영역 (기본적으로 숨겨짐) -->
     <div class="typing-indicator" id="typingIndicator" style="display: none;">상대방이 입력 중...</div>
+
+    <!-- 채팅 메시지 입력 필드와 전송 버튼 -->
     <div class="input-container">
-      <input type="text" id="chatInput" class="chat-input" placeholder="메세지를 입력하세요..." ><!--oninput="notifyTyping()"-->
+      <input type="text" id="chatInput" class="chat-input" placeholder="메세지를 입력하세요...">
       <button onclick="sendMessage()">전송</button>
     </div>
   </div>
 
-  <!-- 참여 중인 멤버 리스트 표시 -->
+  <!-- 참여 중인 멤버 리스트 -->
   <div class="member-list-container">
     <div class="member-list">
       <h4>참여 중인 멤버:</h4>
@@ -214,28 +236,59 @@
   </div>
 </div>
 
+<!-- 채팅 메시지 처리 관련 JavaScript 코드 -->
 <script th:inline="javascript">
+  // 서버로부터 받은 채팅방 ID와 사용자 이름
   const roomId = /*[[${roomId}]]*/ '';
   const username = /*[[${username}]]*/ '';
-  const nickname = /*[[${nickname}]]*/ '';
 
-  const ws = new WebSocket('wss://localhost:8443/ws/chat/'+roomId);
+  // 웹소켓 객체 생성, 채팅 서버와 연결
+  const ws = new WebSocket('wss://localhost:8443/ws/chat/' + roomId);
+
+  // 채팅 로그 영역과 입력 필드 참조
   const chatLog = document.getElementById('chatLog');
   const chatInput = document.getElementById('chatInput');
 
   ws.onmessage = function(event) {
-    console.log("수신된 메시지: ", event.data); // 수신된 메시지를 확인합니다.
-    const data = JSON.parse(event.data);
+    let data;
 
-    // 만약 수신된 데이터가 멤버 리스트라면
+    try {
+      // JSON 형식으로 들어오는 데이터를 파싱
+      data = JSON.parse(event.data);
+    } catch (e) {
+      // JSON이 아닐 경우 그대로 처리
+      data = event.data;
+    }
+
+    // 추가 파싱: 만약 data가 문자열이면 다시 JSON으로 파싱
+    if (typeof data === 'string') {
+      try {
+        data = JSON.parse(data);
+      } catch (e) {
+        console.error("JSON 파싱 오류:", e);
+      }
+    }
+
+    console.log("Parsed data: ", data); // 파싱된 데이터 로그
+    console.log("Sender: ", data.sender); // 발신자 정보 확인
+    console.log("Current username: ", username); // 현재 클라이언트 유저명 확인
+
+    // 멤버 리스트 업데이트 처리 (데이터가 배열일 경우)
     if (Array.isArray(data)) {
-      updateMemberList(data); // 멤버 리스트 업데이트
-    } else {
-      // 이후에 메시지 출력 로직
-      displayMessage(data);
+      updateMemberList(data);
+    }
+    // JSON 객체 형식으로 발신자와 메시지를 모두 포함하고 있을 경우
+    else if (typeof data === 'object' && data.sender && data.chatMessage) {
+      // displayMessage 함수로 발신자(sender)와 메시지(chatMessage)를 분리하여 전달
+      displayMessage(data.sender, data.chatMessage);
+    }
+    // 발신자가 없는 경우 시스템 메시지로 간주
+    else {
+      displayMessage("시스템", data);  // 시스템 메시지로 처리
     }
   };
 
+  // 멤버 리스트를 업데이트하는 함수
   function updateMemberList(memberList) {
     const memberListContainer = document.querySelector('.member-list');
     memberListContainer.innerHTML = ''; // 기존 멤버 리스트 초기화
@@ -247,70 +300,78 @@
     });
   }
 
-  function displayMessage(data) {
+  // displayMessage 함수: 발신자와 메시지를 각각 화면에 표시
+  function displayMessage(sender, chatMessage) {
     const messageContainer = document.createElement('div');
-    messageContainer.classList.add('chatMessage-container');
+    messageContainer.classList.add('openChatMessage-container');
 
-    const nicknameElem = document.createElement('div');
-    nicknameElem.classList.add('nickname');
-    nicknameElem.textContent = data.nickname;
+    // 발신자 정보를 위한 닉네임 엘리먼트
+    const senderElem = document.createElement('div');
+    senderElem.classList.add('nickname');
 
-    if (data.sender === username) {
-      nicknameElem.classList.add('sent-nickname'); // 보낸 메시지의 경우
+    // 발신자 정보 표시
+    senderElem.textContent = sender;
+
+    if (sender === username) {
+      senderElem.classList.add('sent-nickname');
     } else {
-      nicknameElem.classList.add('received-nickname'); // 받은 메시지의 경우
+      senderElem.classList.add('received-nickname');
     }
-    messageContainer.appendChild(nicknameElem);
+    messageContainer.appendChild(senderElem);  // 닉네임 추가
 
-    const chatMessage = document.createElement('div');
-    chatMessage.classList.add('chatMessage');
-    chatMessage.textContent = data.chatMessage;
+    // 실제 채팅 메시지 엘리먼트
+    const chatMessageElem = document.createElement('div');
+    chatMessageElem.classList.add('chatMessage');
 
-    const time = document.createElement('div');
-    time.classList.add('time');
-    time.textContent = new Date(data.sentTime).toLocaleTimeString();
-    chatMessage.appendChild(time);
+    // 메시지 내용을 말풍선 안에 표시
+    chatMessageElem.textContent = chatMessage;
 
-    if (data.sender === username) {
-      chatMessage.classList.add('sent');
+    // 보낸 메시지와 받은 메시지 구분
+    if (sender === username) {
+      chatMessageElem.classList.add('sent');
     } else {
-      chatMessage.classList.add('received');
+      chatMessageElem.classList.add('received');
     }
 
-    messageContainer.appendChild(chatMessage);
+    // 말풍선 메시지 추가
+    messageContainer.appendChild(chatMessageElem);
+
+    // 채팅 로그에 메시지 추가
     chatLog.appendChild(messageContainer);
-    chatLog.scrollTop = chatLog.scrollHeight; // 스크롤을 가장 아래로 이동
+    chatLog.scrollTop = chatLog.scrollHeight;  // 스크롤을 가장 아래로 이동
   }
-
-  function checkEnter(event) {
-    if (event.key === "Enter") {
-      sendMessage();  // 엔터키를 누르면 sendMessage 함수 호출
-    }
-  }
-
   function sendMessage() {
     const chatMessage = chatInput.value;
+
+    // 입력된 메시지가 비어있는 경우 전송하지 않음
+    if (!chatMessage.trim()) {
+      console.log("메시지를 입력하세요.");
+      return;
+    }
+
     const messageData = {
       chatMessage: chatMessage,
-      sentTime: new Date().toISOString(),
       sender: username
     };
-    ws.send(JSON.stringify(messageData));
-    chatInput.value = ''; // 입력 필드 초기화
+
+    // 웹소켓이 열려 있는지 확인
+    if (ws.readyState === WebSocket.OPEN) {
+      ws.send(JSON.stringify(messageData));  // 웹소켓으로 메시지 전송
+      chatInput.value = ''; // 입력 필드 초기화
+    } else {
+      console.error("WebSocket 연결이 닫혀 있습니다.");
+    }
   }
 
-  // 웹소켓 나가기 함수
+  // 채팅방을 나갈 때 실행되는 함수
   function leaveChatRoom() {
     const confirmLeave = confirm("채팅방을 나가시겠습니까? 내용이 모두 삭제됩니다.");
-    if (confirmLeave) {
-      if (ws) {
-        ws.close(); // 웹소켓 연결 종료
-      }
-      // 페이지 이동 등의 추가 동작 수행
+    if (confirmLeave && ws) {
+      // 웹소켓 연결을 종료하고 채팅방 리스트 페이지로 이동
+      ws.close();
       window.location.href = "/chat/list";
     }
   }
-
 </script>
 </body>
 </html>
