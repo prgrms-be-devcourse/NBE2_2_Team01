@@ -265,20 +265,6 @@ public class RandomVideoChatHandler extends TextWebSocketHandler {
         }
     }
 
-//    // 사용자가 연결을 종료했을 때 호출
-//    @Override
-//    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-//        if (waitingUsers.remove(session)) {
-//            System.out.println("사용자" + session.getId() + "가 대기열에서 제거되었습니다.");
-//        }
-//
-//        // 방에서 세션 제거
-//        videoChatSessions.values().forEach(sessions -> sessions.remove(session.getId()));
-//        textChatSessions.values().forEach(sessions -> sessions.remove(session.getId()));
-//
-//        System.out.println("세션이 방에서 제거되었습니다: " + session.getId());
-//    }
-
     // 사용자가 연결을 종료했을 때 호출
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
