@@ -50,7 +50,6 @@ video {
 .controls-chat-wrapper {
     display: flex;
     justify-content: center;
-    margin-top: 20px;
     width: 1800px;
 }
 
@@ -109,7 +108,15 @@ video {
     background-color: #59a664;
 }
 
-/*채팅 시작 버튼*/
+
+#mainButtonBox {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 20px;
+}
 #startRandomChat{
     box-sizing: border-box;
     appearance: none;
@@ -144,7 +151,7 @@ video {
     box-shadow: 0 0 40px 40px #3AB270 inset; /* $red을 red로 교체 */
 }
 
-.start-chat-button{
+#startRandomChat{
     display: flex;           /* Flexbox 사용 */
     align-items: center;      /* 수직 중앙 정렬 */
     justify-content: center;  /* 수평 중앙 정렬 */
@@ -158,12 +165,39 @@ video {
     80% { transform: translate(2px, -2px); }
     100% { transform: translate(0, 0); }
 }
-.start-chat-button svg {
+#startRandomChat svg {
     transition: transform 0.2s;
 }
-.start-chat-button:hover svg {
+#startRandomChat:hover svg {
     animation: shake 0.5s; /* 애니메이션 실행 */
 }
+
+#returnHome {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #000000;
+    cursor: pointer;
+    padding: 10px 20px; /* 버튼 내부 여백 */
+    border-radius: 8px; /* 버튼 모서리 둥글게 */
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+#returnHome:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 호버 시 그림자 추가 */
+}
+
+#returnHome svg, #startRandomChat svg {
+    margin-right: 8px; /* SVG와 텍스트 사이 간격 */
+}
+#returnHomeText, #startRandomChat span {
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+
+
 
 #loadingMessage{
     display: flex;
@@ -344,3 +378,7 @@ video {
 .video-controls-wrapper input[type="range"] {
     margin-left: 10px;
 }
+
+
+
+
