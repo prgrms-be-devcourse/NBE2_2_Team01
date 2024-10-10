@@ -29,6 +29,48 @@
         </div>
     </div>
 
+    <div class="video-controls-wrapper" style="display: none;">
+        <div class="local-controls">
+            <button id="toggleMic">
+                <!-- 마이크 아이콘 (기본 상태) -->
+                <svg id="micIcon" width="24" height="24" viewBox="0 0 24 24">
+                    <!-- 마이크 아이콘 SVG 코드 -->
+                    <path d="M12 14a3 3 0 003-3V5a3 3 0 00-6 0v6a3 3 0 003 3z"></path>
+                    <path d="M19 11a1 1 0 00-1-1h-2a1 1 0 000 2h2a1 1 0 001-1z"></path>
+                </svg>
+                <span>마이크 끄기</span>
+            </button>
+            <button id="toggleVideo">
+                <!-- 카메라 아이콘 (기본 상태) -->
+                <svg id="videoIcon" width="24" height="24" viewBox="0 0 24 24">
+                    <!-- 카메라 아이콘 SVG 코드 -->
+                    <path d="M17 10.5V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-4.5l4 4v-13l-4 4z"></path>
+                </svg>
+                <span>카메라 끄기</span>
+            </button>
+        </div>
+
+        <div class="remote-controls">
+            <button id="toggleRemoteAudio">
+                <!-- 상대방 소리 아이콘 (기본 상태) -->
+                <svg id="remoteAudioIcon" width="24" height="24" viewBox="0 0 24 24">
+                    <!-- 소리 아이콘 SVG 코드 -->
+                    <path d="M3 9v6h4l5 5V4L7 9H3z"></path>
+                </svg>
+                <span>상대방 소리 끄기</span>
+            </button>
+            <input type="range" id="remoteVolume" min="0" max="1" step="0.01" value="1">
+            <button id="toggleRemoteVideo">
+                <!-- 상대방 화면 아이콘 (기본 상태) -->
+                <svg id="remoteVideoIcon" width="24" height="24" viewBox="0 0 24 24">
+                    <!-- 화면 끄기 아이콘 SVG 코드 -->
+                    <path d="M17 10.5V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-4.5l4 4v-13l-4 4z"></path>
+                </svg>
+                <span>상대방 화면 끄기</span>
+            </button>
+        </div>
+    </div>
+
     <div class="controls-chat-wrapper">
         <div class="control-container">
             <button id="startRandomChat">
@@ -42,13 +84,42 @@
             </button>
 
             <div id="loadingMessage" style="display: none;">
-                <p>상대를 검색중입니다...</p>
+                <div id="loadingMessageText">상대를 검색중입니다...</div>
                 <div class="loader"></div> <!-- 로딩 아이콘 -->
             </div>
 
             <div id="chatControls" style="display: none;">
-                <button id="disconnectChat">연결 끊기</button>
-                <button id="findAnother">다른 상대 찾기</button>
+                <div id="disconnectChatBox">
+                    <svg width="60" height="60" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="20" cy="20" r="20" fill="#FF5656"/>
+                        <g clip-path="url(#clip0_150_330)">
+                            <path d="M7.1508 24.1218C6.58649 23.5549 6.24296 22.8052 6.18198 22.0076L5.98389 19.5186C5.89968 18.5005 6.12371 17.4807 6.62683 16.5916C7.12996 15.7025 7.88892 14.9854 8.80505 14.5334C12.2743 12.807 16.0951 11.9042 19.9702 11.8955C23.8452 11.9039 27.6661 12.8064 31.1355 14.5325C32.0487 14.988 32.8052 15.7058 33.3079 16.5939C33.8106 17.4821 34.0366 18.5001 33.957 19.5175L33.7591 22.0065C33.7255 22.4553 33.6018 22.8928 33.3952 23.2926C33.1887 23.6925 32.9036 24.0466 32.557 24.3338C32.2105 24.6209 31.8096 24.8353 31.3783 24.9639C30.947 25.0926 30.4942 25.1329 30.047 25.0826L26.2144 24.6585C25.5994 24.5901 25.0206 24.3333 24.5573 23.9232C24.094 23.5131 23.7688 22.9697 23.6263 22.3676L23.1383 20.324C23.0852 20.1056 22.96 19.9114 22.7829 19.7729C22.6059 19.6343 22.3873 19.5595 22.1625 19.5604L17.7784 19.5606C17.5536 19.5597 17.335 19.6345 17.158 19.7731C16.981 19.9117 16.8558 20.1058 16.8027 20.3243L16.3148 22.3679C16.1741 22.9689 15.8502 23.5115 15.3879 23.9206C14.9256 24.3298 14.3477 24.5853 13.734 24.6519L9.89442 25.0834C9.39423 25.1397 8.88778 25.0825 8.41276 24.9161C7.93774 24.7496 7.50638 24.4781 7.1508 24.1218Z" fill="white"/>
+                        </g>
+                        <defs>
+                            <clipPath id="clip0_150_330">
+                                <rect width="24" height="24" fill="white" transform="translate(36.9412 19.9697) rotate(134.998)"/>
+                            </clipPath>
+                        </defs>
+                    </svg>
+                    <div id="disconnectChat">통화 끊기</div>
+                </div>
+
+                <div id="findAnotherBox">
+                    <svg id="findAnotherIcon" width="72" height="72" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g clip-path="url(#clip0_151_346)">
+                            <path d="M36 71.9782C28.3517 71.9726 20.9033 69.5349 14.7316 65.0173L14.6239 67.5277C14.6219 67.6767 14.5895 67.8238 14.5285 67.9598C14.4676 68.0958 14.3794 68.2179 14.2695 68.3186C14.1596 68.4192 14.0302 68.4963 13.8894 68.5451C13.7485 68.5938 13.5992 68.6133 13.4505 68.6021C13.3029 68.5956 13.1581 68.5601 13.0242 68.4977C12.8903 68.4352 12.7701 68.3469 12.6703 68.238C12.5705 68.129 12.4932 68.0015 12.4427 67.8626C12.3922 67.7238 12.3696 67.5764 12.3761 67.4288L12.5782 62.7376C12.5873 62.5282 12.6546 62.3254 12.7728 62.1522C12.8909 61.9791 13.055 61.8423 13.2467 61.7574C13.4384 61.6726 13.65 61.6429 13.8576 61.6719C14.0652 61.7009 14.2606 61.7873 14.4217 61.9213C20.8877 67.3128 29.1362 70.0912 37.5464 69.7107C45.9566 69.3301 53.9204 65.8181 59.873 59.8647C65.8256 53.9113 69.3365 45.947 69.7159 37.5367C70.0953 29.1265 67.3158 20.8784 61.9234 14.4132C61.8286 14.2998 61.7571 14.1688 61.7129 14.0278C61.6688 13.8867 61.6528 13.7384 61.6659 13.5912C61.6791 13.444 61.7211 13.3008 61.7896 13.1698C61.8581 13.0388 61.9517 12.9226 62.0651 12.8279C62.1785 12.7331 62.3095 12.6615 62.4505 12.6174C62.5916 12.5732 62.7399 12.5572 62.8872 12.5704C63.0344 12.5835 63.1775 12.6256 63.3085 12.6941C63.4395 12.7626 63.5557 12.8562 63.6505 12.9696C68.0328 18.2222 70.8263 24.6157 71.7033 31.4C72.5803 38.1842 71.5044 45.0779 68.6018 51.2723C65.6992 57.4667 61.0904 62.7048 55.3159 66.3723C49.5414 70.0398 42.8407 71.9845 36 71.9782Z" fill="#42B168"/>
+                            <path d="M13.7011 63.9109C13.4236 63.9107 13.1559 63.8079 12.9495 63.6222C12.7432 63.4365 12.6127 63.1812 12.5833 62.9051C12.5539 62.6291 12.6275 62.352 12.79 62.127C12.9526 61.902 13.1925 61.745 13.4638 61.6862L17.7617 60.7535C17.9063 60.7216 18.0558 60.7187 18.2015 60.7447C18.3473 60.7708 18.4865 60.8253 18.6111 60.9053C18.7357 60.9852 18.8434 61.089 18.9278 61.2106C19.0123 61.3322 19.0719 61.4693 19.1033 61.614C19.1346 61.7588 19.1371 61.9082 19.1106 62.0539C19.0841 62.1996 19.0291 62.3386 18.9488 62.463C18.8684 62.5874 18.7643 62.6947 18.6425 62.7787C18.5206 62.8628 18.3833 62.922 18.2385 62.9529L13.9406 63.8857C13.8619 63.9027 13.7816 63.9112 13.7011 63.9109ZM9.21432 59.434C9.04947 59.4342 8.88659 59.3982 8.73719 59.3285C8.58778 59.2589 8.45551 59.1572 8.3497 59.0308C2.72731 52.2804 -0.231188 43.7063 0.0320371 34.9251C0.295262 26.144 3.76202 17.7624 9.77865 11.361C15.7953 4.95951 23.946 0.980421 32.6941 0.173966C41.4421 -0.63249 50.183 1.78942 57.2685 6.98304L57.3762 4.4727C57.3798 4.32416 57.4133 4.17788 57.4748 4.04263C57.5363 3.90737 57.6245 3.78593 57.7341 3.68559C57.8437 3.58525 57.9724 3.50807 58.1125 3.45869C58.2527 3.40932 58.4013 3.38875 58.5496 3.39824C58.6972 3.40473 58.8421 3.44023 58.9759 3.50272C59.1098 3.5652 59.2301 3.65344 59.3298 3.7624C59.4296 3.87135 59.5069 3.9989 59.5574 4.13774C59.6079 4.27659 59.6305 4.42402 59.624 4.57161L59.4218 9.26274C59.4128 9.47217 59.3454 9.67491 59.2273 9.8481C59.1092 10.0213 58.9451 10.158 58.7534 10.2429C58.5617 10.3278 58.3501 10.3574 58.1425 10.3284C57.9349 10.2995 57.7395 10.2131 57.5783 10.079C51.1124 4.68758 42.8639 1.90917 34.4537 2.28974C26.0436 2.67032 18.0797 6.18236 12.1272 12.1358C6.17459 18.0891 2.66365 26.0534 2.28424 34.4637C1.90483 42.8739 4.68438 51.122 10.0767 57.5872C10.214 57.7513 10.3017 57.9512 10.3294 58.1633C10.3571 58.3755 10.3237 58.5912 10.2332 58.7851C10.1427 58.9789 9.99872 59.143 9.81825 59.2579C9.63777 59.3728 9.42829 59.4339 9.21432 59.434Z" fill="#42B168"/>
+                            <path d="M43.6399 39.7202C41.3696 41.2078 38.7143 42.0003 35.9999 42.0003C33.2856 42.0003 30.6303 41.2078 28.3599 39.7202C25.4323 41.0966 22.9297 43.2365 21.1154 45.9148C19.3011 48.5931 18.2422 51.7109 18.0499 54.9402C18.0411 55.0771 18.0605 55.2143 18.107 55.3433C18.1534 55.4723 18.2259 55.5904 18.3199 55.6902C18.414 55.7889 18.5273 55.8674 18.6529 55.9207C18.7784 55.974 18.9135 56.0011 19.0499 56.0002H52.9999C53.1363 56.0011 53.2714 55.974 53.397 55.9207C53.5225 55.8674 53.6358 55.7889 53.7299 55.6902C53.8239 55.5904 53.8964 55.4723 53.9429 55.3433C53.9893 55.2143 54.0087 55.0771 53.9999 54.9402C53.803 51.7057 52.7366 48.5842 50.9131 45.9054C49.0897 43.2266 46.5769 41.0897 43.6399 39.7202Z" fill="#54DF92"/>
+                            <path d="M36 40C42.6274 40 48 34.6274 48 28C48 21.3726 42.6274 16 36 16C29.3726 16 24 21.3726 24 28C24 34.6274 29.3726 40 36 40Z" fill="#54DF92"/>
+                        </g>
+                        <defs>
+                            <clipPath id="clip0_151_346">
+                                <rect width="72" height="72" fill="white"/>
+                            </clipPath>
+                        </defs>
+                    </svg>
+                    <div id="findAnother">다른 상대 찾기</div>
+                </div>
             </div>
         </div>
 
@@ -61,11 +132,7 @@
         </div>
     </div>
 
-</body>
-
     <script>
-        console.log(typeof jwt_decode);
-        console.log("Access Token: " + localStorage.getItem('access_token'));
         const accessToken = localStorage.getItem('access_token');
 
         let signalingServer;
@@ -84,21 +151,121 @@
 
         document.addEventListener('DOMContentLoaded', function() {
             const chatControlBox = document.getElementById('chatControls');
-            const disconnectButton = document.getElementById('disconnectChat');
-            const findAnotherButton = document.getElementById('findAnother');
+            const disconnectButton = document.getElementById('disconnectChatBox');
+            const findAnotherButton = document.getElementById('findAnotherBox');
             const startRandomChatButton = document.getElementById('startRandomChat');
             const loadingMessage = document.getElementById('loadingMessage');
             const vcUserProfiles = document.getElementsByClassName('vc-user-profile');
 
+            // video-controls-wrapper 요소
+            const videoControlsWrapper = document.querySelector('.video-controls-wrapper');
+            const toggleMicButton = document.getElementById('toggleMic');
+            const toggleVideoButton = document.getElementById('toggleVideo');
+            const toggleRemoteAudioButton = document.getElementById('toggleRemoteAudio');
+            const remoteVolumeSlider = document.getElementById('remoteVolume');
+            const toggleRemoteVideoButton = document.getElementById('toggleRemoteVideo');
+
+            // 마이크 상태
+            let micMuted = false;
+            // 비디오 상태
+            let videoOff = false;
+            // 상대방 오디오 상태
+            let remoteAudioMuted = false;
+            // 상대방 비디오 상태
+            let remoteVideoOff = false;
+
             startRandomChatButton.onclick = function() {
                 startRandomChatButton.style.display = 'none';
-                loadingMessage.style.display = 'block';
+                loadingMessage.style.display = 'flex';
+                videoControlsWrapper.style.display = 'flex';
 
                 for (let i = 0; i < vcUserProfiles.length; i++) {
                     vcUserProfiles[i].style.display = 'none';
                 }
 
                 startVideoChat();
+            };
+
+            // 마이크 토글
+            toggleMicButton.onclick = function() {
+                if (localStream) {
+                    micMuted = !micMuted;
+                    localStream.getAudioTracks().forEach(track => track.enabled = !micMuted);
+                    // 아이콘과 텍스트 변경
+                    const micIcon = document.getElementById('micIcon');
+                    const micText = toggleMicButton.querySelector('span');
+                    if (micMuted) {
+                        micIcon.innerHTML = `<path d="M12 14a3 3 0 003-3V5a3 3 0 00-6 0v6a3 3 0 003 3z"></path><path d="M19 11a1 1 0 00-1-1h-2a1 1 0 000 2h2a1 1 0 001-1z"></path><line x1="1" y1="1" x2="23" y2="23" stroke="red" stroke-width="2"/>`; // 예: 빨간색 X 표시
+                        micText.textContent = '마이크 켜기';
+                    } else {
+                        micIcon.innerHTML = `<path d="M12 14a3 3 0 003-3V5a3 3 0 00-6 0v6a3 3 0 003 3z"></path><path d="M19 11a1 1 0 00-1-1h-2a1 1 0 000 2h2a1 1 0 001-1z"></path>`;
+                        micText.textContent = '마이크 끄기';
+                    }
+                }
+            };
+
+            // 비디오 토글
+            toggleVideoButton.onclick = function() {
+                if (localStream) {
+                    videoOff = !videoOff;
+                    localStream.getVideoTracks().forEach(track => track.enabled = !videoOff);
+                    // 아이콘과 텍스트 변경
+                    const videoIcon = document.getElementById('videoIcon');
+                    const videoText = toggleVideoButton.querySelector('span');
+                    if (videoOff) {
+                        videoIcon.innerHTML = `<path d="M17 10.5V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-4.5l4 4v-13l-4 4z"></path><line x1="1" y1="1" x2="23" y2="23" stroke="red" stroke-width="2"/>`; // 예: 빨간색 X 표시
+                        videoText.textContent = '카메라 켜기';
+                    } else {
+                        videoIcon.innerHTML = `<path d="M17 10.5V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-4.5l4 4v-13l-4 4z"></path>`;
+                        videoText.textContent = '카메라 끄기';
+                    }
+                }
+            };
+
+            // 상대방 소리 토글
+            toggleRemoteAudioButton.onclick = function() {
+                const remoteVideo = document.getElementById('remoteVideo');
+                if (remoteVideo) {
+                    remoteAudioMuted = !remoteAudioMuted;
+                    remoteVideo.muted = remoteAudioMuted;
+                    // 아이콘과 텍스트 변경
+                    const remoteAudioIcon = document.getElementById('remoteAudioIcon');
+                    const remoteAudioText = toggleRemoteAudioButton.querySelector('span');
+                    if (remoteAudioMuted) {
+                        remoteAudioIcon.innerHTML = `<path d="M3 9v6h4l5 5V4L7 9H3z"></path><line x1="1" y1="1" x2="23" y2="23" stroke="red" stroke-width="2"/>`; // 예: 빨간색 X 표시
+                        remoteAudioText.textContent = '상대방 소리 켜기';
+                    } else {
+                        remoteAudioIcon.innerHTML = `<path d="M3 9v6h4l5 5V4L7 9H3z"></path>`;
+                        remoteAudioText.textContent = '상대방 소리 끄기';
+                    }
+                }
+            };
+
+            // 상대방 볼륨 조절
+            remoteVolumeSlider.oninput = function() {
+                const remoteVideo = document.getElementById('remoteVideo');
+                if (remoteVideo) {
+                    remoteVideo.volume = this.value;
+                }
+            };
+
+            // 상대방 화면 토글
+            toggleRemoteVideoButton.onclick = function() {
+                const remoteVideo = document.getElementById('remoteVideo');
+                if (remoteVideo) {
+                    remoteVideoOff = !remoteVideoOff;
+                    remoteVideo.style.display = remoteVideoOff ? 'none' : 'block';
+                    // 아이콘과 텍스트 변경
+                    const remoteVideoIcon = document.getElementById('remoteVideoIcon');
+                    const remoteVideoText = toggleRemoteVideoButton.querySelector('span');
+                    if (remoteVideoOff) {
+                        remoteVideoIcon.innerHTML = `<path d="M17 10.5V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-4.5l4 4v-13l-4 4z"></path><line x1="1" y1="1" x2="23" y2="23" stroke="red" stroke-width="2"/>`; // 예: 빨간색 X 표시
+                        remoteVideoText.textContent = '상대방 화면 켜기';
+                    } else {
+                        remoteVideoIcon.innerHTML = `<path d="M17 10.5V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-4.5l4 4v-13l-4 4z"></path>`;
+                        remoteVideoText.textContent = '상대방 화면 끄기';
+                    }
+                }
             };
 
             disconnectButton.onclick = function() {
@@ -158,6 +325,8 @@
                 };
 
                 initializePeerConnection(localVideo, remoteVideo);
+                videoControlsWrapper.style.display = 'flex';
+
                 signalingServer.onmessage = message => {
                     const data = JSON.parse(message.data);
                     switch (data.type) {
@@ -165,7 +334,7 @@
                             setTimeout(() => {
                                 alert(data.message);
                                 loadingMessage.style.display = 'none';
-                                chatControlBox.style.display = 'block';
+                                chatControlBox.style.display = 'flex';
                                 // 역할 할당 정보 확인
                                 role = data.role;
                                 if (role === 'offerer') {
@@ -200,7 +369,7 @@
                             chatBox.scrollTop = chatBox.scrollHeight;
                             break;
                         case 'waiting': // 추가: 대기 메시지 처리
-                            loadingMessage.style.display = 'block';
+                            loadingMessage.style.display = 'flex';
                             chatControlBox.style.display = 'none';
                             break;
                         default:
@@ -405,6 +574,7 @@
                     localStream.getTracks().forEach(track => track.stop());
                     localStream = null;
                 }
+                videoControlsWrapper.style.display = 'none';
                 const localVideo = document.getElementById('localVideo');
                 const remoteVideo = document.getElementById('remoteVideo');
                 localVideo.srcObject = null;
@@ -417,5 +587,5 @@
 
         });
     </script>
-
+</body>
 </html>
