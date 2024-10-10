@@ -1,5 +1,6 @@
 package me.seunghui.springbootdeveloper.chat;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.jose.shaded.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import me.seunghui.springbootdeveloper.Repository.UserRepository;
@@ -13,6 +14,7 @@ import org.springframework.web.socket.WebSocketSession;
 import java.io.IOException;
 import java.lang.reflect.Member;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -24,6 +26,7 @@ public class ChatServiceImpl implements ChatService {
     private final MessageBrokerService messageBrokerService;
     private final UserService userService;
     private final ConcurrentHashMap<String, Map<String, WebSocketSession>> roomSessions;
+
 
     public ChatServiceImpl(MessageBrokerService messageBrokerService, UserService userService, ConcurrentHashMap<String, Map<String, WebSocketSession>> roomSessions) {
         this.messageBrokerService = messageBrokerService;
@@ -47,23 +50,34 @@ public class ChatServiceImpl implements ChatService {
 
         // 세션 정보 저장
         roomSessions.computeIfAbsent(roomId, k -> new ConcurrentHashMap<>()).put(sessionId, session);
-        log.info("chatImpl roomSessions : {}", roomSessions.keySet());
+        log.info("roomSessions : {}", roomSessions.keySet());
         //채널 구독
-        messageBrokerService.publishToChannel(roomId, accountId);
+      /*  messageBrokerService.publishToChannel(roomId, accountId);*/
+        // 간단한 환영 메시지: sender와 message만 포함
 
-        String welcomeMessage = String.format("{\"message\": \"%s님이 입장했습니다. 모두 환영해주세요\", \"sender\": \"%s\",  \"nickname\": \"%s님\"}",nickname, accountId, nickname);
-        messageBrokerService.publishToChannel(roomId,welcomeMessage);
+        String welcomeMessage = String.format("%s님이 입장했습니다. 모두 환영해주세요",nickname);
+       messageBrokerService.publishToChannel(roomId,welcomeMessage);
 
     }
 
     //퇴장 처리
     @Override
     public void handleUserDisconnection(WebSocketSession session, String roomId, String email) {
+        log.info("퇴장 메서드 실행");
         User user = userService.findByEmail(email);
         String nickname = user.getNickname();
+        // 간단한 퇴장 메시지: sender와 message만 포함
+        Map<String, String> message = new HashMap<>();
+        message.put("sender", nickname);
+        message.put("chatMessage", String.format("%s 님이 퇴장하셨습니다.", nickname));
 
-        String bye = String.format("\"message\" : \"%s 님이 퇴장하셨습니다\"",nickname);
-        messageBrokerService.publishToChannel(roomId,bye);
+        String messageJson = new Gson().toJson(message); // Gson으로 메시지를 JSON으로 변환
+
+
+        messageBrokerService.publishToChannel(roomId, messageJson);
+       /* String bye = String.format("\"message\" : \"%s 님이 퇴장하셨습니다\"",nickname);
+        messageBrokerService.publishToChannel(roomId,bye);*/
+        log.info("퇴장 메시지 발행: {}", messageJson);
 
         roomSessions.get(roomId).remove(session.getId());
 
@@ -107,6 +121,7 @@ public class ChatServiceImpl implements ChatService {
     //chat/list 화면에서 해당 채팅방의 접속자 수를 반환
     @Override
     public int getUserCount(String roomId) {
+        log.info("roomId: {}, roomSessions: {}", roomId, roomSessions);
         return roomSessions.containsKey(roomId) ? roomSessions.get(roomId).size() : 0;
     }
 

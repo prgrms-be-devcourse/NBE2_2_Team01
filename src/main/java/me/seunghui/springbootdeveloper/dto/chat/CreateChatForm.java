@@ -16,8 +16,6 @@ public class CreateChatForm {
     private String email;
     private String description;
 
-//    private int Count;
-
 
 
     public ChatRoom toEntity(String email) {
