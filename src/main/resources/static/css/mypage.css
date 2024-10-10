@@ -1,10 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap');
 html, body {
     height: 100%;
     margin: 0;
     padding: 0;
-    font-family: 'Arial', sans-serif;
-    display: flex;
-    flex-direction: column;
+    font-family: "Nanum Gothic", serif;
     min-height: 100vh;
 
 }
@@ -19,8 +18,20 @@ body {
     color: #090909;
 }
 
-
-
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* 뷰포트 높이 100% */
+}
+/* 콘텐츠 영역의 스타일 */
+.content {
+    width: 800px;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    flex: 1; /* flex 속성 추가로 콘텐츠가 페이지에서 여유 공간을 채우도록 설정 */
+    text-align: center;
+}
 
 /* 로그아웃 버튼을 오른쪽 상단에 고정 */
 
@@ -44,19 +55,6 @@ body {
 .logout-btn:hover {
     background-color: #777;
 }
-
-
-
-
-/* 콘텐츠 영역의 스타일 */
-.content {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-    flex: 1; /* flex 속성 추가로 콘텐츠가 페이지에서 여유 공간을 채우도록 설정 */
-}
-
-
 
 
 #article-content{
@@ -223,7 +221,7 @@ footer {
     color: #575757;
     text-align: center;
     padding: 2rem;
-    margin-top: auto; /* footer를 항상 페이지 하단에 배치 */
+    margin-top: auto;
     /*position: absolute;*/
 }
 
