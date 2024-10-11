@@ -13,9 +13,13 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmail(String email); //email로 사용자 정보를 가져옴
 
+    Optional<User> findByNickname(String nickname);
+    Optional<User> findByEmailAndNickname(String email, String nickname);
+
     @Modifying
     @Query("UPDATE User u SET u.profileImage = :profileImage WHERE u.email = :email")
     void updateProfileImage(@Param("email") String email, @Param("profileImage") byte[] profileImage);
+
 
 
    // void deleteByUsername(String email);
