@@ -72,6 +72,7 @@ public class ArticleViewController {
         log.info("currentUserName: {}", currentUserName);
         log.info("articleAuthor:{}", article.getAuthor());
         //log.info("isOwner: {}", isOwner);
+
         User articleUser=userService.findByEmail(article.getAuthor());
         String currrentUserImage=userService.findByEmail(currentUserName).getProfileImageAsBase64();
 
