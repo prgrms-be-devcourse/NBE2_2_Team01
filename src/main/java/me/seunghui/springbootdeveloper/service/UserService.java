@@ -82,9 +82,16 @@ public class UserService {
 
     // 이메일로 사용자 조회
     public User findByEmail(String email) {
+        if ("탈퇴한 사용자입니다.".equals(email)) {
+            User defaultUser = new User();
+            defaultUser.setEmail("탈퇴한 사용자입니다.");
+            // profileImage를 설정하지 않으면, getProfileImageUrl()에서 기본 이미지 경로가 반환됨
+            return defaultUser;
+        }
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("No user found with email: " + email));
     }
+
 
     //사용자 탈퇴
     @Transactional

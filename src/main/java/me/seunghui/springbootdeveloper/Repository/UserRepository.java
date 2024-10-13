@@ -20,6 +20,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("UPDATE User u SET u.profileImage = :profileImage WHERE u.email = :email")
     void updateProfileImage(@Param("email") String email, @Param("profileImage") byte[] profileImage);
 
+//    @Query("SELECT u.profileImage FROM User u WHERE  u.email = :email")
+//    byte[] getProfileImage(@Param("email") String email);
 
 
    // void deleteByUsername(String email);
