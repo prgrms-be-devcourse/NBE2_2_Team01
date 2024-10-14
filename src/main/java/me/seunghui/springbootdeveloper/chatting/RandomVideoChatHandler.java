@@ -177,6 +177,8 @@ public class RandomVideoChatHandler extends TextWebSocketHandler {
             saveRoomIdToSession(user1, roomId);
             saveRoomIdToSession(user2, roomId);
 
+            // 이하 생략...
+
             // 디버깅 코드: 유저 둘이 같은 방에 들어가 있는지 확인
             verifyUsersInSameRoom(roomId, user1, user2);
 

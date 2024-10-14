@@ -8,6 +8,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Base64;
 import java.util.Collection;
@@ -18,6 +19,7 @@ import java.util.List;
 @Entity
 @Table(name = "users")
 @Getter
+@Setter
 @NoArgsConstructor
 
 @EntityListeners(AuditingEntityListener.class)
@@ -31,7 +33,7 @@ public class User implements UserDetails {
     @Column(name = "email",nullable = false,unique = true)
     private String email;
 
-    @Column(name = "password")
+    @Column(name = "password", length = 255)
     private String password;
 
     @Enumerated(EnumType.STRING)
@@ -82,6 +84,18 @@ public class User implements UserDetails {
         this.nickname = nickname;
         return this;
     }
+
+
+    @Transactional
+    public User updatePW(String password) {
+        if (password == null || password.isEmpty()) {
+            throw new IllegalArgumentException("Password cannot be null or empty");
+        }
+        System.out.println(password + " 4. 제발 되라");
+        this.password = password;
+        return this;
+    }
+
 
     @Override //권한 반환
     public Collection<? extends GrantedAuthority> getAuthorities() {

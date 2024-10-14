@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.3.3'
     id 'io.spring.dependency-management' version '1.1.6'
+    id 'org.jetbrains.kotlin.jvm'
 }
 
 group = 'me.seunghui'
@@ -67,7 +68,6 @@ dependencies {
     implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
     implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 
-
     implementation 'com.fasterxml.jackson.core:jackson-databind'
 
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
@@ -80,6 +80,7 @@ dependencies {
             'com.querydsl:querydsl-apt:5.1.0:jakarta',
             'org.projectlombok:lombok'
     )
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 
 }
 
