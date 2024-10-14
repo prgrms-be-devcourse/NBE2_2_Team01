@@ -38,8 +38,11 @@
    - **Spring Boot Scheduler**: 동적 스케줄링 기능 구현
  
 <strong>Database</strong>
+
   <img src="https://img.shields.io/badge/My Sql-4479A1?style=for-the-badge&logo=mysql&logoColor=white"> 
- <strong>middleware</strong>
+  
+<strong>middleware</strong>
+ 
   <img src="https://img.shields.io/badge/redis-%23DD0031.svg?style=for-the-badge&logo=redis&logoColor=white">
 
   
