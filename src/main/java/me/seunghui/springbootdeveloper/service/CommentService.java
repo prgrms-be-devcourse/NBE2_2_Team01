@@ -104,7 +104,7 @@ public class CommentService {
         Comment updatedComment=commentRepository.findById(commentId).orElseThrow(()->new IllegalArgumentException("Comment not found"));
 
         // 로그 추가
-      log.info("Before Update: commentId = {}, isDeleted = {}, content = {}", updatedComment.getCommentId(), updatedComment.isCommentIsDeleted(), updatedComment.getCommentContent());
+        log.info("Before Update: commentId = {}, isDeleted = {}, content = {}", updatedComment.getCommentId(), updatedComment.isCommentIsDeleted(), updatedComment.getCommentContent());
 
 
         authorizeCommentAuthor(updatedComment);
@@ -115,7 +115,7 @@ public class CommentService {
         //updatedComment.update(request.getCommentContent(), request.isCommentIsDeleted());
 
         // 로그 추가: 업데이트 후 값을 확인
-      log.info("After Update: commentId = {}, isDeleted = {}, content = {}", updatedComment.getCommentId(), updatedComment.isCommentIsDeleted(), updatedComment.getCommentContent());
+        log.info("After Update: commentId = {}, isDeleted = {}, content = {}", updatedComment.getCommentId(), updatedComment.isCommentIsDeleted(), updatedComment.getCommentContent());
 
         return new UpdateCommentRequest(updatedComment);
     }
@@ -125,7 +125,7 @@ public class CommentService {
     //5. 댓글 삭제
     public void deleteComment(Long commentId) {
         Comment comment = commentRepository.findById(commentId)
-                        .orElseThrow(()->new IllegalArgumentException("Comment not found"));
+                .orElseThrow(()->new IllegalArgumentException("Comment not found"));
         authorizeCommentAuthor(comment);
         commentRepository.delete(comment);
     }
