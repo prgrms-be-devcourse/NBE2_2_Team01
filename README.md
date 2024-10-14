@@ -32,11 +32,17 @@
 ## 📚 사용 기술 스택 (Tech Stack)
 
 ### 🛠 Backend
-- **Java**: 메인 백엔드 언어  
-- **Spring Boot**: 애플리케이션 프레임워크  
-  - **Spring Boot Scheduler**: 동적 스케줄링 기능 구현  
-- **MySQL**: 데이터베이스  
-- **Redis**: 캐시 및 세션 관리  
+- <img src="https://img.shields.io/badge/Java-007396?style=for-the-badge&logo=Java&logoColor=white">
+- <img src="https://img.shields.io/badge/Spring Boot-6DB33F?style=for-the-badge&logo=spring boot&logoColor=white">
+
+   - **Spring Boot Scheduler**: 동적 스케줄링 기능 구현
+ 
+<strong>Database</strong>
+-  <img src="https://img.shields.io/badge/MySQL-4479A1?style=flat-square&logo=mysql&logoColor=white">
+ <strong>middleware</strong>
+-  ![Redis](https://img.shields.io/badge/redis-%23DD0031.svg?style=for-the-badge&logo=redis&logoColor=white)
+
+  
 - **JWT**: 인증 및 권한 부여  
 - **WebSocket API**: 실시간 통신 구현  
 - **WebRTC**: 화상 채팅 기능 구현  
@@ -44,8 +50,7 @@
 ---
 
 ### 🎨 Frontend
-- **JavaScript**: 클라이언트 사이드 로직  
-- **HTML5 & CSS3**: 프론트엔드 UI 구현  
+<img src="https://img.shields.io/badge/html5-E34F26?style=flat-square&logo=html5&logoColor=white">  <img src="https://img.shields.io/badge/css-1572`B6?style=flat-square&logo=css3&logoColor=white">  <img src="https://img.shields.io/badge/Thymeleaf-005F0F?style=flat-square&logo=Thymeleaf&logoColor=white">
 - **CKEditor**: 텍스트 에디터 활용  
 
 ---
@@ -58,7 +63,8 @@
 
 ### 📡 클라이언트 통신
 - **WebSocket API**: 실시간 메시지 송수신  
-- **Redis**: 메시지 브로커 역할  
+  ![Redis](https://img.shields.io/badge/redis-%23DD0031.svg?style=for-the-badge&logo=redis&logoColor=white)
+  - 메시지 브로커 역할  
 
 
 ---
