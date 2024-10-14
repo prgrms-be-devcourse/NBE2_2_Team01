@@ -2,9 +2,9 @@
 
 놀 줄 아는 노인들을 위한 만남 서비스 경로당
 
-### 기술 스택
+## 기술 스택
 
-### 팀원 소개
+## 팀원 소개
 
 <table>
   <tbody>
@@ -27,8 +27,6 @@
           <sub><b>팀원 : 최근태</b></sub>
         </a><br />
       </td>
-    </tr>
-    <tr>
       <td align="center">
         <a href="https://github.com/SeungHuiHan">
           <img src="https://github.com/user-attachments/assets/4b236f05-73ba-4ba2-aefe-00214812bd1c" width="100px;" alt="팀원 한승희(깃관리자)"/><br />
