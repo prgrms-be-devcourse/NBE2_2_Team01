@@ -72,8 +72,8 @@
     <!-- 첫 번째 행: 팀원 이름 -->
     <tr>
       <td align="center"><b>채호정</b></td>
-      <td align="center"><b>도승우</b></td>
       <td align="center"><b>최근태</b></td>
+      <td align="center"><b>도승우</b></td>
       <td align="center"><b>한승희</b></td>
       <td align="center"><b>김강민</b></td>
     </tr>
@@ -85,12 +85,12 @@
       </td>
       <td align="center">
         <a href="https://github.com/MagongDo">
-          <img src="https://avatars.githubusercontent.com/MagongDo" width="100px;" alt="도승우 프로필 사진"/>
+           <img src="https://avatars.githubusercontent.com/RooDu" width="100px;" alt="최근태 프로필 사진"/>
         </a>
       </td>
       <td align="center">
         <a href="https://github.com/RooDu">
-          <img src="https://avatars.githubusercontent.com/RooDu" width="100px;" alt="최근태 프로필 사진"/>
+        <img src="https://avatars.githubusercontent.com/MagongDo" width="100px;" alt="도승우 프로필 사진"/>
         </a>
       </td>
       <td align="center">
@@ -113,6 +113,15 @@
     </tr>
   </tbody>
 </table>
+---
+## 역할 소개 
+🐻 채호정 
+ - 팀장, 스케줄 조율 
+ - 오픈채팅
+ 
+
+
+
 
 ---
 ## 주요 기능 에러 사항 및 진행 상황 
