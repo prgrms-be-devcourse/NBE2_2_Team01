@@ -66,20 +66,14 @@
  <strong>버전 관리 및 소스 코드 저장소  </strong>
  
   <img src="https://img.shields.io/badge/GitHub -181717?style=for-the-badge&logo=github&logoColor=white">
-
-
 ---
 
 ### 📡 클라이언트 통신
  <img src="https://img.shields.io/badge/WebSocket API-색상?style=for-the-badge&logo=rsocket&logoColor=white"> <img src="https://img.shields.io/badge/webrtc -333333?style=for-the-badge&logo=webrtc&logoColor=white">  ![Redis](https://img.shields.io/badge/redis-%23DD0031.svg?style=for-the-badge&logo=redis&logoColor=white)
-  
-
-
 ---
 
 ### 🗣 커뮤니케이션
  <img src="https://img.shields.io/badge/Notion-%23000000.svg?style=for-the-badge&logo=notion&logoColor=white"> <img src="https://img.shields.io/badge/Zoom-2D8CFF?style=for-the-badge&logo=zoom&logoColor=white"> <img src="https://img.shields.io/badge/Discord-%235865F2.svg?style=for-the-badge&logo=discord&logoColor=white">
-
 ---
 
 
