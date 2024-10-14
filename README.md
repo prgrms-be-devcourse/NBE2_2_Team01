@@ -16,36 +16,39 @@
 
 <table>
   <tbody>
+    <!-- 첫 번째 행: 팀원 이름 -->
+    <tr>
+      <td align="center"><b>채호정</b></td>
+      <td align="center"><b>도승우</b></td>
+      <td align="center"><b>최근태</b></td>
+      <td align="center"><b>한승희</b></td>
+      <td align="center"><b>김강민</b></td>
+    </tr>
     <tr>
       <td align="center">
-        <sub><b>채호정</b></sub><br />
         <a href="https://github.com/Hojeong016">
           <img src="https://avatars.githubusercontent.com/Hojeong016" width="100px;" alt="채호정 프로필 사진"/>
-        </a><br />
+        </a>
       </td>
       <td align="center">
-        <sub><b>도승우</b></sub><br />
         <a href="https://github.com/MagongDo">
           <img src="https://avatars.githubusercontent.com/MagongDo" width="100px;" alt="도승우 프로필 사진"/>
-        </a><br />
+        </a>
       </td>
       <td align="center">
-        <sub><b>최근태</b></sub><br />
         <a href="https://github.com/RooDu">
           <img src="https://avatars.githubusercontent.com/RooDu" width="100px;" alt="최근태 프로필 사진"/>
-        </a><br />
+        </a>
       </td>
       <td align="center">
-        <sub><b>한승희</b></sub><br />
         <a href="https://github.com/SeungHuiHan">
           <img src="https://avatars.githubusercontent.com/SeungHuiHan" width="100px;" alt="한승희 프로필 사진"/>
-        </a><br />
+        </a>
       </td>
       <td align="center">
-        <sub><b>김강민</b></sub><br />
         <a href="https://github.com/adorahelen">
           <img src="https://avatars.githubusercontent.com/adorahelen" width="100px;" alt="김강민 프로필 사진"/>
-        </a><br />
+        </a>
       </td>
     </tr>
     <tr>
@@ -57,6 +60,7 @@
     </tr>
   </tbody>
 </table>
+
 
 
 
