@@ -2,12 +2,14 @@
 
 놀 줄 아는 노인들을 위한 만남 서비스 경로당
 
-## 기술 스택
+## 스택
 ##### Environment
 
 ##### Back-End
 
 ##### Front-End
+
+##### DB/Infra
 
 ##### Communication
 
