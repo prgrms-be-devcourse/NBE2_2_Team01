@@ -38,33 +38,37 @@
    - **Spring Boot Scheduler**: 동적 스케줄링 기능 구현
  
 <strong>Database</strong>
--  <img src="https://img.shields.io/badge/MySQL-4479A1?style=flat-square&logo=mysql&logoColor=white">
+-  <img src="https://img.shields.io/badge/MySQL-4479A1?style=style=for-the-badge&logo=mysql&logoColor=white">
  <strong>middleware</strong>
--  ![Redis](https://img.shields.io/badge/redis-%23DD0031.svg?style=for-the-badge&logo=redis&logoColor=white)
+-  <img src="https://img.shields.io/badge/redis-%23DD0031.svg?style=for-the-badge&logo=redis&logoColor=white">
 
   
-- **JWT**: 인증 및 권한 부여  
-- **WebSocket API**: 실시간 통신 구현  
-- **WebRTC**: 화상 채팅 기능 구현  
 
+
+- **JWT**: 인증 및 권한 부여
 ---
 
 ### 🎨 Frontend
-<img src="https://img.shields.io/badge/html5-E34F26?style=flat-square&logo=html5&logoColor=white">  <img src="https://img.shields.io/badge/css-1572`B6?style=flat-square&logo=css3&logoColor=white">  <img src="https://img.shields.io/badge/Thymeleaf-005F0F?style=flat-square&logo=Thymeleaf&logoColor=white">
-- **CKEditor**: 텍스트 에디터 활용  
+<img src="https://img.shields.io/badge/html5-E34F26?style=for-the-badge&logo=html5&logoColor=white">  <img src="https://img.shields.io/badge/css3-1572B6?style=for-the-badge&logo=css3&logoColor=white">  <img src="https://img.shields.io/badge/Thymeleaf-005F0F?style=for-the-badge&logo=Thymeleaf&logoColor=white">  <img src="https://img.shields.io/badge/CKEditor-0287D0?style=for-the-badge&logo=ckeditor4&logoColor=white">
 
 ---
 
 ### 💻 개발 환경 및 배포
-- **IntelliJ IDEA**: 메인 개발 툴  
-- **GitHub**: 버전 관리 및 소스 코드 저장소  
+
+<strong>메인 개발 툴</strong>
+
+ <img src="https://img.shields.io/badge/IntelliJ IDEA -000000?style=for-the-badge&logo=intellijidea&logoColor=white">
+  
+ <strong>버전 관리 및 소스 코드 저장소  </strong>
+ 
+  <img src="https://img.shields.io/badge/GitHub -181717?style=for-the-badge&logo=github&logoColor=white">
+
 
 ---
 
 ### 📡 클라이언트 통신
-- **WebSocket API**: 실시간 메시지 송수신  
-  ![Redis](https://img.shields.io/badge/redis-%23DD0031.svg?style=for-the-badge&logo=redis&logoColor=white)
-  - 메시지 브로커 역할  
+- <img src="https://img.shields.io/badge/WebSocket API-색상?style=for-the-badge&logo=rsocket&logoColor=white"> <img src="https://img.shields.io/badge/webrtc -333333?style=for-the-badge&logo=webrtc&logoColor=white">  ![Redis](https://img.shields.io/badge/redis-%23DD0031.svg?style=for-the-badge&logo=redis&logoColor=white)
+  
 
 
 ---
