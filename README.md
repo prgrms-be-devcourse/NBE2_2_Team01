@@ -40,6 +40,13 @@
         </a><br />
       </td>
     </tr>
+     <tr>
+      <td align="center"><b>프론트엔드 팀장</b></td>
+      <td align="center"><b>프론트엔드 개발자</b></td>
+      <td align="center"><b>프론트엔드 개발자</b></td>
+      <td align="center"><b>백엔드 개발자 (Git 관리자)</b></td>
+      <td align="center"><b>백엔드 개발자</b></td>
+    </tr>
   </tbody>
 </table>
 
