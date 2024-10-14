@@ -32,15 +32,15 @@
 ## 📚 사용 기술 스택 (Tech Stack)
 
 ### 🛠 Backend
-- <img src="https://img.shields.io/badge/Java-007396?style=for-the-badge&logo=Java&logoColor=white">
-- <img src="https://img.shields.io/badge/Spring Boot-6DB33F?style=for-the-badge&logo=spring boot&logoColor=white">
+ <img src="https://img.shields.io/badge/Java-007396?style=for-the-badge&logo=Java&logoColor=white">
+ <img src="https://img.shields.io/badge/Spring Boot-6DB33F?style=for-the-badge&logo=spring boot&logoColor=white">
 
    - **Spring Boot Scheduler**: 동적 스케줄링 기능 구현
  
 <strong>Database</strong>
--  <img src="https://img.shields.io/badge/MySQL-4479A1?style=style=for-the-badge&logo=mysql&logoColor=white">
+  <img src="https://img.shields.io/badge/My Sql-4479A1?style=for-the-badge&logo=mysql&logoColor=white"> 
  <strong>middleware</strong>
--  <img src="https://img.shields.io/badge/redis-%23DD0031.svg?style=for-the-badge&logo=redis&logoColor=white">
+  <img src="https://img.shields.io/badge/redis-%23DD0031.svg?style=for-the-badge&logo=redis&logoColor=white">
 
   
 
@@ -67,7 +67,7 @@
 ---
 
 ### 📡 클라이언트 통신
-- <img src="https://img.shields.io/badge/WebSocket API-색상?style=for-the-badge&logo=rsocket&logoColor=white"> <img src="https://img.shields.io/badge/webrtc -333333?style=for-the-badge&logo=webrtc&logoColor=white">  ![Redis](https://img.shields.io/badge/redis-%23DD0031.svg?style=for-the-badge&logo=redis&logoColor=white)
+ <img src="https://img.shields.io/badge/WebSocket API-색상?style=for-the-badge&logo=rsocket&logoColor=white"> <img src="https://img.shields.io/badge/webrtc -333333?style=for-the-badge&logo=webrtc&logoColor=white">  ![Redis](https://img.shields.io/badge/redis-%23DD0031.svg?style=for-the-badge&logo=redis&logoColor=white)
   
 
 
