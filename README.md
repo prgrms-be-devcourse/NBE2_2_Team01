@@ -5,16 +5,6 @@
  보다 간편한 **사용자 인터페이스**와 시니어를 위한 **맞춤형 기능**을 구현하였습니다.
 
 ---
-## 📋 설계도
-<details>
-<summary>자세히보기</summary>
-
--작성
-
-</details>
-
----
-
 ## 📌 주요 기능 및 특징
 
 ### 🎙️ 오픈 및 화상 채팅 기능
@@ -28,8 +18,106 @@
 
 ### ⏰ 커스텀 알람 서비스
 - **사용자 정의 알람 설정**: 채팅 알람 및 커뮤니티 알림을 사용자가 원하는 대로 설정 가능 
+  
+---
+## 📋 설계도
+<details>
+<summary>자세히보기</summary>
+
+-작성
+
+</details>
 
 ---
+
+## 📚 사용 기술 스택 (Tech Stack)
+
+### 🛠 Backend
+- **Java**: 메인 백엔드 언어  
+- **Spring Boot**: 애플리케이션 프레임워크  
+  - **Spring Boot Scheduler**: 동적 스케줄링 기능 구현  
+- **MySQL**: 데이터베이스  
+- **Redis**: 캐시 및 세션 관리  
+- **JWT**: 인증 및 권한 부여  
+- **WebSocket API**: 실시간 통신 구현  
+- **WebRTC**: 화상 채팅 기능 구현  
+
+---
+
+### 🎨 Frontend
+- **JavaScript**: 클라이언트 사이드 로직  
+- **HTML5 & CSS3**: 프론트엔드 UI 구현  
+- **CKEditor**: 텍스트 에디터 활용  
+
+---
+
+### 💻 개발 환경 및 배포
+- **IntelliJ IDEA**: 메인 개발 툴  
+- **GitHub**: 버전 관리 및 소스 코드 저장소  
+
+---
+
+### 📡 클라이언트 통신
+- **WebSocket API**: 실시간 메시지 송수신  
+- **Redis**: 메시지 브로커 역할  
+
+
+---
+
+
+
+## 📌 팀원 소개
+
+<table>
+  <tbody>
+    <!-- 첫 번째 행: 팀원 이름 -->
+    <tr>
+      <td align="center"><b>채호정</b></td>
+      <td align="center"><b>도승우</b></td>
+      <td align="center"><b>최근태</b></td>
+      <td align="center"><b>한승희</b></td>
+      <td align="center"><b>김강민</b></td>
+    </tr>
+    <tr>
+      <td align="center">
+        <a href="https://github.com/Hojeong016">
+          <img src="https://avatars.githubusercontent.com/Hojeong016" width="100px;" alt="채호정 프로필 사진"/>
+        </a>
+      </td>
+      <td align="center">
+        <a href="https://github.com/MagongDo">
+          <img src="https://avatars.githubusercontent.com/MagongDo" width="100px;" alt="도승우 프로필 사진"/>
+        </a>
+      </td>
+      <td align="center">
+        <a href="https://github.com/RooDu">
+          <img src="https://avatars.githubusercontent.com/RooDu" width="100px;" alt="최근태 프로필 사진"/>
+        </a>
+      </td>
+      <td align="center">
+        <a href="https://github.com/SeungHuiHan">
+          <img src="https://avatars.githubusercontent.com/SeungHuiHan" width="100px;" alt="한승희 프로필 사진"/>
+        </a>
+      </td>
+      <td align="center">
+        <a href="https://github.com/adorahelen">
+          <img src="https://avatars.githubusercontent.com/adorahelen" width="100px;" alt="김강민 프로필 사진"/>
+        </a>
+      </td>
+    </tr>
+    <tr>
+      <td align="center"><b>BE 팀장<br/>오픈 채팅</b></td>
+      <td align="center"><b>BE<br/>랜덤 화상채팅<br/>1대1 화상채팅</b></td>
+      <td align="center"><b>BE<br/>커스텀 알람<br/>게시글/좋아요 알람</b></td>
+      <td align="center"><b>BE 깃 관리자<br/>게시판<br/>댓글<br/>마이페이지</b></td>
+      <td align="center"><b>BE<br/>OAuth2 로그인<br/>JWT토큰<br/>로그인/회원가입</b></td>
+    </tr>
+  </tbody>
+</table>
+
+---
+## 주요 기능 에러 사항 및 진행 상황 
+
 
 <details>
 <summary>📋 더 자세히 보기</summary>
@@ -375,49 +463,7 @@
 
 </details>
 
----
 
-## 🎯 프로젝트 목적 및 기대 효과
-
-- **고령층 전용 SNS**를 통한 **외로움과 고독감 해소**  
-- **간편한 UI/UX**를 통해 디지털에 익숙하지 않은 사용자를 배려한 서비스 제공  
-- **랜덤 및 화상 채팅**으로 사회적 연결을 확대하여 새로운 관계 형성  
-
----
-
-## 📚 사용 기술 스택 (Tech Stack)
-
-### 🛠 Backend
-- **Java**: 메인 백엔드 언어  
-- **Spring Boot**: 애플리케이션 프레임워크  
-  - **Spring Boot Scheduler**: 동적 스케줄링 기능 구현  
-- **MySQL**: 데이터베이스  
-- **Redis**: 캐시 및 세션 관리  
-- **JWT**: 인증 및 권한 부여  
-- **WebSocket API**: 실시간 통신 구현  
-- **WebRTC**: 화상 채팅 기능 구현  
-
----
-
-### 🎨 Frontend
-- **JavaScript**: 클라이언트 사이드 로직  
-- **HTML5 & CSS3**: 프론트엔드 UI 구현  
-- **CKEditor**: 텍스트 에디터 활용  
-
----
-
-### 💻 개발 환경 및 배포
-- **IntelliJ IDEA**: 메인 개발 툴  
-- **GitHub**: 버전 관리 및 소스 코드 저장소  
-
----
-
-### 📡 클라이언트 통신
-- **WebSocket API**: 실시간 메시지 송수신  
-- **Redis**: 메시지 브로커 역할  
-
-
----
 
 ## 📋 프로젝트 구조
 
