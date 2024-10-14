@@ -5,6 +5,7 @@
 ### 기술 스택
 
 ### 팀원 소개
+
 <table>
   <tbody>
     <tr>
@@ -14,11 +15,9 @@
      <tr/>
       <td align="center"><a href=""><img src="" width="100px;" alt=""/><br /><sub><b>팀원 : 한승희(깃관리자)</b></sub></a><br /></td>
       <td align="center"><a href=""><img src="" width="100px;" alt=""/><br /><sub><b>팀원 : 김강민</b></sub></a><br /></td>
-   
     </tr>
   </tbody>
 </table>
-
 ## 진행상황
 
 작성 중에 있습니다. 잠시만 기다려주세요~~
