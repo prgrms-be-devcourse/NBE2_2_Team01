@@ -53,7 +53,7 @@ MZ세대의 대표 랜덤 채팅 서비스인 **아자르(Azar)**와 고령층 �
  
   <img src="https://img.shields.io/badge/redis-%23DD0031.svg?style=for-the-badge&logo=redis&logoColor=white">
 
-- **JWT**: 인증 및 권한 부여
+- **JWT&Oauht**: 인증 및 권한 부여
 
 ---
 
