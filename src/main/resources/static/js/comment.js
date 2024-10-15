@@ -211,7 +211,7 @@ function renderCommentWithReplies(comment, allComments, depth) {
             ${
             comment.commentAuthor !== "탈퇴한 사용자입니다." ?
                 `<button class="btn btn-link reply-btn" id="reply-button-${comment.commentId}" data-comment-id="${comment.commentId}">댓글 쓰기</button>` : ''
-                }
+        }
             <div id="reply-form-${comment.commentId}" class="reply-form mt-2" style="display: none;">
                 <textarea class="form-control" rows="3" placeholder="대댓글을 입력하세요"></textarea>
                 <div class="text-right">

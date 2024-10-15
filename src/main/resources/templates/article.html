@@ -162,7 +162,7 @@
                         <header class="mb-4">
                             <h3 class="fw-bolder mb-1" style="font-family:'나눔고딕'" th:text="${article.title}"></h3>
                             <div class="text-muted fst-italic mb-2 d-flex align-items-center">
-                                <img th:src="${profileImage}" alt="Profile Image" class="profile-image" style="margin: 0px" />
+                                <img th:src="${profileImage != null ? profileImage : '/img/default.jpeg'}" alt="Profile Image" class="profile-image" style="margin: 0px" />
                                 <span th:text="${article.author}"style="margin-left: 10px"></span>
                                 <span th:text="${#temporals.format(article.createdAt, 'yyyy-MM-dd HH:mm')}"style="margin-left: 10px" ></span>
                                 | 조회수: <span th:text="${article.viewCount}"style="margin-left: 10px"></span>
@@ -199,10 +199,10 @@
                             <div th:each="comment : ${comments}">
                                 <div class="card mb-3" th:style="${comment.parentCommentId != null} ? 'margin-left: 20px;' : ''">
                                     <div class="card-body">
-                                                                            <h6 class="card-subtitle mb-2 text-muted" th:text="${comment.commentAuthor}"></h6>
-                                                                            <p class="card-text" th:text="${comment.commentContent}"></p>
-                                                                            <p class="text-muted" th:text="${#temporals.format(comment.commentCreatedAt, 'yyyy-MM-dd HH:mm')}"></p>
-                                                                            <button class="btn btn-link reply-btn" th:data-comment-id="${comment.commentId}">Reply</button>
+                                        <h6 class="card-subtitle mb-2 text-muted" th:text="${comment.commentAuthor}"></h6>
+                                        <p class="card-text" th:text="${comment.commentContent}"></p>
+                                        <p class="text-muted" th:text="${#temporals.format(comment.commentCreatedAt, 'yyyy-MM-dd HH:mm')}"></p>
+                                        <button class="btn btn-link reply-btn" th:data-comment-id="${comment.commentId}">Reply</button>
                                         <!-- comment1.js에 html 코드가 작성되어있음 -->
                                     </div>
                                 </div>
